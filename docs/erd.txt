@@ -1,4 +1,11 @@
+user
+-
+id pk
+session varchar(255)
+
+
 screenshots
 -
 id pk
-name
+name varchar(255)
+user_session fk >- user.session
