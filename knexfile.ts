@@ -1,4 +1,4 @@
-import type { Knex } from "knex";
+import type { Knex } from 'knex';
 
 // Update with your config settings.
 
@@ -57,6 +57,6 @@ const config: { [key: string]: Knex.Config } = {
       tableName: 'knex_migrations',
     },
   },
-}
+};
 
 module.exports = config;
