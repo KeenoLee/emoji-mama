@@ -1,4 +1,48 @@
+html, body {
+    height:100%;
+    width:100%;
+    margin:0;
+    padding:0;
+}
+
 body {
     background-image: url('../assets/bg.jpeg');
 }
-@import url(//fonts.googleapis.com/css?family=Vibur);
+
+a {
+    text-decoration: none;
+}
+
+.logo {
+    color: #ff8e05;
+}
+.result-container {
+    text-align:center;
+    position: fixed;
+    top:30%;
+    left:50%;
+    transform: translate(-50%, -50%);
+}
+#resultMessage {
+    font-size: 25px;
+}
+
+
+.gallery-container{
+    display: flex;
+    /* justify-content: space-around; */
+    flex-wrap: wrap;
+    background: lightblue;
+    height: 40%;
+    width: 100%;
+    margin:0;
+    padding: 20px;
+    overflow: auto;
+}
+
+.gallery {
+    background: lightgreen;
+    margin: 5px;
+    height: 200px;
+    width: 200px;
+}
