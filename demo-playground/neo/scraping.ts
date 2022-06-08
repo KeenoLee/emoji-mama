@@ -113,7 +113,7 @@ async function scrapingImage(keyword:string) {
 
 // const searchItems = ['鑰匙', '信用卡', '紙包飲品','雨傘', '水樽', '書本']
 // const searchItems = ['bottle blank','bottle single', 'bottles']
-const searchItems = ['umbrella closed']
+const searchItems = ['keys']
 for (let item of searchItems) {
 scrapingImage(item);
 }
