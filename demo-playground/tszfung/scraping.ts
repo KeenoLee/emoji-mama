@@ -61,15 +61,12 @@ async function scrapingImage(keyword: string) {
                 let buffer = await res.buffer()
                 let filename = keyword + "-" + i + "." + "jpg";
                 const filePath = path.join(`../../datasets/${keyword}`, filename)
-                console.log('going to write file...', filePath)
                 fs.writeFileSync(filePath, buffer);
             } else {
                 const buffer = Buffer.from(parts[1], "base64");
                 let ext = parts[0].match(/\/(\w+);/)?.[1];
                 let filename = keyword + "-" + i + "." + ext;
                 const filePath = path.join(`../../datasets/${keyword}`, filename)
-                console.log('going to write file...')
-
                 fs.writeFileSync(filePath, buffer);
             }
             i++
@@ -81,4 +78,7 @@ async function scrapingImage(keyword: string) {
     }
 }
 
-scrapingImage('比卡超');
+const searchItems = ['chairs', 'tables', 'pikachu', 'squirtle']
+for (let item of searchItems) {
+    scrapingImage(item);
+}
