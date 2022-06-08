@@ -1,4 +1,7 @@
 import type { Knex } from 'knex';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Update with your config settings.
 
