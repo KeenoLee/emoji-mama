@@ -1,7 +1,17 @@
+import Knex from 'knex';
+const knexConfigs = require('./knexfile');
+const configMode = process.env.NODE_ENV || 'development';
+
 export class PlayerService {
-    constructor()
+    private knex;
+    constructor() {
+        this.knex = Knex(knexConfigs[configMode]);
+    }
 
-    record() {
-
+    async record(playerName: string, score: number) {
+        await this.knex.insert({ name: playerName, score: score }).into('players');
     }
 }
+
+
+

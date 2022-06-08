@@ -1,13 +1,11 @@
 import express from 'express';
-import { Client } from 'pg';
 import { PlayerService } from './playerService';
 import { PlayerController } from './playerController';
 
 let app = express();
 
 let routes = express.Router();
-let client = new Client();
-let playerService = new PlayerService(client);
+let playerService = new PlayerService();
 let playerController = new PlayerController(playerService);
 
 routes.post('/record', playerController.record)
