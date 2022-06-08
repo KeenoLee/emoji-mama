@@ -1,7 +1,8 @@
 user
 -
 id pk
-session varchar(255)
+name varchar(255)
+score integer
 
 
 screenshots
