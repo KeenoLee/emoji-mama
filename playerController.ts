@@ -2,20 +2,21 @@ import { Request, Response } from 'express';
 import { PlayerService } from './playerService';
 
 export class PlayerController {
-    // constructor(private playerService: PlayerService) { }
     private playerService: PlayerService;
     constructor(playerService: PlayerService) {
         this.playerService = playerService;
     }
 
     record = async (req: Request, res: Response) => {
-        let playerName = req.body;
+        let { playerName, score } = req.body;
         if (!playerName) {
             res.status(400).json({ error: 'missing player name' });
             return;
         }
-        // any limitation imposed on the player name???
+        // any limitation imposed on the player name??????????
 
-        await this.playerService.record(playerName);
+        let record = this.playerService.record(playerName, score);
+        // showing top 10 players
+        res.json({ 'record': record });
     }
 }
