@@ -1,0 +1,17 @@
+image: node:16.15-alpine
+
+stages:
+  - test
+  - build
+
+test: 
+  stage: test  
+  before_script:
+    - npm install  
+  script:
+    - npx jest --runInBand --forceExit
+
+build:
+  stage: build
+  script:
+    - npx tsc -p

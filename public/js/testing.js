@@ -1,6 +1,5 @@
 
 let model;
-
 // webCam
 const video = document.querySelector('video');
 
@@ -17,13 +16,14 @@ console.log("Height:", window.innerHeight)
 const stats = new Stats();
 
 const imgSize = 224
-const modelUrlPath = 'https://cdn.jsdelivr.net/gh/r48n34/self-tf-Model-storage/5Classv3Graph/model.json'
+const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
+// const modelUrlPath = '/Users/tszfungko/Project/emoji-mama/model/myTrainingModelv3.h5'
 
 const [divNum , subNum] = [1,0] // [0:255]
 // const [divNum , subNum] = [255,0] // [0:1]
 // const [divNum , subNum] = [127.5,1] // [0:1]
 
-const labels = ['bird', 'cat', 'dog', 'fish', 'lion']
+const labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
 
 async function getMedia() {
     let stream = null;
@@ -61,20 +61,20 @@ async function loadModel(){
 
     const capBtn = document.getElementById("capBtn");
 
-    capBtn.addEventListener("click", async () => {
+    // capBtn.addEventListener("click", async () => {
 
-        let imgURL = canvas.toDataURL("image/png");
+    //     let imgURL = canvas.toDataURL("image/png");
 
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+    //     let dlLink = document.createElement('a');
+    //     dlLink.download = "fileName";
+    //     dlLink.href = imgURL;
+    //     dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
 
-        document.body.appendChild(dlLink);
-        dlLink.click();
-        document.body.removeChild(dlLink);
+    //     document.body.appendChild(dlLink);
+    //     dlLink.click();
+    //     document.body.removeChild(dlLink);
         
-    })
+    // })
 
 }
 
@@ -90,7 +90,7 @@ window.onload = async () => {
     getMedia();
 }
 
-var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
+let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
@@ -107,22 +107,26 @@ async function predictModel(){
                 .sub(tf.scalar(subNum))
                 .expandDims();
     });
-    
     const result = await model.predict(imgPre).data();
-
     await tf.dispose(imgPre); // clear memory
+    let probs = Math.max(...result)
+    let successRate = 0.8
+    if (probs > successRate) {
+        video.pause()
+        // Upload image by formidable
+       }
 
-    let ind = result.indexOf(Math.max(...result));
+    let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
-    //console.log("Possibility:", result[ind] * 100); // top leabels possible
+    //console.log("Possibility:", result[ind] * 100); // top labels possible
 
     ctx.drawImage(video, 0, 0);
 
-    // Draw the top color box
+    // // Draw the top color box
     ctx.fillStyle = "#00FFFF";
     ctx.fillRect(0, 0, 1000, 30);
     
-    // Draw the text last to ensure it's on top. (draw label)
+    // // Draw the text last to ensure it's on top. (draw label)
     const font = "22px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
