@@ -8,7 +8,7 @@ async function scrapingImage() {
         const browser = await firefox.launch({ headless: false });
         const page = await browser.newPage();
         await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
-        let keyword = "手提電腦";
+        let keyword = "";
         await page.evaluate(
             ({ keyword }) => {
                 // search and click
