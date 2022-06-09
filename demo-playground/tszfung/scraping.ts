@@ -78,7 +78,7 @@ async function scrapingImage(keyword: string) {
     }
 }
 
-const searchItems = ['chairs', 'tables', 'pikachu', 'squirtle']
+const searchItems = ['peakdesign backpack']
 for (let item of searchItems) {
     scrapingImage(item);
 }
