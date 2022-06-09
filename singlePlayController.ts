@@ -21,7 +21,8 @@ export class SinglePlayController {
     }
     sendImage = async (req: Request, res: Response) => {
         form.parse(req, (err, fields, files) => {
-            console.log('hi')
+            console.log(files, fields)
+            console.log(req.body)
         })
     }
     

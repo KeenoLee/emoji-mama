@@ -6,14 +6,14 @@ import { SinglePlayController } from './singlePlayController';
 
 let app = express();
 
-let routes = express.Router();
+// let routes = express.Router();
 let playerService = new PlayerService();
 let playerController = new PlayerController(playerService);
 let singlePlayController = new SinglePlayController();
 
-routes.post('/record', playerController.record)
+app.post('/record', playerController.record)
 
-routes.post('/sendImage', singlePlayController.sendImage)
+app.post('/sendImage', singlePlayController.sendImage)
 // app.get('/', (req, res) => {
 //     console.log('Server is connected');
 //     res.end('Hello from express');
@@ -21,7 +21,7 @@ routes.post('/sendImage', singlePlayController.sendImage)
 
 const port = 8100;
 
-express.static('public')
+app.use(express.static('public'))
 
 app.listen(port, () => {
     console.log('listening at http://localhost:' + port)

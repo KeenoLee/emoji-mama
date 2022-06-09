@@ -113,12 +113,22 @@ async function predictModel() {
     let successRate = 0.9
     if (probs > successRate) {
         video.pause()
+        let imgURL = canvas.toDataURL("image/png");
+        let dlLink = document.createElement('a');
+        dlLink.download = "fileName";
+        dlLink.href = imgURL;
+        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+        document.body.appendChild(dlLink);
+        let data = {image: imgURL}
+        console.log('imgURL', imgURL)
+        console.log('dlLink', dlLink)
         const res = await fetch('/sendImage', {
             method: 'POST',
-            // headers: {
-            //     'Content-Type': ''
-            // },
-            // body: JSON.stringify(image)
+            headers: {
+                // 'Content-Type': 'multipart/form-data'
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         })
         // Upload image by formidable
         return
