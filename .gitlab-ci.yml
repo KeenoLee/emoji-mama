@@ -4,6 +4,12 @@ stages:
   - test
   - build
 
+variables:
+  POSTGRES_DB: badproject
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  
+
 test: 
   stage: test  
   services:
