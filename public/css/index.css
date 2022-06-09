@@ -1,5 +1,6 @@
 body {
     background-image: url('../assets/bg.jpeg');
+    background-size: cover;
 }
 @import url(//fonts.googleapis.com/css?family=Lato:300:400);
 
@@ -51,8 +52,14 @@ p {
 }
 
 .content {
+
+    position:relative;
+    height:30vh;
+
     position: relative;
     height: 20vh;
+    /* bottom: 0;
+    margin-bottom: 0; */
     text-align: center;
     background-color: white;
 }
