@@ -15,6 +15,8 @@ export class PlayerController {
         }
         // any limitation imposed on the player name??????????
 
-        this.playerService.record(playerName, score);
+        let record = this.playerService.record(playerName, score);
+        // showing top 10 players
+        res.json({ 'record': record });
     }
 }

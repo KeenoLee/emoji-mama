@@ -9,9 +9,9 @@ export class PlayerService {
     }
 
     async record(playerName: string, score: number) {
-        await this.knex.insert({ name: playerName, score: score }).into('players');
+        await this.knex.insert({ name: playerName, score: score }).into('records');
+
+        let topTen = await this.knex.select('name', 'score').from('records').orderBy('score').limit(10);
+        return topTen;
     }
 }
-
-
-
