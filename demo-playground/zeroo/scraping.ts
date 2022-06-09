@@ -3,13 +3,13 @@ import fs from "fs";
 import path from "path";
 import fetch from "node-fetch";
 
-async function scrapingImage(keyword:string) {
+async function scrapingImage(keyword: string) {
     try {
         const browser = await firefox.launch({ headless: false });
         const page = await browser.newPage();
         await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
         // let keyword = "chairs";
-        fs.mkdirSync(`./datasets/${keyword}`, {recursive: true});
+        fs.mkdirSync(`./datasets/${keyword}`, { recursive: true });
         await page.evaluate(
             ({ keyword }) => {
                 // search and click
@@ -26,7 +26,7 @@ async function scrapingImage(keyword:string) {
                 function loop(): void {
                     // console.log("loop")
                     document.querySelectorAll("[jsslot]").forEach(div => {
-                        if(getComputedStyle(div).display == "none") {
+                        if (getComputedStyle(div).display == "none") {
                             div.remove()
                         }
                     })
@@ -86,7 +86,7 @@ async function scrapingImage(keyword:string) {
             console.log("All the URls", parts)
             if (parts.length == 1) {
                 let res = await
-                fetch(imageUrl)
+                    fetch(imageUrl)
                 let buffer = await res.buffer()
                 let filename = keyword + "-" + i + "." + "jpg";
                 const filePath = path.join(`./datasets/${keyword}`, filename)
@@ -113,7 +113,8 @@ async function scrapingImage(keyword:string) {
 
 // const searchItems = ['鑰匙', '信用卡', '紙包飲品','雨傘', '水樽', '書本']
 // const searchItems = ['bottle blank','bottle single', 'bottles']
-const searchItems = ['keys']
+// const searchItems = ['electronic mouse', 'lcd television', 'facial tissue', 'beverage can', 'paper pack drink']
+const searchItems = ['紙包飲料']
 for (let item of searchItems) {
-scrapingImage(item);
+    scrapingImage(item);
 }
