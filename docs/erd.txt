@@ -1,11 +1,11 @@
 user
 -
 id pk
-session varchar(255)
+name varchar(255)
+score integer
 
 
 screenshots
 -
 id pk
 name varchar(255)
-user_session fk >- user.session
