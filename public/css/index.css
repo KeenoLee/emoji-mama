@@ -25,13 +25,6 @@ p {
     text-align: center;
     color: #ff8037;
 }
-.logo {
-    width: 50px;
-    fill: white;
-    padding-right: 15px;
-    display: inline-block;
-    vertical-align: middle;
-}
 
 .inner-header {
     height: 65vh;
@@ -114,8 +107,13 @@ body {
 }
 
 .logo {
+    width: 50px;
+    fill: white;
+    /* padding-right: 15px; */
+    display: inline-block;
+    vertical-align: middle;
     text-align: center;
-    width: 65%;
+    width: 100%;
     height: 250px;
     margin: auto;
     position: absolute;
