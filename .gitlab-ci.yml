@@ -6,7 +6,7 @@ stages:
 
 test: 
   stage: test  
-  service:
+  services:
     - postgres: 14.3-alpine
   before_script:
     - npm install  
