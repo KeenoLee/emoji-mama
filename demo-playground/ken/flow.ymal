@@ -1,0 +1,8 @@
+path: /content/KNN_v2  # dataset root dir  
+train: /content/KNN_v2/images/train  # train images (relative to 'path')  
+val: /content/KNN_v2/images/val  # val images (relative to 'path')
+test:  # (optional)
+
+## Classes  
+nc: 20  # number of classes  
+names: ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']  # class names  
