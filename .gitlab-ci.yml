@@ -8,6 +8,7 @@ variables:
   POSTGRES_DB: badproject
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: postgres
   
 
 test: 
