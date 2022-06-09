@@ -19,7 +19,7 @@ const imgSize = 224
 const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
 // const modelUrlPath = '/Users/tszfungko/Project/emoji-mama/model/myTrainingModelv3.h5'
 
-const [divNum , subNum] = [1,0] // [0:255]
+const [divNum, subNum] = [1, 0] // [0:255]
 // const [divNum , subNum] = [255,0] // [0:1]
 // const [divNum , subNum] = [127.5,1] // [0:1]
 
@@ -31,25 +31,25 @@ async function getMedia() {
     let constraints = window.constraints = {
         audio: false,
         video: {
-            facingMode: "environment" 
+            facingMode: "environment"
         }
     };
-  
+
     try {
-      stream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log(stream)
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        console.log(stream)
 
-      window.stream = stream
-      video.srcObject = stream
+        window.stream = stream
+        video.srcObject = stream
 
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 }
 
 
 // creata load model and active cameras
-async function loadModel(){
+async function loadModel() {
 
     model = await tf.loadGraphModel(modelUrlPath);
 
@@ -73,7 +73,7 @@ async function loadModel(){
     //     document.body.appendChild(dlLink);
     //     dlLink.click();
     //     document.body.removeChild(dlLink);
-        
+
     // })
 
 }
@@ -84,38 +84,50 @@ video.addEventListener('loadeddata', async () => {
 });
 
 window.onload = async () => {
-    stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild( stats.dom );
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(stats.dom);
 
     getMedia();
 }
 
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
-        window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+    window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
-async function predictModel(){
-    
+async function predictModel() {
+
     stats.begin();
 
     // Prevent memory leaks by using tidy 
     let imgPre = await tf.tidy(() => {
         return tf.browser.fromPixels(video)
-                .resizeNearestNeighbor([imgSize, imgSize])
-                .toFloat()
-                .div(tf.scalar(divNum)) 
-                .sub(tf.scalar(subNum))
-                .expandDims();
+            .resizeNearestNeighbor([imgSize, imgSize])
+            .toFloat()
+            .div(tf.scalar(divNum))
+            .sub(tf.scalar(subNum))
+            .expandDims();
     });
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
     let probs = Math.max(...result)
     let successRate = 0.9
     if (probs > successRate) {
+<<<<<<< HEAD
         // video.pause()
         console.log(result)
+=======
+        video.pause()
+        const res = await fetch('/sendImage', {
+            method: 'POST',
+            // headers: {
+            //     'Content-Type': ''
+            // },
+            // body: JSON.stringify(image)
+        })
+>>>>>>> 2c0bb68d4db4361fe10f7c31895d7c59ba904c52
         // Upload image by formidable
-       }
+        return
+    }
 
     let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
@@ -126,14 +138,14 @@ async function predictModel(){
     // // Draw the top color box
     ctx.fillStyle = "#00FFFF";
     ctx.fillRect(0, 0, 1000, 30);
-    
+
     // // Draw the text last to ensure it's on top. (draw label)
     const font = "22px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
     ctx.fillStyle = "#000000";
-    ctx.fillText(`${labels[ind]} : ${result[ind] * 100}%`, 20, 8); 
+    ctx.fillText(`${labels[ind]} : ${result[ind] * 100}%`, 20, 8);
     console.log('ctx: ', ctx)
     stats.end();
-    requestAnimationFrameCross(predictModel);        
+    requestAnimationFrameCross(predictModel);
 }
