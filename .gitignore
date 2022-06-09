@@ -4,9 +4,6 @@ node_modules
 .env
 datasets
 dist
-<<<<<<< HEAD
 emojimama
 yolov5
-=======
 trainingAI
->>>>>>> refs/remotes/origin/main
