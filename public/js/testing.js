@@ -110,7 +110,7 @@ async function predictModel() {
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
     let probs = Math.max(...result)
-    let successRate = 0.8
+    let successRate = 0.9
     if (probs > successRate) {
         video.pause()
         const res = await fetch('/sendImage', {

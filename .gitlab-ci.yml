@@ -4,8 +4,17 @@ stages:
   - test
   - build
 
+variables:
+  POSTGRES_DB: badproject
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: postgres
+  
+
 test: 
   stage: test  
+  services:
+    - postgres:14.3-alpine
   before_script:
     - npm install  
   script:
