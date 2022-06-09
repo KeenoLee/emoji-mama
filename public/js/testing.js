@@ -1,6 +1,5 @@
 
 let model;
-
 // webCam
 const video = document.querySelector('video');
 
@@ -17,13 +16,14 @@ console.log("Height:", window.innerHeight)
 const stats = new Stats();
 
 const imgSize = 224
-const modelUrlPath = 'https://cdn.jsdelivr.net/gh/r48n34/self-tf-Model-storage/5Classv3Graph/model.json'
+const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
+// const modelUrlPath = '/Users/tszfungko/Project/emoji-mama/model/myTrainingModelv3.h5'
 
 const [divNum , subNum] = [1,0] // [0:255]
 // const [divNum , subNum] = [255,0] // [0:1]
 // const [divNum , subNum] = [127.5,1] // [0:1]
 
-const labels = ['bird', 'cat', 'dog', 'fish', 'lion']
+const labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
 
 async function getMedia() {
     let stream = null;
@@ -110,10 +110,11 @@ async function predictModel(){
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
     let probs = Math.max(...result)
-    if (probs > 0.95) {
+    let successRate = 0.8
+    if (probs > successRate) {
         video.pause()
         // Upload image by formidable
-    }
+       }
 
     let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
