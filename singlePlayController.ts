@@ -1,7 +1,16 @@
 import { Request, Response } from 'express';
+import formidable from 'formidable'
 
+const uploadDir = 'uploads'
+const form = formidable({
+    uploadDir,
+    keepExtensions: true,
+    maxFiles: 1,
+    maxFileSize: 200 * 1024 ** 2, // the default limit is 200KB
+    filter: part => part.mimetype?.startsWith('image/') || false,
+  })
 
-export class singlePlayController {
+export class SinglePlayController {
     constructor() {}
     verifyNavigator = async(req: Request, res: Response) => {
         if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
@@ -10,7 +19,11 @@ export class singlePlayController {
         }
         console.log('no')
     }
+    sendImage = async (req: Request, res: Response) => {
+        form.parse(req, (err, fields, files) => {
+            console.log('hi')
+        })
+    }
+    
 }
 
-export let play = new singlePlayController()
-console.log(window.navigator, window.navigator.mediaDevices)
