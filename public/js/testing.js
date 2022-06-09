@@ -112,7 +112,8 @@ async function predictModel(){
     let probs = Math.max(...result)
     let successRate = 0.9
     if (probs > successRate) {
-        video.pause()
+        // video.pause()
+        console.log(result)
         // Upload image by formidable
        }
 
