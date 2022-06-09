@@ -61,20 +61,20 @@ async function loadModel(){
 
     const capBtn = document.getElementById("capBtn");
 
-    capBtn.addEventListener("click", async () => {
+    // capBtn.addEventListener("click", async () => {
 
-        let imgURL = canvas.toDataURL("image/png");
+    //     let imgURL = canvas.toDataURL("image/png");
 
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+    //     let dlLink = document.createElement('a');
+    //     dlLink.download = "fileName";
+    //     dlLink.href = imgURL;
+    //     dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
 
-        document.body.appendChild(dlLink);
-        dlLink.click();
-        document.body.removeChild(dlLink);
+    //     document.body.appendChild(dlLink);
+    //     dlLink.click();
+    //     document.body.removeChild(dlLink);
         
-    })
+    // })
 
 }
 
@@ -90,7 +90,7 @@ window.onload = async () => {
     getMedia();
 }
 
-var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
+let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
@@ -107,22 +107,25 @@ async function predictModel(){
                 .sub(tf.scalar(subNum))
                 .expandDims();
     });
-    
     const result = await model.predict(imgPre).data();
-
     await tf.dispose(imgPre); // clear memory
+    let probs = Math.max(...result)
+    if (probs > 0.95) {
+        video.pause()
+        // Upload image by formidable
+    }
 
-    let ind = result.indexOf(Math.max(...result));
+    let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
-    //console.log("Possibility:", result[ind] * 100); // top leabels possible
+    //console.log("Possibility:", result[ind] * 100); // top labels possible
 
     ctx.drawImage(video, 0, 0);
 
-    // Draw the top color box
+    // // Draw the top color box
     ctx.fillStyle = "#00FFFF";
     ctx.fillRect(0, 0, 1000, 30);
     
-    // Draw the text last to ensure it's on top. (draw label)
+    // // Draw the text last to ensure it's on top. (draw label)
     const font = "22px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
