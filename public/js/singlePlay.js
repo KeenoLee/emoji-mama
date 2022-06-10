@@ -17,13 +17,36 @@ const stats = new Stats();
 
 const imgSize = 224
 const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
-// const modelUrlPath = '/Users/tszfungko/Project/emoji-mama/model/myTrainingModelv3.h5'
 
 const [divNum, subNum] = [1, 0] // [0:255]
 // const [divNum , subNum] = [255,0] // [0:1]
 // const [divNum , subNum] = [127.5,1] // [0:1]
 
-const labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
+let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
+
+function checkEmojiDup() {
+    let labelCount = {}
+    labels.map((label) => {
+        labelCount[label] = 0
+    })
+    return labelCount
+}
+
+function genEmoji(round, checkEmojiDup) {
+    let remainLabels = labels.length + 1 - round
+    let result = Math.floor(Math.random() * labels.length)
+    if (checkEmojiDup[labels[result]] > 0) {
+        return genEmoji(round, checkEmojiDup)
+    }
+    if (checkRound(checkEmojiDup) == round - 1) {
+        return result
+    }
+}
+
+function checkRound(object) {
+    return Object.values(object).reduce((pre, cur) => pre + cur)
+}
+
 
 async function getMedia() {
     let stream = null;
@@ -37,7 +60,7 @@ async function getMedia() {
 
     try {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
-        console.log(stream)
+        // console.log(stream)
 
         window.stream = stream
         video.srcObject = stream
@@ -47,35 +70,15 @@ async function getMedia() {
     }
 }
 
-let count = 0
-// creata load model and active cameras
+let round = 1
+// create load model and active cameras
 async function loadModel() {
-
     model = await tf.loadGraphModel(modelUrlPath);
 
     // Set up canvas w and h
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
     predictModel();
-
-    // const capBtn = document.getElementById("capBtn");
-
-    // capBtn.addEventListener("click", async () => {
-
-    //     let imgURL = canvas.toDataURL("image/png");
-
-    //     let dlLink = document.createElement('a');
-    //     dlLink.download = "fileName";
-    //     dlLink.href = imgURL;
-    //     dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-
-    //     document.body.appendChild(dlLink);
-    //     dlLink.click();
-    //     document.body.removeChild(dlLink);
-
-    // })
-
 }
 
 video.addEventListener('loadeddata', async () => {
@@ -86,7 +89,6 @@ video.addEventListener('loadeddata', async () => {
 window.onload = async () => {
     stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.body.appendChild(stats.dom);
-
     getMedia();
 }
 
@@ -94,8 +96,11 @@ let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
-async function predictModel() {
 
+let checkEmo = checkEmojiDup()
+let successRate = 0.7
+
+async function predictModel() {
     stats.begin();
 
     // Prevent memory leaks by using tidy 
@@ -109,36 +114,43 @@ async function predictModel() {
     });
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
+
+
     let probs = Math.max(...result)
-    let successRate = 0.9
-    if (probs > successRate) {
-        video.pause()
-        let imgURL = canvas.toDataURL("image/png");
-        // console.log(imgURL)
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-        document.body.appendChild(dlLink);
-        let data = { image: imgURL }
-        const res = await fetch('/sendImage', {
-            method: 'POST',
-            headers: {
-                // 'Content-Type': 'multipart/form-data'
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        const result = await res.json()
-        if (result.success) {
-            count++
-            console.log(`You corrected ${count} times!`)
-            setTimeout(() => {
-                video.play()
-                loadModel()
-            }, 1000)
+    if (checkRound(checkEmo) == round) {
+        let genEmo = genEmoji(round, checkEmo)
+        console.log(genEmo)
+        console.log(`Find ${labels[genEmo]}`)
+        if (result[genEmo] > successRate) {
+            console.log('success!')
+            video.pause()
+            let imgURL = canvas.toDataURL("image/png");
+            let dlLink = document.createElement('a');
+            dlLink.download = "fileName";
+            dlLink.href = imgURL;
+            dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+            document.body.appendChild(dlLink);
+            let data = { image: imgURL, round: round }
+            const res = await fetch('/sendImage', {
+                method: 'POST',
+                headers: {
+                    // 'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            const resResult = await res.json()
+            if (resResult.success) {
+                round++
+                checkEmo[labels[genEmo]] += 1
+                setTimeout(() => {
+                    video.play()
+                    predictModel()
+                }, 1000)
+            }
+            return
+            
         }
-        return
     }
     let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
