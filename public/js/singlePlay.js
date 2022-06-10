@@ -99,7 +99,7 @@ let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
 
 let checkEmo = checkEmojiDup()
 let successRate = 0.7
-
+let imgURLArray = [];
 async function predictModel() {
     stats.begin();
 
@@ -125,6 +125,8 @@ async function predictModel() {
             console.log('success!')
             video.pause()
             let imgURL = canvas.toDataURL("image/png");
+            // imgURLArray.push(imgURL)
+            // console.log(imgURLArray)
             let dlLink = document.createElement('a');
             dlLink.download = "fileName";
             dlLink.href = imgURL;
@@ -149,7 +151,7 @@ async function predictModel() {
                 }, 1000)
             }
             return
-            
+
         }
     }
     let ind = result.indexOf(probs);
