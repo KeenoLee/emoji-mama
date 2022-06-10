@@ -36,7 +36,8 @@ const video = document.querySelector('video');
 
 // webCam display
 const canvas = document.getElementById('output');
-const ctx = canvas.getContext('2d');
+    // 以Canvas形式Display 2D既片/圖
+const ctx = canvas.getContext('2d'); 
 
 // debugMessage
 const debugMessage = document.getElementById("debugMessage")
@@ -51,25 +52,33 @@ const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/b
 const scoreThras = 0.25 // score lower then that will not display
 
 const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']
-
+const emojiLabels = ["🌂 ","🔑 ","🍾","📕","💳","🪑","⌨️","💻 ","🖊️","📱","👕","👖","👟","👓 ","⌚","💍","🖱️","🧻","🧃","📺"]
 
 
 async function getMedia() {
-    let stream = null;
+    let mediaStream = null;
 
     let constraints = window.constraints = {
         audio: false,
         video: {
-            facingMode: "environment" 
+            //For Mobile Set前置/後置Camera
+            //In Mobile: "前置：user"；後置："environment" 
+            facingMode: "environment",
+            //Set size of webcam display, Ideal: 1280x720  
+            width: { min: 1024, ideal: 1280, max: 1920 },
+            height: { min: 576, ideal: 720, max: 1080 }
         }
     };
   
     try {
-      stream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log(stream)
+    // try get camera permission from client (Eg. Pop up window: Request Camera Permission)
+    // navigator.mediaDevices.getUserMedia 入邊要有一個Parameters which call constraints 
+    // constraints 入邊會有兩樣野audio or video~
+      mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+      console.log(mediaStream)
 
-      window.stream = stream
-      video.srcObject = stream
+      window.stream = mediaStream
+      video.srcObject = mediaStream
 
     } catch(err) {
         console.log(err);
@@ -77,7 +86,7 @@ async function getMedia() {
 }
 
 
-// creata load model and active cameras
+// create load model and active cameras
 async function loadModel(){
 
     model = await tf.loadGraphModel(modelUrlPath);
@@ -107,11 +116,13 @@ async function loadModel(){
 
 }
 
+// Webcam load successfully -> action load model
 video.addEventListener('loadeddata', async () => {
     console.log('Yay!');
     loadModel();
 });
 
+// 
 window.onload = async () => {
     stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
     document.body.appendChild( stats.dom );
@@ -119,6 +130,7 @@ window.onload = async () => {
     getMedia();
 }
 
+// Loop webcam
 var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -170,11 +182,11 @@ async function predictModel(){
 
         const width = x2 - x1;
         const height = y2 - y1;
-        const klass = labels[classes_data[i]];
+        const klass = emojiLabels[classes_data[i]];
         const score = scores_data[i].toFixed(2);
 
         // Draw the bounding box. (draw box)
-        ctx.strokeStyle = "#00FFFF";
+        ctx.strokeStyle = "#FFFFFF";
         ctx.lineWidth = 4;
         ctx.strokeRect(x1, y1, width, height);
 
