@@ -23,6 +23,8 @@ const [divNum, subNum] = [1, 0] // [0:255]
 // const [divNum , subNum] = [127.5,1] // [0:1]
 
 let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
+const emojiLabels = ["🧃","📕","🍾","💳","🪑","👓","⌨️","🔑 ","🖱️","💻","👖","🖊️","📱","💍","👟","📺","🧻","👕","🌂","⌚"]
+
 
 function checkEmojiDup() {
     let labelCount = {}
