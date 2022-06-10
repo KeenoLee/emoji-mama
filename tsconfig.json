@@ -1,12 +1,16 @@
 {
     "compilerOptions": {
+        "outDir": "dist",
         "module": "commonjs",
         "target": "es5",
-        "lib": ["es6", "dom"],
+        "lib": [
+            "es6",
+            "dom"
+        ],
         "sourceMap": true,
         "allowJs": true,
         "jsx": "react",
-        "esModuleInterop":true,
+        "esModuleInterop": true,
         "moduleResolution": "node",
         "noImplicitReturns": true,
         "noImplicitThis": true,

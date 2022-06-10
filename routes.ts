@@ -16,8 +16,8 @@ export let sessionMiddleware = expressSession({
     secret: 'Project 2',
     resave: true,
     saveUninitialized: true,
-  })
-  
+})
+
 // let routes = express.Router();
 let playerService = new PlayerService();
 let playerController = new PlayerController(playerService);
