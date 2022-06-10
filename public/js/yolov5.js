@@ -52,7 +52,7 @@ const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/b
 const scoreThras = 0.25 // score lower then that will not display
 
 const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']
-const emojiLabels = ["🌂 ","🔑 ","🍾","📕","💳","🪑","⌨️","💻 ","🖊️","📱","👕","👖","👟","👓 ","⌚","💍","🖱️","🧻","🧃","📺"]
+const emojiLabels = ["🌂","🔑 ","🍾","📕","💳","🪑","⌨️","💻","🖊️","📱","👕","👖","👟","👓","⌚","💍","🖱️","🧻","🧃","📺"]
 
 
 async function getMedia() {
@@ -150,12 +150,14 @@ async function predictModel(){
     
     const result = await model.executeAsync(imgPre);
 
-    const font = "16px sans-serif";
+    const font = "50px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
 
     const [boxes, scores, classes, valid_detections] = result;
+    console.log(classes);
     const boxes_data = boxes.dataSync();
+    console.log(boxes_data);
     const scores_data = scores.dataSync();
     const classes_data = classes.dataSync();
     const valid_detections_data = valid_detections.dataSync()[0];
@@ -183,15 +185,15 @@ async function predictModel(){
         const width = x2 - x1;
         const height = y2 - y1;
         const klass = emojiLabels[classes_data[i]];
-        const score = scores_data[i].toFixed(2);
+        const score = (scores_data[i].toFixed(2))*100 + "%"; 
 
         // Draw the bounding box. (draw box)
-        ctx.strokeStyle = "#FFFFFF";
+        ctx.strokeStyle = colorArray[classes_data[i]];
         ctx.lineWidth = 4;
         ctx.strokeRect(x1, y1, width, height);
 
         // Draw the label background. (draw label bg)
-        ctx.fillStyle = "#00FFFF";
+        ctx.fillStyle = colorArray[classes_data[i]];
         const textWidth = ctx.measureText(klass + ":" + score).width;
         const textHeight = parseInt(font, 10); // base 10
         ctx.fillRect(x1, y1, textWidth + 4, textHeight + 4);
@@ -205,3 +207,15 @@ async function predictModel(){
     stats.end();
     requestAnimationFrameCross(predictModel);        
 }
+
+const colorArray = 
+['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+'#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+'#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+'#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+'#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+'#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+'#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+'#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+'#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+'#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
