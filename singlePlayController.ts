@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import formidable from 'formidable'
+import fs from 'fs';
+import path from 'path';
 
 const uploadDir = 'uploads'
 const form = formidable({
@@ -11,19 +13,31 @@ const form = formidable({
   })
 
 export class SinglePlayController {
-    constructor() {}
-    verifyNavigator = async(req: Request, res: Response) => {
-        if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
-            console.log('hi')
-            return
-        }
-        console.log('no')
+    constructor() {
+
     }
+
     sendImage = async (req: Request, res: Response) => {
         form.parse(req, (err, fields, files) => {
-            console.log(files, fields)
-            console.log(req.body)
+            if (!fields.image || err) {
+                res.status(400).json({error: 'failed to capture image'})
+            }
+            let imageUrl: any = fields.image
+            let parts = imageUrl.split(/,\s*/);
+            const buffer = Buffer.from(parts[1], "base64");
+            let ext = parts[0].match(/\/(\w+);/)?.[1];
+            let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "." + ext;
+            const filePath = path.join(`./public/uploads`, filename)
+            fs.writeFileSync(filePath, buffer);
+            res.json({success: true})
         })
+    }
+    getSessionID = (req: Request) => {
+        let sessionID = req.headers.cookie?.replace('connect.sid=', '')
+        return sessionID
+    }
+    countScore = async (req: Request, res: Response) => {
+
     }
     
 }

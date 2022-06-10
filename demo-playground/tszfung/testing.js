@@ -17,7 +17,6 @@ const stats = new Stats();
 
 const imgSize = 224
 const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
-// const modelUrlPath = '/Users/tszfungko/Project/emoji-mama/model/myTrainingModelv3.h5'
 
 const [divNum, subNum] = [1, 0] // [0:255]
 // const [divNum , subNum] = [255,0] // [0:1]
@@ -48,7 +47,7 @@ async function getMedia() {
 }
 
 
-// creata load model and active cameras
+// create load model and active cameras
 async function loadModel() {
 
     model = await tf.loadGraphModel(modelUrlPath);
