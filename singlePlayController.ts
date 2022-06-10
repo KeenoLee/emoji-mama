@@ -26,18 +26,20 @@ export class SinglePlayController {
             let parts = imageUrl.split(/,\s*/);
             const buffer = Buffer.from(parts[1], "base64");
             let ext = parts[0].match(/\/(\w+);/)?.[1];
-            let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "." + ext;
-            const filePath = path.join(`./public/uploads`, filename)
-            fs.writeFileSync(filePath, buffer);
+            if (this.getSessionID) {
+                let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "." + ext;
+                const filePath = path.join(`./public/uploads`, filename)
+                fs.writeFileSync(filePath, buffer);
+            }
             res.json({success: true})
         })
     }
-    getSessionID = (req: Request) => {
+    private getSessionID = (req: Request) => {
         let sessionID = req.headers.cookie?.replace('connect.sid=', '')
         return sessionID
     }
     countScore = async (req: Request, res: Response) => {
-
+        
     }
     
 }
