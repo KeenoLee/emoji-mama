@@ -17,3 +17,4 @@ export async function down(knex: KnexType): Promise<void> {
     await knex.schema.dropTableIfExists("record");
 }
 
+g
