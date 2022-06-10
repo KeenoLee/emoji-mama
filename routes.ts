@@ -1,5 +1,6 @@
 import express from 'express';
 import expressSession from 'express-session'
+import { knex } from './app'
 import { PlayerService } from './playerService';
 import { PlayerController } from './playerController';
 import { SinglePlayController } from './singlePlayController';
@@ -19,7 +20,8 @@ export let sessionMiddleware = expressSession({
 })
 
 // let routes = express.Router();
-let playerService = new PlayerService();
+
+let playerService = new PlayerService(knex);
 let playerController = new PlayerController(playerService);
 let singlePlayController = new SinglePlayController();
 
