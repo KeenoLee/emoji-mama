@@ -111,6 +111,10 @@ async function predictModel() {
     let probs = Math.max(...result)
     let successRate = 0.9
     if (probs > successRate) {
+<<<<<<< HEAD
+        // video.pause()
+        console.log(result)
+=======
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
         let dlLink = document.createElement('a');
@@ -129,6 +133,7 @@ async function predictModel() {
             },
             body: JSON.stringify(data)
         })
+>>>>>>> 2c0bb68d4db4361fe10f7c31895d7c59ba904c52
         // Upload image by formidable
         return
     }
