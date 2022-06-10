@@ -25,27 +25,52 @@ const [divNum, subNum] = [1, 0] // [0:255]
 let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
 const emojiLabels = ["🧃","📕","🍾","💳","🪑","👓","⌨️","🔑 ","🖱️","💻","👖","🖊️","📱","💍","👟","📺","🧻","👕","🌂","⌚"]
 let checkEmo = checkEmojiDup();
-let successRate = 0.5;
+let successRate = 0.1;
 let imgURLArray = [];
 let label;
 let round = 1;
+let startedCount = false
+let stopCount = false
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 const currentEmoji = document.querySelector('#current-emoji')
+const timer = document.querySelector('#timer')
 
+// Timer
+function setTimer() {
+    let setTime;
+    let s = 19
+    let ms = 99
+    startedCount = true
+    
+    return setInterval(() => {
+        if (ms == 0) {
+            ms = 99
+            s -= 1
+        }
+        ms -= 1
+        s = '0' + s
+        ms = '0' + ms
+        if (parseInt(s) <= 0) {
+            // timer.textContent = 'Time Out!'
+            stopCount = true
+            return
+        }
+        setTime = s.substring(s.length - 2, s.length) + ':' + ms.substring(ms.length - 2, ms.length)
+        timer.textContent = setTime
+    }, 1000/99);
+}
 
 function checkEmojiDup() {
     let labelCount = {}
     labels.map((label) => {
         labelCount[label] = 0
     })
-    console.log(labelCount)
     return labelCount
 }
 
 function genEmoji(round, checkEmojiDup) {
-    // let remainLabels = labels.length + 1 - round
     let result = Math.floor(Math.random() * labels.length)
     if (checkEmojiDup[labels[result]] > 0) {
         return genEmoji(round, checkEmojiDup)
@@ -60,10 +85,8 @@ function checkRound(object) {
     return Object.values(object).reduce((pre, cur) => pre + cur)
 }
 
-
 async function getMedia() {
     let stream = null;
-
     let constraints = window.constraints = {
         audio: false,
         video: {
@@ -121,7 +144,12 @@ async function predictModel() {
     });
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
-
+    if (stopCount) {
+        timer.textContent = 'Time Out!'
+    }
+    if (!startedCount && !stopCount) {
+        setTimer()
+    }
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
         label = genEmoji(round, checkEmo)
@@ -157,22 +185,22 @@ async function predictModel() {
 
 
     }
-    // let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
     //console.log("Possibility:", result[ind] * 100); // top labels possible
-
+    
     ctx.drawImage(video, 0, 0);
-
+    
     // // Draw the top color box
-    // ctx.fillStyle = "#00FFFF";
-    // ctx.fillRect(0, 0, 1000, 30);
-
+    ctx.fillStyle = "#00FFFF";
+    ctx.fillRect(0, 0, 1000, 30);
+    
     // // Draw the text last to ensure it's on top. (draw label)
-    // const font = "22px sans-serif";
-    // ctx.font = font;
-    // ctx.textBaseline = "top";
-    // ctx.fillStyle = "#000000";
-    // ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
+    let ind = result.indexOf(probs);
+    const font = "22px sans-serif";
+    ctx.font = font;
+    ctx.textBaseline = "top";
+    ctx.fillStyle = "#000000";
+    ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
     // console.log('ctx: ', ctx)
     // stats.end();
     requestAnimationFrameCross(predictModel);
