@@ -13,7 +13,7 @@ console.log("Width:", window.innerWidth)
 console.log("Height:", window.innerHeight)
 
 // stats library
-const stats = new Stats();
+// const stats = new Stats();
 
 const imgSize = 224
 const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
@@ -24,6 +24,15 @@ const [divNum, subNum] = [1, 0] // [0:255]
 
 let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
 const emojiLabels = ["🧃","📕","🍾","💳","🪑","👓","⌨️","🔑 ","🖱️","💻","👖","🖊️","📱","💍","👟","📺","🧻","👕","🌂","⌚"]
+let checkEmo = checkEmojiDup();
+let successRate = 0.5;
+let imgURLArray = [];
+let label;
+let round = 1;
+let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
+    window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+const currentEmoji = document.querySelector('#current-emoji')
 
 
 function checkEmojiDup() {
@@ -74,11 +83,9 @@ async function getMedia() {
     }
 }
 
-let round = 1
 // create load model and active cameras
 async function loadModel() {
     model = await tf.loadGraphModel(modelUrlPath);
-
     // Set up canvas w and h
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -91,22 +98,17 @@ video.addEventListener('loadeddata', async () => {
 });
 
 window.onload = async () => {
-    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
+    // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    // document.body.appendChild(stats.dom);
     getMedia();
 }
 
-let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
-    window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
 
-let checkEmo = checkEmojiDup()
-let successRate = 0.5
-let imgURLArray = [];
-let label;
+
+
 async function predictModel() {
-    stats.begin();
+    // stats.begin();
 
     // Prevent memory leaks by using tidy 
     let imgPre = await tf.tidy(() => {
@@ -123,7 +125,7 @@ async function predictModel() {
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
         label = genEmoji(round, checkEmo)
-
+        currentEmoji.textContent = `${emojiLabels[label]}`
         console.log(`Find ${labels[label]}`)
     }
     if (result[label] > successRate) {
@@ -155,23 +157,23 @@ async function predictModel() {
 
 
     }
-    let ind = result.indexOf(probs);
+    // let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
     //console.log("Possibility:", result[ind] * 100); // top labels possible
 
     ctx.drawImage(video, 0, 0);
 
     // // Draw the top color box
-    ctx.fillStyle = "#00FFFF";
-    ctx.fillRect(0, 0, 1000, 30);
+    // ctx.fillStyle = "#00FFFF";
+    // ctx.fillRect(0, 0, 1000, 30);
 
     // // Draw the text last to ensure it's on top. (draw label)
-    const font = "22px sans-serif";
-    ctx.font = font;
-    ctx.textBaseline = "top";
-    ctx.fillStyle = "#000000";
-    ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
+    // const font = "22px sans-serif";
+    // ctx.font = font;
+    // ctx.textBaseline = "top";
+    // ctx.fillStyle = "#000000";
+    // ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
     // console.log('ctx: ', ctx)
-    stats.end();
+    // stats.end();
     requestAnimationFrameCross(predictModel);
 }
