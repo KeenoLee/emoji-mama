@@ -4,9 +4,11 @@ import { Knex } from 'knex';
 
 export class PlayerService {
 
-    constructor(private knex: Knex) { }
+    constructor(private knex: Knex) {
+        // this.knex = knex;
+    }
 
-    private async record(playerName: string, score: number) {
+    async record(playerName: string, score: number) {
         await this.knex
             .insert({ name: playerName, score: score })
             .into('record');
@@ -18,7 +20,7 @@ export class PlayerService {
             .limit(10);
         return topTen;
     }
-     hello(){
+    hello() {
         console.log('hi')
     }
 }
