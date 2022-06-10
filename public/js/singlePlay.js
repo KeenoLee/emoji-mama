@@ -102,7 +102,7 @@ let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
 
 
 let checkEmo = checkEmojiDup()
-let successRate = 0.7
+let successRate = 0.5
 let imgURLArray = [];
 let label;
 async function predictModel() {
@@ -120,7 +120,6 @@ async function predictModel() {
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
 
-    console.log('checkRoundEmo: ', checkRound(checkEmo))
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
         label = genEmoji(round, checkEmo)
@@ -131,8 +130,6 @@ async function predictModel() {
         console.log('success!')
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
-        // imgURLArray.push(imgURL)
-        // console.log(imgURLArray)
         let dlLink = document.createElement('a');
         dlLink.download = "fileName";
         dlLink.href = imgURL;
@@ -142,7 +139,6 @@ async function predictModel() {
         const res = await fetch('/sendImage', {
             method: 'POST',
             headers: {
-                // 'Content-Type': 'multipart/form-data'
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
@@ -174,7 +170,7 @@ async function predictModel() {
     ctx.font = font;
     ctx.textBaseline = "top";
     ctx.fillStyle = "#000000";
-    ctx.fillText(`${labels[ind]} : ${result[ind] * 100}%`, 20, 8);
+    ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
     // console.log('ctx: ', ctx)
     stats.end();
     requestAnimationFrameCross(predictModel);
