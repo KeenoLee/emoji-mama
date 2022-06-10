@@ -16,7 +16,7 @@ export class PlayerService {
         let topTen = await this.knex
             .select('name', 'score')
             .from('record')
-            .orderBy('score')
+            .orderBy([ {column: 'score'}, {column: 'created_at', order: 'desc'}])
             .limit(10);
         return topTen;
     }
