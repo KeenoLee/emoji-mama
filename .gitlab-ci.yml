@@ -30,4 +30,4 @@ build:
   before_script:
     - npm install typescript
   script:
-    - npx tsc -p
+    - npx tsc -p .
