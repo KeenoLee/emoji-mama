@@ -29,16 +29,18 @@ function checkEmojiDup() {
     labels.map((label) => {
         labelCount[label] = 0
     })
+    console.log(labelCount)
     return labelCount
 }
 
 function genEmoji(round, checkEmojiDup) {
-    let remainLabels = labels.length + 1 - round
+    // let remainLabels = labels.length + 1 - round
     let result = Math.floor(Math.random() * labels.length)
     if (checkEmojiDup[labels[result]] > 0) {
         return genEmoji(round, checkEmojiDup)
     }
-    if (checkRound(checkEmojiDup) == round - 1) {
+    if (checkRound(checkEmojiDup) == (round - 1)) {
+        checkEmojiDup[labels[result]]++
         return result
     }
 }
@@ -100,6 +102,7 @@ let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
 let checkEmo = checkEmojiDup()
 let successRate = 0.7
 let imgURLArray = [];
+let label;
 async function predictModel() {
     stats.begin();
 
@@ -115,44 +118,44 @@ async function predictModel() {
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
 
-
+    console.log('checkRoundEmo: ', checkRound(checkEmo))
     let probs = Math.max(...result)
-    if (checkRound(checkEmo) == round) {
-        let genEmo = genEmoji(round, checkEmo)
-        console.log(genEmo)
-        console.log(`Find ${labels[genEmo]}`)
-        if (result[genEmo] > successRate) {
-            console.log('success!')
-            video.pause()
-            let imgURL = canvas.toDataURL("image/png");
-            // imgURLArray.push(imgURL)
-            // console.log(imgURLArray)
-            let dlLink = document.createElement('a');
-            dlLink.download = "fileName";
-            dlLink.href = imgURL;
-            dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-            document.body.appendChild(dlLink);
-            let data = { image: imgURL, round: round }
-            const res = await fetch('/sendImage', {
-                method: 'POST',
-                headers: {
-                    // 'Content-Type': 'multipart/form-data'
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            const resResult = await res.json()
-            if (resResult.success) {
-                round++
-                checkEmo[labels[genEmo]] += 1
-                setTimeout(() => {
-                    video.play()
-                    predictModel()
-                }, 1000)
-            }
-            return
+    if (checkRound(checkEmo) == (round - 1)) {
+        label = genEmoji(round, checkEmo)
 
+        console.log(`Find ${labels[label]}`)
+    }
+    if (result[label] > successRate) {
+        console.log('success!')
+        video.pause()
+        let imgURL = canvas.toDataURL("image/png");
+        // imgURLArray.push(imgURL)
+        // console.log(imgURLArray)
+        let dlLink = document.createElement('a');
+        dlLink.download = "fileName";
+        dlLink.href = imgURL;
+        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
+        document.body.appendChild(dlLink);
+        let data = { image: imgURL, round: round }
+        const res = await fetch('/sendImage', {
+            method: 'POST',
+            headers: {
+                // 'Content-Type': 'multipart/form-data'
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        const resResult = await res.json()
+        if (resResult.success) {
+            round++
+            setTimeout(() => {
+                video.play()
+                predictModel()
+            }, 1000)
         }
+        return
+
+
     }
     let ind = result.indexOf(probs);
     //console.log("MyModel predicted:", labels[ind]); // top labels
