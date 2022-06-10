@@ -15,12 +15,19 @@ test:
   stage: test  
   services:
     - postgres:14.3-alpine
-  before_script:
+  # artifacts:
+  #   paths:
+  #     - emoji-mama/node_modules
+  before_script:    
     - npm install  
   script:
     - npx jest --runInBand --forceExit
 
 build:
   stage: build
+  # dependencies:
+  #   - test
+  before_script:
+    - npm install typescript
   script:
     - npx tsc -p
