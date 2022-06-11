@@ -2,6 +2,7 @@ import express from 'express';
 import expressSession from 'express-session'
 import {Server as SocketIO} from 'socket.io'
 import http from 'http'
+import { ExpressPeerServer } from 'peer'
 import { knex } from './app'
 import { PlayerService } from './playerService';
 import { PlayerController } from './playerController';
@@ -30,9 +31,13 @@ export let sessionMiddleware = expressSession({
 
 // let routes = express.Router();
 
-
+const peerServer = ExpressPeerServer(server, {
+    // debug: true,
+});
+app.use('/peerjs', peerServer);
 app.set('view engine', 'ejs')
-app.get('/', multiPlayController.sendRoom)
+app.get('/:room', multiPlayController.sendRoom)
+app.get('/', multiPlayController.enterRoom)
 app.use(sessionMiddleware)
 app.post('/record', playerController.record)
 app.post('/sendImage', singlePlayController.sendImage)
@@ -41,6 +46,7 @@ app.get('/endGame', singlePlayController.endGame)
 //     console.log('Server is connected');
 //     res.end('Hello from express');
 // });
+
 
 const port = 8100;
 
