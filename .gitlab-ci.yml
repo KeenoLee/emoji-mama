@@ -11,7 +11,7 @@ variables:
   POSTGRES_PASSWORD: postgres
   POSTGRES_HOST: postgres
   SERVER_HOST: 52.76.109.40
-  SERVER_USER: badproject
+  SERVER_USER: ubuntu
   
 test: 
   stage: test  
