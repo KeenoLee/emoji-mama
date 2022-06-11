@@ -3,6 +3,7 @@ image: node:16.15-alpine
 stages:
   - test
   - build
+  - deploy
 
 variables:
   POSTGRES_DB: badproject
@@ -10,14 +11,13 @@ variables:
   POSTGRES_PASSWORD: postgres
   POSTGRES_HOST: postgres
   
-
 test: 
   stage: test  
   services:
     - postgres:14.3-alpine
-  # artifacts:
-  #   paths:
-  #     - emoji-mama/node_modules
+  artifacts:
+    paths:
+      - node_modules
   before_script:    
     - npm install  
   script:
@@ -25,9 +25,25 @@ test:
 
 build:
   stage: build
-  # dependencies:
-  #   - test
+  dependencies:
+    - test
+  artifacts:
+    paths:
+      - dist
   before_script:
-    - npm install typescript
+    # - npm install typescript
   script:
     - npx tsc -p .
+
+deploy:
+  stage: deploy
+  only:
+    - production
+  image: ubuntu:22.04
+  dependencies:
+    - build
+  before_script:
+    - apt update
+    - apt install --yes git openssh-client
+  script:
+    - echo "commit_hash = $CI_COMMIT_SHA"
