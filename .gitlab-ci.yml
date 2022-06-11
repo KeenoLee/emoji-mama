@@ -58,6 +58,7 @@ deploy:
     
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
+    - cat ~/.ssh/config
     - ssh badproject "
         git fetch &&\
         git checkout $CI_COMMIT_SHA &&\
