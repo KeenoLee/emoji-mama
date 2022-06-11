@@ -27,19 +27,36 @@ export class SinglePlayController {
             const buffer = Buffer.from(parts[1], "base64");
             let ext = parts[0].match(/\/(\w+);/)?.[1];
             if (this.getSessionID) {
-                let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "." + ext;
+                // let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "_" + round.substring(round.length - 2, round.length) + "." + ext;
+                let filename = this.filterSID(this.getSessionID(req)) + "_" + this.formatInt(fields.round) + "." + ext;
                 const filePath = path.join(`./public/uploads`, filename)
                 fs.writeFileSync(filePath, buffer);
             }
             res.json({success: true})
+            return
         })
+    }
+    countScore = async (req: Request, res: Response) => {
+        
+    }
+    endGame = async (req: Request, res: Response) => {
+        if (!this.getSessionID) {
+            res.status(400).json({error: 'no session id'})
+            return
+        }
+        res.redirect('/result.html')
+        return
     }
     private getSessionID = (req: Request) => {
         let sessionID = req.headers.cookie?.replace('connect.sid=', '')
         return sessionID
     }
-    countScore = async (req: Request, res: Response) => {
-        
+    private filterSID = (sessionID: string) => {
+        return sessionID.replace(/[^a-zA-Z ]/g, "")
+    }
+    private formatInt = (round: any) => {
+        let result = '0' + round.toString()
+        return result.substring(result.length - 2, result.length)
     }
     
 }
