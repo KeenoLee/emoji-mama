@@ -28,6 +28,7 @@ let singlePlayController = new SinglePlayController();
 app.use(sessionMiddleware)
 app.post('/record', playerController.record)
 app.post('/sendImage', singlePlayController.sendImage)
+app.get('/endGame', singlePlayController.endGame)
 // app.get('/', (req, res) => {
 //     console.log('Server is connected');
 //     res.end('Hello from express');
