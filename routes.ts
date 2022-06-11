@@ -7,7 +7,7 @@ import { knex } from './app'
 import { PlayerService } from './playerService';
 import { PlayerController } from './playerController';
 import { SinglePlayController } from './singlePlayController';
-import { MultiPlayController } from './multiPlayController';
+// import { MultiPlayController } from './multiPlayController';
 
 
 let app = express();
@@ -16,7 +16,7 @@ const io = new SocketIO(server)
 let playerService = new PlayerService(knex);
 let playerController = new PlayerController(playerService);
 let singlePlayController = new SinglePlayController();
-let multiPlayController = new MultiPlayController();
+// let multiPlayController = new MultiPlayController();
 declare module 'express-session' {
     interface SessionData {
         cookie: Cookie
@@ -34,10 +34,7 @@ export let sessionMiddleware = expressSession({
 const peerServer = ExpressPeerServer(server, {
     // debug: true,
 });
-app.use('/peerjs', peerServer);
-app.set('view engine', 'ejs')
-app.get('/:room', multiPlayController.sendRoom)
-app.get('/', multiPlayController.enterRoom)
+
 app.use(sessionMiddleware)
 app.post('/record', playerController.record)
 app.post('/sendImage', singlePlayController.sendImage)
