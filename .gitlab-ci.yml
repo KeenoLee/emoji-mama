@@ -47,3 +47,11 @@ deploy:
     - apt install --yes git openssh-client
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
+    - ssh badproject "
+        git fetch &&\
+        git checkout $CI_COMMIT_SHA &&\
+        npm install --prod &&\
+        cd dist &&\
+        npx knex migrate:latest &&\
+        pm2 reload ./server.js
+        "
