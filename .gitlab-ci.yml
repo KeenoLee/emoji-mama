@@ -15,9 +15,9 @@ test:
   stage: test  
   services:
     - postgres:14.3-alpine
-  # artifacts:
-  #   paths:
-  #     - emoji-mama/node_modules
+  artifacts:
+    paths:
+      - emoji-mama/node_modules
   before_script:    
     - npm install  
   script:
@@ -25,8 +25,8 @@ test:
 
 build:
   stage: build
-  # dependencies:
-  #   - test
+  dependencies:
+    - test
   before_script:
     # - npm install typescript
   script:
