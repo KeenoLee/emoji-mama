@@ -3,6 +3,7 @@ image: node:16.15-alpine
 stages:
   - test
   - build
+  - deploy
 
 variables:
   POSTGRES_DB: badproject
