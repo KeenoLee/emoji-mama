@@ -54,7 +54,7 @@ deploy:
     - echo "Host badproject
             Hostname $SERVER_HOST
             User $SERVER_USER
-            IdentityFile C:\Users\user\.ssh\id_rsa" > ~/.ssh/config
+            IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
     
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
