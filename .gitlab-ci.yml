@@ -17,7 +17,7 @@ test:
     - postgres:14.3-alpine
   artifacts:
     paths:
-      - emoji-mama/node_modules
+      - node_modules
   before_script:    
     - npm install  
   script:
