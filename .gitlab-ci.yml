@@ -11,7 +11,7 @@ variables:
   POSTGRES_PASSWORD: postgres
   POSTGRES_HOST: postgres
   SERVER_HOST: 52.76.109.40
-  SERVER_USER: ubuntu
+  SERVER_USER: badproject
   
 test: 
   stage: test  
@@ -46,10 +46,13 @@ deploy:
     - build
   before_script:
     - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H $SERVER_HOST > ~/.ssh/known_hosts
     - echo "Host badproject
             Hostname $SERVER_HOST
             User $SERVER_USER
-            IdentityFile C:\Users\user\.ssh\badproject.pem" > ~/.ssh/config
+            IdentityFile C:\Users\user\.ssh\id_rsa" > ~/.ssh/config
     - apt update
     - apt install --yes git openssh-client
   script:
