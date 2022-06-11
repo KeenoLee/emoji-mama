@@ -10,6 +10,8 @@ variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_HOST: postgres
+  SERVER_HOST: 52.76.109.40
+  SERVER_USER: badproject
   
 test: 
   stage: test  
@@ -43,6 +45,11 @@ deploy:
   dependencies:
     - build
   before_script:
+    - mkdir -p ~/.ssh
+    - echo "Host badproject
+            Hostname $SERVER_HOST
+            User SERVER_USER
+            IdentityFile C:\Users\user\.ssh\badproject.pem" > ~/.ssh/config
     - apt update
     - apt install --yes git openssh-client
   script:
