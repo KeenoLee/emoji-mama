@@ -45,6 +45,8 @@ deploy:
   dependencies:
     - build
   before_script:
+    - apt update
+    - apt install --yes git openssh-client
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
@@ -53,8 +55,7 @@ deploy:
             Hostname $SERVER_HOST
             User $SERVER_USER
             IdentityFile C:\Users\user\.ssh\id_rsa" > ~/.ssh/config
-    - apt update
-    - apt install --yes git openssh-client
+    
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
     - ssh badproject "
