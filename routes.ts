@@ -1,12 +1,21 @@
 import express from 'express';
 import expressSession from 'express-session'
+import {Server as SocketIO} from 'socket.io'
+import http from 'http'
 import { knex } from './app'
 import { PlayerService } from './playerService';
 import { PlayerController } from './playerController';
 import { SinglePlayController } from './singlePlayController';
+import { MultiPlayController } from './multiPlayController';
 
 
 let app = express();
+const server = new http.Server(app)
+const io = new SocketIO(server)
+let playerService = new PlayerService(knex);
+let playerController = new PlayerController(playerService);
+let singlePlayController = new SinglePlayController();
+let multiPlayController = new MultiPlayController();
 declare module 'express-session' {
     interface SessionData {
         cookie: Cookie
@@ -21,10 +30,9 @@ export let sessionMiddleware = expressSession({
 
 // let routes = express.Router();
 
-let playerService = new PlayerService(knex);
-let playerController = new PlayerController(playerService);
-let singlePlayController = new SinglePlayController();
 
+app.set('view engine', 'ejs')
+app.get('/', multiPlayController.sendRoom)
 app.use(sessionMiddleware)
 app.post('/record', playerController.record)
 app.post('/sendImage', singlePlayController.sendImage)
@@ -38,6 +46,6 @@ const port = 8100;
 
 app.use(express.static('public'))
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log('listening at http://localhost:' + port)
 })
