@@ -28,6 +28,6 @@ build:
   # dependencies:
   #   - test
   before_script:
-    - npm install typescript
+    # - npm install typescript
   script:
     - npx tsc -p .
