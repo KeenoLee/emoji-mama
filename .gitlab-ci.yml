@@ -51,7 +51,7 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H $SERVER_HOST > ~/.ssh/known_hosts
-    - echo "Host badproject
+    - echo "Host aws-setup
             Hostname $SERVER_HOST
             User $SERVER_USER
             IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
@@ -59,7 +59,7 @@ deploy:
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
     - cat ~/.ssh/config
-    - ssh badproject "
+    - ssh aws-setup "
         git fetch &&\
         git checkout $CI_COMMIT_SHA &&\
         npm install --prod &&\
