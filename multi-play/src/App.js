@@ -4,7 +4,9 @@ import TextField from "@material-ui/core/TextField"
 import AssignmentIcon from "@material-ui/icons/Assignment"
 import PhoneIcon from "@material-ui/icons/Phone"
 import React, { useEffect, useRef, useState } from "react"
+// Copy ID to send to other users
 import { CopyToClipboard } from "react-copy-to-clipboard"
+// Peer connection
 import Peer from "simple-peer"
 import io from "socket.io-client"
 import "./App.css"
@@ -12,17 +14,23 @@ import "./App.css"
 
 const socket = io.connect('http://localhost:3000')
 function App() {
+  // My ID
   const [me, setMe] = useState("")
   const [stream, setStream] = useState()
   const [receivingCall, setReceivingCall] = useState(false)
   const [caller, setCaller] = useState("")
   const [callerSignal, setCallerSignal] = useState()
   const [callAccepted, setCallAccepted] = useState(false)
+  // Pass the ID to call through copying clipboard
   const [idToCall, setIdToCall] = useState("")
   const [callEnded, setCallEnded] = useState(false)
+  // Name that going to pass along
   const [name, setName] = useState("")
+
+  // Reference video that will be passing through a video tag
   const myVideo = useRef()
   const userVideo = useRef()
+  // Allow to disconnect when a call is going to end-up
   const connectionRef = useRef()
 
   useEffect(() => {
