@@ -108,14 +108,10 @@ async function getMedia() {
             facingMode: "environment"
         }
     };
-
     try {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
-        // console.log(stream)
-
         window.stream = stream
         video.srcObject = stream
-
     } catch (err) {
         console.log(err);
     }
@@ -199,8 +195,6 @@ async function predictModel() {
             }, 1000)
         }
         return
-
-
     }
     //console.log("MyModel predicted:", labels[ind]); // top labels
     //console.log("Possibility:", result[ind] * 100); // top labels possible
