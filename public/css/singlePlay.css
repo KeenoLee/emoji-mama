@@ -6,6 +6,7 @@ body {
     overflow: hidden;
     background-image: url('../assets/bg.jpeg');
     background-size: cover;
+    user-select: none;
 }
 #header {
     width: 100vw;

@@ -31,6 +31,10 @@ let label;
 let round = 1;
 let startedCount = false
 let stopCount = false
+let interval = 1000 / 99
+let bonusScore = 5
+let startTimer
+
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -38,28 +42,26 @@ const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
 
 // Timer
-function setTimer() {
+function setTimer(seconds, miniSeconds) {
     let setTime;
-    let s = 19
-    let ms = 99
+    let s = seconds
+    let ms = miniSeconds
     startedCount = true
-    
     return setInterval(() => {
-        if (ms == 0) {
+        if (ms == 0 && s > 0) {
             ms = 99
             s -= 1
         }
         ms -= 1
         s = '0' + s
         ms = '0' + ms
-        if (parseInt(s) <= 0) {
-            // timer.textContent = 'Time Out!'
+        if (parseInt(s) <= 0 && parseInt(ms) == 0) {
             stopCount = true
             return
         }
         setTime = s.substring(s.length - 2, s.length) + ':' + ms.substring(ms.length - 2, ms.length)
         timer.textContent = setTime
-    }, 1000/99);
+    }, interval);
 }
 
 function checkEmojiDup() {
@@ -145,10 +147,13 @@ async function predictModel() {
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
     if (stopCount) {
+        clearInterval(startTimer)
         timer.textContent = 'Time Out!'
+        const res = await fetch(`/endGame`)
+        console.log('fetched: ', res)
     }
     if (!startedCount && !stopCount) {
-        setTimer()
+        startTimer = setTimer(59, 99)
     }
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
@@ -175,10 +180,17 @@ async function predictModel() {
         })
         const resResult = await res.json()
         if (resResult.success) {
+            let currentTimer = timer.textContent
+            let seconds = currentTimer.substring(0, 2)
+            let miniSeconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
+            console.log(seconds, miniSeconds)
+            clearInterval(startTimer)
             round++
             setTimeout(() => {
                 video.play()
                 predictModel()
+                startTimer = setTimer(+seconds + bonusScore, +miniSeconds)
+                // startTimer()
             }, 1000)
         }
         return
