@@ -57,8 +57,8 @@ deploy:
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
     - cat ~/.ssh/config
-    - cat ~/.ssh/id_rsa
     - ssh badproject "
+        cd ~/emoji-mama/ &&\
         git fetch &&\
         git checkout $CI_COMMIT_SHA &&\
         npm install --prod &&\
