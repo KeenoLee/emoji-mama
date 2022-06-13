@@ -44,7 +44,7 @@ deploy:
     - build
   before_script:
     - apt update
-    - apt install --yes git openssh-client
+    - apt install --yes git rsync openssh-client
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
@@ -56,6 +56,7 @@ deploy:
     
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
+    - rsync -SavLP dist "badproject:~/emoji-mama/"
     - cat ~/.ssh/config
     - ssh badproject "
         cd ~/emoji-mama/ &&\
