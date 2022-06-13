@@ -46,18 +46,18 @@ deploy:
     - apt update
     - apt install --yes git openssh-client
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa.pem
-    - chmod 600 ~/.ssh/id_rsa.pem
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H $SERVER_HOST > ~/.ssh/known_hosts
     - echo "Host badproject
             Hostname $SERVER_HOST
             User $SERVER_USER
-            IdentityFile ~/.ssh/id_rsa.pem" > ~/.ssh/config
+            IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
     
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
     - cat ~/.ssh/config
-    - cat ~/.ssh/id_rsa.pem
+    - cat ~/.ssh/id_rsa
     - ssh badproject "
         git fetch &&\
         git checkout $CI_COMMIT_SHA &&\
