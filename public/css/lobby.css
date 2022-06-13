@@ -5,7 +5,7 @@ body {
     max-width: 100vw;
     overflow: hidden;
     background-image: url('../assets/bg.jpeg');
-    background-size: cover;
+    background-size:auto;
 }
 
 .top-bar {
@@ -32,4 +32,25 @@ body {
     position: fixed;
     right: 5px;
     height: 2rem;
+}
+
+.game-mode-list {
+    text-align: center;
+    margin-top: 10rem;
+}
+.btn-game-mode{
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 5rem;
+    border-radius: 10%;
+    margin: 10px 10px 0px 10px;
+}
+
+.lottie-image {
+    position:fixed;
+    width: 400px;
+    height: 300px;
+    bottom:1rem;
+    right: 1rem;
 }
