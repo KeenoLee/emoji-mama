@@ -32,8 +32,6 @@ build:
   artifacts:
     paths:
       - dist
-  before_script:
-    # - npm install typescript
   script:
     - npx tsc -p .
 
@@ -48,18 +46,19 @@ deploy:
     - apt update
     - apt install --yes git openssh-client
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa.pem
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H $SERVER_HOST > ~/.ssh/known_hosts
-    - echo "Host aws-setup
+    - echo "Host badproject
             Hostname $SERVER_HOST
             User $SERVER_USER
-            IdentityFile ~/.ssh/id_rsa" > ~/.ssh/config
+            IdentityFile ~/.ssh/id_rsa.pem" > ~/.ssh/config
     
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
     - cat ~/.ssh/config
-    - ssh aws-setup "
+    - cat ~/.ssh/id_rsa.pem
+    - ssh badproject "
         git fetch &&\
         git checkout $CI_COMMIT_SHA &&\
         npm install --prod &&\
