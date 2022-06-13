@@ -26,7 +26,7 @@ let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'ke
 const emojiLabels = ["🧃","📕","🍾","💳","🪑","👓","⌨️","🔑 ","🖱️","💻","👖","🖊️","📱","💍","👟","📺","🧻","👕","🌂","⌚"]
 let checkEmo = checkEmojiDup();
 let successRate = 0.1;
-let imgURLArray = [];
+// let imgURLArray = [];
 let label;
 let round = 1;
 let startedCount = false
@@ -35,11 +35,24 @@ let interval = 1000 / 99
 let bonusScore = 5
 let startTimer
 
+//choose camera from each device
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
+
+window.onload = async () => {
+    // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    // document.body.appendChild(stats.dom);
+    getMedia();
+}
+
+video.addEventListener('loadeddata', async () => {
+    console.log('Yay!');
+    loadModel();
+});
+
 
 // Timer
 function setTimer(seconds, miniSeconds) {
@@ -117,16 +130,8 @@ async function loadModel() {
     predictModel();
 }
 
-video.addEventListener('loadeddata', async () => {
-    console.log('Yay!');
-    loadModel();
-});
 
-window.onload = async () => {
-    // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    // document.body.appendChild(stats.dom);
-    getMedia();
-}
+
 
 
 
@@ -202,17 +207,18 @@ async function predictModel() {
     
     ctx.drawImage(video, 0, 0);
     
-    // // Draw the top color box
+    // Draw the top color box
     ctx.fillStyle = "#00FFFF";
     ctx.fillRect(0, 0, 1000, 30);
     
-    // // Draw the text last to ensure it's on top. (draw label)
+    // Draw the text last to ensure it's on top. (draw label)
     let ind = result.indexOf(probs);
     const font = "22px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
     ctx.fillStyle = "#000000";
     ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
+    
     // console.log('ctx: ', ctx)
     // stats.end();
     requestAnimationFrameCross(predictModel);
