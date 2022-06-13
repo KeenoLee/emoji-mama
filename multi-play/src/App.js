@@ -1,7 +1,6 @@
 import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import TextField from "@material-ui/core/TextField"
-import AssignmentIcon from "@material-ui/icons/Assignment"
 import PhoneIcon from "@material-ui/icons/Phone"
 import React, { useEffect, useRef, useState } from "react"
 // import ReactDom from 'react-dom'
@@ -9,11 +8,11 @@ import React, { useEffect, useRef, useState } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 // Peer connection
 import Peer from "simple-peer"
-import io from "socket.io-client"
+import { io } from "socket.io-client"
 import "./App.css"
 
 
-// const socket = io.connect('http://localhost:3000')
+const socket = io.connect('http://localhost:8101')
 function App() {
 
   // My ID
@@ -28,11 +27,6 @@ function App() {
   const [callEnded, setCallEnded] = useState(false)
   // Name that going to pass along
   const [name, setName] = useState("")
-  // Connect Socket.io Server // Myself
-  const [socket, setIO] = useState("")
-  const connectSocketIO = () => {
-    setIO(io('http://localhost:3000'))
-  }
 
   // Reference video that will be passing through a video tag
   const myVideo = useRef()
@@ -47,7 +41,7 @@ function App() {
     // })
     const getUserMedia = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         setStream(stream)
         myVideo.current.srcObject = stream;
       } catch (err) {
@@ -57,7 +51,6 @@ function App() {
     getUserMedia();
 
     socket.on('me', (id) => {
-      console.log('any id? ', id)
       setMe(id)
     })
 
@@ -119,21 +112,32 @@ function App() {
 
   return (
     <>
-      <h1 style={{ textAlign: "center", color: '#fff' }}>MultiPlay</h1>
-      <div className="container">
-        <div>
-          <input type='button' value='Connect' onClick={connectSocketIO}></input>
+      {/* <h1 style={{ textAlign: "center", color: '#fff' }}>MultiPlay</h1> */}
+      <div className="header">
+        <div className="score">
+          <div className="my-score">Your Score</div>
+          <div className="enemy-score">Enemy Score</div>
         </div>
+        <div className="current-emoji">MultiPlay</div>
+        <div className="timer">00:00</div>
+      </div>
+      <div className="container">
         <div className="video-container">
+          {/* 1P Video */}
           <div className="video">
-            {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+            {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "50vw", position: 'relative' }} />}
           </div>
+          {/* 2P Video */}
           <div className="video">
             {callAccepted && !callEnded ?
-              <video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} /> :
+              <video playsInline ref={userVideo} autoPlay style={{ width: "300px", position: 'relative', zIndex: 100 }} /> :
               null}
           </div>
         </div>
+      </div>
+
+      <div className="footer">
+        {/* My Info */}
         <div className="myId">
           <TextField
             id="filled-basic"
@@ -141,14 +145,12 @@ function App() {
             variant="filled"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            style={{ marginBottom: "20px" }}
           />
           <CopyToClipboard text={me} style={{ marginBottom: "2rem" }}>
-            <Button variant="contained" color="primary" startIcon={<AssignmentIcon fontSize="large" />}>
-              Copy ID
+            <Button variant="contained" color="primary">
+              Copy My ID
             </Button>
           </CopyToClipboard>
-
           <TextField
             id="filled-basic"
             label="ID to call"
@@ -156,6 +158,11 @@ function App() {
             value={idToCall}
             onChange={(event) => setIdToCall(event.target.value)}
           />
+
+        </div>
+
+        {/* Receive Call */}
+        <div className="call-column">
           <div className="call-button">
             {/* Show End Call icon when a call is accepted & call is not ended */}
             {callAccepted && !callEnded ? (
@@ -169,8 +176,6 @@ function App() {
             )}
             {idToCall}
           </div>
-        </div>
-        <div>
           {receivingCall && !callAccepted ? (
             <div className="caller">
               <h1 >{name} is calling...</h1>

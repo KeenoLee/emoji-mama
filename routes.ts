@@ -1,6 +1,7 @@
 import express from 'express';
 import expressSession from 'express-session'
 import {Server as SocketIO} from 'socket.io'
+import cors from 'cors'
 import http from 'http'
 import { knex } from './app'
 import { PlayerService } from './playerService';
@@ -10,11 +11,12 @@ import { SinglePlayController } from './singlePlayController';
 
 
 let app = express();
+app.use(cors())
 const server = new http.Server(app)
 // const io = new SocketIO(server)
 const io = new SocketIO(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: 'http://localhost:8101',
         methods: ['GET', 'POST']
     }
 })
@@ -37,6 +39,7 @@ export let sessionMiddleware = expressSession({
 // let routes = express.Router();
 io.on('connection', (socket) => {
     socket.emit('me', socket.id)
+    console.log('id: ', socket.id)
     socket.on('disconnect', () => {
         socket.broadcast.emit('callEnded')
     })
