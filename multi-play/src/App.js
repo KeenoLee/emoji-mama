@@ -12,7 +12,7 @@ import { io } from "socket.io-client"
 import "./App.css"
 
 
-const socket = io.connect('http://localhost:8101')
+const socket = io.connect('http://localhost:8100')
 function App() {
 
   // My ID
