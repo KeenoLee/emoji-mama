@@ -31,8 +31,8 @@ let label;
 let round = 1;
 let startedCount = false
 let stopCount = false
-let interval = 1000 / 99
-let bonusScore = 5
+let interval = 1000 / 100
+let bonusTime = 5
 let startTimer
 
 //choose camera from each device
@@ -55,10 +55,10 @@ video.addEventListener('loadeddata', async () => {
 
 
 // Timer
-function setTimer(seconds, miniSeconds) {
+function setTimer(seconds, milliseconds) {
     let setTime;
     let s = seconds
-    let ms = miniSeconds
+    let ms = milliseconds
     startedCount = true
     return setInterval(() => {
         if (ms == 0 && s > 0) {
@@ -187,14 +187,14 @@ async function predictModel() {
         if (resResult.success) {
             let currentTimer = timer.textContent
             let seconds = currentTimer.substring(0, 2)
-            let miniSeconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-            console.log(seconds, miniSeconds)
+            let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
+            console.log(seconds, milliseconds)
             clearInterval(startTimer)
             round++
             setTimeout(() => {
                 video.play()
                 predictModel()
-                startTimer = setTimer(+seconds + bonusScore, +miniSeconds)
+                startTimer = setTimer(+seconds + bonusTime, +milliseconds)
                 // startTimer()
             }, 1000)
         }
