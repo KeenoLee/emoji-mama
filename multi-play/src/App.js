@@ -4,6 +4,7 @@ import TextField from "@material-ui/core/TextField"
 import AssignmentIcon from "@material-ui/icons/Assignment"
 import PhoneIcon from "@material-ui/icons/Phone"
 import React, { useEffect, useRef, useState } from "react"
+// import ReactDom from 'react-dom'
 // Copy ID to send to other users
 import { CopyToClipboard } from "react-copy-to-clipboard"
 // Peer connection
@@ -12,8 +13,9 @@ import io from "socket.io-client"
 import "./App.css"
 
 
-const socket = io.connect('http://localhost:3000')
+// const socket = io.connect('http://localhost:3000')
 function App() {
+
   // My ID
   const [me, setMe] = useState("")
   const [stream, setStream] = useState()
@@ -26,6 +28,11 @@ function App() {
   const [callEnded, setCallEnded] = useState(false)
   // Name that going to pass along
   const [name, setName] = useState("")
+  // Connect Socket.io Server // Myself
+  const [socket, setIO] = useState("")
+  const connectSocketIO = () => {
+    setIO(io('http://localhost:3000'))
+  }
 
   // Reference video that will be passing through a video tag
   const myVideo = useRef()
@@ -49,7 +56,7 @@ function App() {
     };
     getUserMedia();
 
-    socket.on("me", (id) => {
+    socket.on('me', (id) => {
       console.log('any id? ', id)
       setMe(id)
     })
@@ -114,6 +121,9 @@ function App() {
     <>
       <h1 style={{ textAlign: "center", color: '#fff' }}>MultiPlay</h1>
       <div className="container">
+        <div>
+          <input type='button' value='Connect' onClick={connectSocketIO}></input>
+        </div>
         <div className="video-container">
           <div className="video">
             {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
@@ -147,6 +157,7 @@ function App() {
             onChange={(event) => setIdToCall(event.target.value)}
           />
           <div className="call-button">
+            {/* Show End Call icon when a call is accepted & call is not ended */}
             {callAccepted && !callEnded ? (
               <Button variant="contained" color="secondary" onClick={leaveCall}>
                 End Call
