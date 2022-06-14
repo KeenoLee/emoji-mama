@@ -261,7 +261,7 @@ async function predictModel() {
             },
             body: JSON.stringify(data)
         })
-        console.log(imgURL)
+        // console.log(imgURL)
         const resResult = await res.json()
         if (resResult.score) {
             // let currentTimer = timer.textContent
