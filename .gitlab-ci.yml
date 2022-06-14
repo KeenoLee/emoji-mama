@@ -59,11 +59,11 @@ deploy:
     - rsync -SavLP dist "badproject:~/emoji-mama/"
     - cat ~/.ssh/config
     - ssh badproject "
-        cd ~/emoji-mama &&\
-        git fetch &&\
-        git checkout $CI_COMMIT_SHA &&\
-        npm install --prod &&\
-        cd dist &&\
-        npx knex migrate:latest &&\
+        cd ~/emoji-mama &&
+        git fetch &&
+        git checkout $CI_COMMIT_SHA &&
+        npm install --prod &&
+        cd dist &&
+        npx knex migrate:latest &&
         pm2 reload ./server.js
         "
