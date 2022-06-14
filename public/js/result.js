@@ -21,6 +21,7 @@ function showPost(post) {
     // idQuery.onsuccess = function () {
     //     console.log('idQuery', store.get(1).result)
     // }
+}
 
 function createPost(post) {
     let postContainer = postTemplate.cloneNode(true);
