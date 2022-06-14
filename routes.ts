@@ -80,6 +80,9 @@ app.get('/result', singlePlayController.getImage)
 app.post('/record', playerController.record)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
+app.post('/getSpecialModeData', singlePlayController.getData)
+
+
 // app.get('/', (req, res) => {
 //     console.log('Server is connected');
 //     res.end('Hello from express');

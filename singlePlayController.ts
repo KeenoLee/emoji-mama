@@ -55,6 +55,7 @@ export class SinglePlayController {
     }
 
     private countScore = async (timeSpace: any) => {
+        // console.log('inside countScore///')
         // console.log(req)
             if (!timeSpace) {
                 return
@@ -72,7 +73,9 @@ export class SinglePlayController {
     }
     getData = async (req: Request, res: Response) => {
         form.parse(req, async(err, fields, files) => {
+            console.log('going to send image...')
         await this.sendImage(fields.image, fields.round, this.getSessionID(req))
+        console.log('sent...')
         // await this.countScore(fields.bonusTime)
         res.json(await this.countScore(fields.timeSpace))
         return
