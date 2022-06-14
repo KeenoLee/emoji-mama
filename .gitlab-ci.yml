@@ -10,6 +10,8 @@
 #   POSTGRES_USER: postgres
 #   POSTGRES_PASSWORD: postgres
 #   POSTGRES_HOST: postgres
+#   SERVER_HOST: 52.76.109.40
+#   SERVER_USER: badproject
   
 # test: 
 #   stage: test  
@@ -30,8 +32,6 @@
 #   artifacts:
 #     paths:
 #       - dist
-#   before_script:
-#     # - npm install typescript
 #   script:
 #     - npx tsc -p .
 
@@ -43,7 +43,26 @@
 #   dependencies:
 #     - build
 #   before_script:
-#     - apt update
-#     - apt install --yes git openssh-client
+#     - apt update    
+#     - apt install --yes git rsync openssh-client
+#     - mkdir -p ~/.ssh
+#     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+#     - chmod 600 ~/.ssh/id_rsa
+#     - ssh-keyscan -H $SERVER_HOST > ~/.ssh/known_hosts
+#     - echo "Host badproject" >> ~/.ssh/config
+#     - echo "  Hostname $SERVER_HOST" >> ~/.ssh/config
+#     - echo "  User $SERVER_USER" >> ~/.ssh/config
+#     - echo "  IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+    
 #   script:
-#     - echo "commit_hash = $CI_COMMIT_SHA"
+#     - rsync -SavLP dist "badproject:~/emoji-mama/"    
+#     - ssh badproject "
+#         source ~/.nvm/nvm.sh &&
+#         cd ~/emoji-mama &&        
+#         git fetch &&
+#         git checkout $CI_COMMIT_SHA &&
+#         npm install --omit=dev &&
+#         cd dist &&
+#         npx knex migrate:latest &&
+#         pm2 reload ~/emoji-mama/dist/routes.js
+#         "
