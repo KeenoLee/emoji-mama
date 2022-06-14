@@ -6,7 +6,13 @@ export class SinglePlayService {
         this.knex = knex
     }
     sendImage = async (image: string, sid: string) => {
-        await this.knex.insert({sid: sid, image: image})
-        .into('screenshots')
+        await this.knex
+            .insert({sid: sid, image: image})
+            .into('screenshots')
+    }
+    deleteImage = async (sid: string) => {
+        await this.knex('screenshots')
+            .where('sid', sid)
+            .del()
     }
 }
