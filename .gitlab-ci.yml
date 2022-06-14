@@ -58,13 +58,11 @@ deploy:
     - rsync -SavLP dist "badproject:~/emoji-mama/"    
     - ssh badproject "
         source ~/.nvm/nvm.sh &&
-        cd ~/emoji-mama &&
-        node --version &&
-        npm --version &&
+        cd ~/emoji-mama &&        
         git fetch &&
         git checkout $CI_COMMIT_SHA &&
         npm install --omit=dev &&
         cd dist &&
         npx knex migrate:latest &&
-        pm2 reload ./server.js
+        pm2 reload ~/emoji-mama/dist/routes.js
         "
