@@ -40,14 +40,17 @@ export class SinglePlayController {
             // res.json({ success: true })
             return
     }
-    private countScore = async (bonusTime) => {
+    private countScore = async (timeSpace: any) => {
         // console.log(req)
-            if (!bonusTime) {
+            if (!timeSpace) {
                 return
             } else {
-                bonusTime = +bonusTime
-                if (bonusTime <= 0) {
+                // timeSpace = +timeSpace
+                let bonusTime: number;
+                if (timeSpace > 5) {
                     bonusTime = 1
+                } else {
+                    bonusTime = 5 - timeSpace + 1
                 }
                 // res.json({score: (1000 * bonusTime).toFixed(0)})
                 return {score: (1000 * bonusTime).toFixed(0)}
@@ -57,8 +60,7 @@ export class SinglePlayController {
         form.parse(req, async(err, fields, files) => {
         await this.sendImage(fields.image, fields.round, this.getSessionID(req))
         // await this.countScore(fields.bonusTime)
-        console.log('FKYOU: ', await this.countScore(fields.bonusTime))
-        res.json(await this.countScore(fields.bonusTime))
+        res.json(await this.countScore(fields.timeSpace))
         return
     })
     }
