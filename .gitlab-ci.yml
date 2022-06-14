@@ -63,7 +63,7 @@ deploy:
         npm --version &&
         git fetch &&
         git checkout $CI_COMMIT_SHA &&
-        npm install --prod &&
+        npm install --omit=dev &&
         cd dist &&
         npx knex migrate:latest &&
         pm2 reload ./server.js
