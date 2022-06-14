@@ -1,10 +1,11 @@
-# image: node:16.15-alpine
+image: node:16.15-alpine
 
-# stages:
-#   - test
-#   - build
-#   - deploy
+stages:
+  - test
+  - build
+  - deploy
 
+<<<<<<< HEAD
 # variables:
 #   POSTGRES_DB: badproject
 #   POSTGRES_USER: postgres
@@ -12,19 +13,27 @@
 #   POSTGRES_HOST: postgres
 #   SERVER_HOST: 52.76.109.40
 #   SERVER_USER: badproject
+=======
+variables:
+  POSTGRES_DB: badproject
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: postgres
+>>>>>>> parent of a0eb738 (temporarily suspend the ci/cd to save ci minutes in gitlab)
   
-# test: 
-#   stage: test  
-#   services:
-#     - postgres:14.3-alpine
-#   artifacts:
-#     paths:
-#       - node_modules
-#   before_script:    
-#     - npm install  
-#   script:
-#     - npx jest --runInBand --forceExit
+test: 
+  stage: test  
+  services:
+    - postgres:14.3-alpine
+  artifacts:
+    paths:
+      - node_modules
+  before_script:    
+    - npm install  
+  script:
+    - npx jest --runInBand --forceExit
 
+<<<<<<< HEAD
 # build:
 #   stage: build
 #   dependencies:
@@ -66,3 +75,29 @@
 #         npx knex migrate:latest &&
 #         pm2 reload ~/emoji-mama/dist/routes.js
 #         "
+=======
+build:
+  stage: build
+  dependencies:
+    - test
+  artifacts:
+    paths:
+      - dist
+  before_script:
+    # - npm install typescript
+  script:
+    - npx tsc -p .
+
+deploy:
+  stage: deploy
+  only:
+    - production
+  image: ubuntu:22.04
+  dependencies:
+    - build
+  before_script:
+    - apt update
+    - apt install --yes git openssh-client
+  script:
+    - echo "commit_hash = $CI_COMMIT_SHA"
+>>>>>>> parent of a0eb738 (temporarily suspend the ci/cd to save ci minutes in gitlab)
