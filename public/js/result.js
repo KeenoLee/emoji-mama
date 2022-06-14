@@ -1,6 +1,20 @@
 let postTemplate = document.querySelector(".gallery-container");
 postTemplate.remove();
 
+// fetch("/result")
+//     .then((res) => res.json())
+//     .catch((error) => ({
+//         error: String(error),
+//     }))
+//     .then((json) => {
+//         if (json.error) {
+//             console.log(json.error);
+//         }
+//         let posts = json.result;
+//         let blockList = json.blockList;
+//         console.log(blockList);
+//         posts.forEach((post) => showPost(post, blockList));
+//     });
 
 document.querySelector('.play-again').addEventListener("click", () => {
     //TODO: clear indexedDB
@@ -13,15 +27,6 @@ function showPost(post) {
 
 }
 
-
-    // store.put({ id: 1, screenshots: '123' })
-
-    // const idQuery = store.get(1)
-
-    // idQuery.onsuccess = function () {
-    //     console.log('idQuery', store.get(1).result)
-    // }
-}
 
 function createPost(post) {
     let postContainer = postTemplate.cloneNode(true);

@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import formidable from 'formidable'
-import fs from 'fs';
+import fs, { mkdirSync } from 'fs';
 import path from 'path';
 import { SinglePlayService } from './singlePlayService';
 
 const uploadDir = 'uploads'
+mkdirSync(uploadDir, { recursive: true });
 const form = formidable({
     uploadDir,
     keepExtensions: true,
