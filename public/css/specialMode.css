@@ -1,0 +1,33 @@
+body {
+    background-image: url('../assets/bg.jpeg');
+    overflow: hidden;
+}
+
+#top-bar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#score,
+#find-emoji,
+#timer {
+    padding:2rem;
+}
+
+#camera {
+    display: flex;
+    justify-content: center;
+    height: auto;
+    width: auto;
+}
+
+#btn-list {
+    text-align: center;
+}
+
+.btn-capture {
+    background-color: black;
+    color: azure;
+    position: relative;
+}
