@@ -98,7 +98,6 @@ let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'ke
 const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
 let checkEmo = checkEmojiDup();
 let successRate = 0.1;
-// let imgURLArray = [];
 let label;
 let round = 1;
 let startedCount = false
@@ -106,13 +105,16 @@ let stopCount = false
 let interval = 1000 / 100
 let bonusTime = 5
 let startTimer
-
-//choose camera from each device
+let timeSpace = 0
+let originTimer = '59:99'
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
+const score = document.querySelector('#current-score')
+
 
 window.onload = async () => {
     // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -205,9 +207,7 @@ function getTime(time) {
     return +s + (+ms / 100)
 }
 
-let timeSpace = 0
-let originTimer = '59:99'
-const score = document.querySelector('#current-score')
+
 
 async function predictModel() {
     // stats.begin();
