@@ -1,7 +1,8 @@
 import type { Knex } from 'knex';
 import dotenv from 'dotenv';
+import { existsSync } from 'fs';
 
-dotenv.config();
+dotenv.config({ path: existsSync('.env') ? '.env' : '../.env' });
 
 // Update with your config settings.
 
