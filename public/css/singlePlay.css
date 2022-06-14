@@ -10,7 +10,7 @@ body {
 }
 #header {
     width: 100vw;
-    height: 15vh;
+    height: 10vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -19,28 +19,39 @@ body {
 #current-emoji {
     font-size: 3rem;
 }
-#score, #timer {
+#score,
+#timer {
     padding: 2rem;
     width: 10rem;
     text-align: center;
 }
 #content {
     width: 100vw;
-    height: 70vh;
+    height: auto;
     background-color: #333333;
 }
-#footer {
+/* #footer {
     width: 100vw;
     height: 15vh;
-    /* background-color: #ffee00; */
+    background-color: #ffee00;
+} */
+
+video,
+canvas {
+    width: 100%;
+    /* height: 20vh; */
+    height: auto;
+    /* width: 80vw */
+    flex-wrap: wrap;
 }
 
-
-video, canvas {
-    width: 100vw;
-    height: 70vh;
+#video {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    visibility: hidden;
+    width: auto;
+    height: auto;
 }
-
 
 .controls {
     position: absolute;
@@ -81,11 +92,11 @@ video, canvas {
 }
 
 .controls button:nth-child(1) {
-    border: 2px solid #D2002E;
+    border: 2px solid #d2002e;
 }
 
 .controls button:nth-child(1) svg {
-    color: #D2002E;
+    color: #d2002e;
 }
 
 .controls button:nth-child(2) {
@@ -97,11 +108,11 @@ video, canvas {
 }
 
 .controls button:nth-child(3) {
-    border: 2px solid #00B541;
+    border: 2px solid #00b541;
 }
 
 .controls button:nth-child(3) svg {
-    color: #00B541;
+    color: #00b541;
 }
 
 .controls > button {

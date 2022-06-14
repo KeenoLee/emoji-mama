@@ -8,4 +8,5 @@ score integer
 screenshots
 -
 id pk
-name varchar(255)
+sid text
+image text

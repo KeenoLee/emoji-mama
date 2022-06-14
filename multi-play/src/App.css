@@ -1,0 +1,90 @@
+#root {
+	display: block;
+	margin: 0;
+	overflow: hidden;
+}
+.container {
+	display: grid;
+	grid-template-columns: 7fr 3fr;
+	width: 100vw;
+	height: 70vh;
+
+}
+.footer, .header {
+	display: flex;
+	align-items: center;
+}
+
+.header {
+	justify-content: space-between;
+	width: 100vw;
+	height: 15vh;
+}
+/* .video-container:first-child {
+	position: absolute;
+	width: inherit;
+	height: 70vh;
+}
+.video-container:nth-child(1) {
+	position: absolute;
+	width: 20vw;
+	height: 10vh;
+	z-index: 100;
+} */
+.score, .timer {
+    padding: 2rem;
+    width: 10rem;
+    text-align: center;}
+.footer {
+	justify-content: center;
+	width: 100vw;
+	height: 15vh;
+}
+.myId {
+	/* margin-right: 5rem; */
+	border-radius: 5px;
+	/* background: #c9d6ff; fallback for old browsers */
+	/* background: -webkit-linear-gradient(to right, #e2e2e2, #c9d6ff); Chrome 10-25, Safari 5.1-6 */
+	/* background: linear-gradient(
+		to right,
+		#e2e2e2,
+		#c9d6ff
+	); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	padding: 2rem;
+	display: block;
+	justify-content: center;
+	align-content: center;
+}
+.call-column {
+	/* display: flex; */
+}
+.call-button {
+	width: 50vw;
+}
+.caller {
+	display: flex;
+}
+ 
+/* .call-button {
+	text-align: center;
+} */
+
+.video-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	justify-content: center;
+	align-content: center;
+	/* margin-top: 10rem; */
+	/* margin-left: 10rem; */
+}
+
+/* .caller {
+	text-align: center;
+	color: #fff;
+} */
+
+body {
+  background-image: url('../../public/assets/bg.jpeg');
+  background-size: cover;
+}
