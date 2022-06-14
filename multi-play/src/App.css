@@ -57,8 +57,15 @@
 	align-content: center;
 }
 .call-column {
-	display: block;
+	/* display: flex; */
 }
+.call-button {
+	width: 50vw;
+}
+.caller {
+	display: flex;
+}
+ 
 /* .call-button {
 	text-align: center;
 } */
