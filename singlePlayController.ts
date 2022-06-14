@@ -11,7 +11,7 @@ const form = formidable({
     maxFiles: 1,
     maxFileSize: 200 * 1024 ** 2, // the default limit is 200KB
     filter: part => part.mimetype?.startsWith('image/') || false,
-  })
+})
 
 export class SinglePlayController {
     private singlePlayService: SinglePlayService;
@@ -32,12 +32,12 @@ export class SinglePlayController {
             let ext = parts[0].match(/\/(\w+);/)?.[1];
             if (this.getSessionID) {
                 // let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "_" + round.substring(round.length - 2, round.length) + "." + ext;
-                let filename = this.filterSID(this.getSessionID(req)) + "_" + this.formatInt(fields.round) + "." + ext;
-                const filePath = path.join(`./public/uploads`, filename)
+                let filename = this.filterSID(this.getSessionID(req)).substring(0, 10) + "_" + this.formatInt(fields.round) + "." + ext;
+                const filePath = path.join(`./uploads`, filename)
                 fs.writeFileSync(filePath, buffer);
-                this.singlePlayService.sendImage
+                this.singlePlayService.sendImage(filename, this.getSessionID(req))
             }
-            res.json({success: true})
+            res.json({ success: true })
             return
         })
     }
@@ -64,7 +64,7 @@ export class SinglePlayController {
     }
     endGame = async (req: Request, res: Response) => {
         if (!this.getSessionID) {
-            res.status(400).json({error: 'no session id'})
+            res.status(400).json({ error: 'no session id' })
             return
         }
         res.redirect('/result.html')
@@ -81,6 +81,12 @@ export class SinglePlayController {
         let result = '0' + round.toString()
         return result.substring(result.length - 2, result.length)
     }
-    
+    deleteImage = (req: Request, res: Response) => {
+        if (!this.getSessionID) {
+            res.status(400).json({ error: 'no session id' })
+            return
+        }
+        this.singlePlayService.deleteImageFromDB(this.getSessionID(req))
+    }
 }
 
