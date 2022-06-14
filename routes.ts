@@ -70,6 +70,7 @@ io.on('connection', (socket) => {
 
 
 app.use(sessionMiddleware)
+app.post('/lobby', singlePlayController.deleteImage)
 app.post('/record', playerController.record)
 app.post('/sendImage', singlePlayController.sendImage)
 app.get('/endGame', singlePlayController.endGame)
