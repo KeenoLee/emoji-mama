@@ -18,13 +18,14 @@ export class SinglePlayController {
     private singlePlayService: SinglePlayService;
     constructor(singlePlayService: SinglePlayService) {
         this.singlePlayService = singlePlayService
-
     }
 
-    sendImage = async (req: Request, res: Response) => {
+    private sendImage = async (req: Request, res: Response) => {
         form.parse(req, (err, fields, files) => {
+            console.log(fields)
             if (!fields.image || err) {
-                res.status(400).json({ error: 'failed to capture image' })
+                res.status(400).json({error: 'failed to capture image'})
+                return
             }
             let imageUrl: any = fields.image
             let parts = imageUrl.split(/,\s*/);
@@ -41,8 +42,26 @@ export class SinglePlayController {
             return
         })
     }
-    countScore = async (req: Request, res: Response) => {
-
+    private countScore = async (req: Request, res: Response) => {
+        // console.log(req)
+        form.parse(req, (err, fields, files) => {
+            if (!fields.bonusTime) {
+                res.json({score: 1000})
+                return
+            } else {
+                let bonusTime = +(fields.bonusTime)
+                if (bonusTime <= 0) {
+                    bonusTime = 1
+                }
+                res.json({score: (1000 * bonusTime).toFixed(0)})
+                return
+            }
+        })
+    }
+    getData = async (req: Request, res: Response) => {
+        await this.sendImage(req, res)
+        await this.countScore(req, res)
+        
     }
     endGame = async (req: Request, res: Response) => {
         if (!this.getSessionID) {
