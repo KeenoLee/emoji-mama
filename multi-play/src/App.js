@@ -16,7 +16,7 @@ import * as tf from "@tensorflow/tfjs";
 // import TFJS from "tfjs"
 // import { loadModel, predictModel } from "../../demo-playground/tszfung/AiModel"
 import "./App.css"
-import { GenEmoji, SetTimer } from "./AiModel"
+import { SetTimer } from "./AiModel"
 
 
 const socket = io.connect('http://localhost:8100')
@@ -186,11 +186,11 @@ function App() {
         await tf.dispose(imgPre);
 
         let probs = Math.max(...result)
-        // if (checkRound(checkEmo) == (round - 1)) {
-        //     label = genEmoji(round, checkEmo)
-        //     currentEmoji.textContent = `${emojiLabels[label]}`
-        //     console.log(`Find ${labels[label]}`)
-        // }
+        if (checkRound(checkEmo) == (round - 1)) {
+            label = genEmoji(round, checkEmo)
+            currentEmoji.textContent = `${emojiLabels[label]}`
+            console.log(`Find ${labels[label]}`)
+        }
         if (result[label] > successRate) {
             console.log('success!')
             myVideo.current.pause()
@@ -238,8 +238,7 @@ function App() {
                     <div className="my-score">Your Score</div>
                     <div className="enemy-score">Enemy Score</div>
                 </div>
-                {/* <div className="current-emoji">MultiPlay</div> */}
-                <GenEmoji />
+                <div className="current-emoji">MultiPlay</div>
                 {/* <div className="timer">{startTimer = setTimer()}</div> */}
                 <SetTimer />
             </div>
