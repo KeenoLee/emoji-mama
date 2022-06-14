@@ -16,6 +16,7 @@ const form = formidable({
 
 export class SinglePlayController {
     private singlePlayService: SinglePlayService;
+    private counter = 0;
     constructor(singlePlayService: SinglePlayService) {
         this.singlePlayService = singlePlayService
     }
@@ -31,8 +32,9 @@ export class SinglePlayController {
             let ext = parts[0].match(/\/(\w+);/)?.[1];
             if (sid) {
                 console.log('sid: ', sid)
+                this.counter++
                 // let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "_" + round.substring(round.length - 2, round.length) + "." + ext;
-                let filename = this.filterSID(sid).substring(0, 10) + "_" + this.formatInt(round) + "." + ext;
+                let filename = this.filterSID(sid).substring(0, 10) + "_" + this.formatInt(round) + "-" + this.counter + "." + ext;
                 const filePath = path.join(`./uploads`, filename)
                 fs.writeFileSync(filePath, buffer);
                 this.singlePlayService.sendImage(filename, sid)
@@ -43,12 +45,15 @@ export class SinglePlayController {
     getImage = async (req, res) => {
         try {
             this.singlePlayService.getImageBySID(this.getSessionID(req))
+            .then((result)=> {
+                res.json(result)
+            })
         }
         catch (error) {
             res.status(500).json({ error: String(error) });
         }
     }
-    
+
     private countScore = async (timeSpace: any) => {
         // console.log(req)
             if (!timeSpace) {
@@ -97,6 +102,7 @@ export class SinglePlayController {
             res.status(400).json({ error: 'no session id' })
             return
         }
+        this.counter = 0;
         this.singlePlayService.deleteImageFromDB(this.getSessionID(req))
     }
     
