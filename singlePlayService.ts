@@ -13,6 +13,13 @@ export class SinglePlayService {
             .insert({sid: sid, image: image})
             .into('screenshots')
     }
+    getImageBySID = async (sid: string) => {
+        let image = await this.knex
+        .select("image")
+        .from('screenshots')
+        .where('sid', sid)
+        
+    }
     deleteImageFromDB = async (sid: string) => {
         let existingImages = await this.knex
         .select("image")
@@ -28,4 +35,5 @@ export class SinglePlayService {
             .where('sid', sid)
             .del()
     }
+    
 }
