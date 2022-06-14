@@ -80,6 +80,8 @@ p {
     padding: 8px 20px;
     letter-spacing: 1px;
     border-style: ridge;
+    position: sticky;
+    z-index: 100;
 }
 
 .waves {
