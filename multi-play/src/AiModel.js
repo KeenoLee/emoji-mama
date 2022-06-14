@@ -41,12 +41,15 @@ export function GenEmoji() {
 
 
     useEffect(() => {
-        setEmoji(() => {
+        setEmoji((emoji) => {
             let result = Math.floor(Math.random() * labels.length)
-            setEmojiDup(() => {
+            if (emojiDup[labels[result]] > 0) {
+                result = Math.floor(Math.random() * labels.length)
+            }
+            setEmojiDup((emojiDup) => {
                 emojiDup[labels[result]]++
             })
-            
+            emoji = [emojiLabels[result]]
         })
         setRound(previousRound => previousRound + 1)
     }, [round])
