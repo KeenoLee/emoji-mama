@@ -59,6 +59,7 @@ deploy:
     - rsync -SavLP dist "badproject:~/emoji-mama/"    
     - ssh badproject "
         cd ~/emoji-mama &&
+        node --version &&
         npm --version &&
         git fetch &&
         git checkout $CI_COMMIT_SHA &&
