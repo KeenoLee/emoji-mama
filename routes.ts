@@ -9,6 +9,7 @@ import { PlayerController } from './playerController';
 import { SinglePlayController } from './singlePlayController';
 import path from 'path';
 import fs from 'fs';
+import { SinglePlayService } from './singlePlayService';
 
 // Try MultiPlay
 
@@ -26,12 +27,14 @@ const io = new SocketIO(server, {
 
 let playerService = new PlayerService(knex);
 let playerController = new PlayerController(playerService);
-let singlePlayController = new SinglePlayController();
+let singlePlayService = new SinglePlayService(knex)
+let singlePlayController = new SinglePlayController(singlePlayService);
 declare module 'express-session' {
     interface SessionData {
         cookie: Cookie
-        grant?: any
+        image: string
     }
+
 }
 export let sessionMiddleware = expressSession({
     secret: 'Project 2',
