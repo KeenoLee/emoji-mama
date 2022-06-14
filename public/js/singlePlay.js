@@ -243,11 +243,8 @@ async function predictModel() {
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
         // addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-        document.body.appendChild(dlLink);
+        // let dlLink = document.createElement('a');
+        // dlLink.download = "fileName";
 
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)

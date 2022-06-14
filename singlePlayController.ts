@@ -40,6 +40,15 @@ export class SinglePlayController {
             // res.json({ success: true })
             return
     }
+    getImage = async (req, res) => {
+        try {
+            this.singlePlayService.getImageBySID(this.getSessionID(req))
+        }
+        catch (error) {
+            res.status(500).json({ error: String(error) });
+        }
+    }
+    
     private countScore = async (timeSpace: any) => {
         // console.log(req)
             if (!timeSpace) {
@@ -90,5 +99,6 @@ export class SinglePlayController {
         }
         this.singlePlayService.deleteImageFromDB(this.getSessionID(req))
     }
+    
 }
 

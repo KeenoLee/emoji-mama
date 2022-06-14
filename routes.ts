@@ -1,3 +1,4 @@
+import {print} from "listening-on";
 import express from 'express';
 import expressSession from 'express-session'
 import {Server as SocketIO} from 'socket.io'
@@ -88,5 +89,5 @@ const port = 8100;
 app.use(express.static('public'))
 
 server.listen(port, () => {
-    console.log('listening at http://localhost:' + port)
+    print(port)
 })
