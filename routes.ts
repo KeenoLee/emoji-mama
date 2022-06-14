@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
 app.use(sessionMiddleware)
 app.post('/lobby', singlePlayController.deleteImage)
 app.post('/record', playerController.record)
-app.post('/sendImage', singlePlayController.sendImage)
+app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
 // app.get('/', (req, res) => {
 //     console.log('Server is connected');
