@@ -153,12 +153,7 @@ function App() {
         const str = JSON.stringify([...imgArray, image])
         localStorage.setItem('imagesArrayLocalStore', str);
         setImgArray([...imgArray, image])
-        // socket.emit('takeScreenShot', {
-        //     image: image
-        // })
-        // socket.on('takeScreenShotSuccess', (data) => {
-        //     console.log('REPLY ME: ', data)
-        // })
+
     }, [image])
 
     useEffect(() => {

@@ -98,7 +98,6 @@ let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'ke
 const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
 let checkEmo = checkEmojiDup();
 let successRate = 0.1;
-// let imgURLArray = [];
 let label;
 let round = 1;
 let startedCount = false
@@ -106,13 +105,16 @@ let stopCount = false
 let interval = 1000 / 100
 let bonusTime = 5
 let startTimer
-
-//choose camera from each device
+let timeSpace = 0
+let originTimer = '59:99'
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
+const score = document.querySelector('#current-score')
+
 
 window.onload = async () => {
     // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -205,9 +207,7 @@ function getTime(time) {
     return +s + (+ms / 100)
 }
 
-let timeSpace = 0
-let originTimer = '59:99'
-const score = document.querySelector('#current-score')
+
 
 async function predictModel() {
     // stats.begin();
@@ -243,18 +243,13 @@ async function predictModel() {
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
         // addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-        document.body.appendChild(dlLink);
+        // let dlLink = document.createElement('a');
+        // dlLink.download = "fileName";
 
         let currentTimer = timer.textContent
-        console.log('currentTime: ', currentTimer)
-        timeSpace = (bonusTime + 1) - (getTime(originTimer) - getTime(currentTimer))
+        timeSpace = getTime(originTimer) - getTime(currentTimer)
         originTimer = currentTimer
-        console.log('timespace, origin, current: ', timeSpace, originTimer, currentTimer)
-        let data = { image: imgURL, round: round, bonusTime: timeSpace }
+        let data = { image: imgURL, round: round, timeSpace: timeSpace }
         const res = await fetch('/getData', {
             method: 'POST',
             headers: {
@@ -265,15 +260,15 @@ async function predictModel() {
         // console.log(imgURL)
         const resResult = await res.json()
         if (resResult.score) {
-            console.log('score???', resResult.score)
-            console.log('score???', score.textContent)
-            // let currentTimer = timer.textContent
 
-            score.textContent = parseInt(score.textContent) + resResult.score
-            console.log(score.textContent)
+            // let currentTimer = timer.textContent
+            let accScore = parseInt(score.textContent)
+            if (isNaN(accScore)) {
+                accScore = 0
+            }
+            score.innerHTML = +accScore + +resResult.score
             let seconds = currentTimer.substring(0, 2)
             let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-            console.log(seconds, milliseconds)
             clearInterval(startTimer)
             round++
             setTimeout(() => {
