@@ -249,11 +249,9 @@ async function predictModel() {
         document.body.appendChild(dlLink);
 
         let currentTimer = timer.textContent
-        console.log('currentTime: ', currentTimer)
-        timeSpace = (bonusTime + 1) - (getTime(originTimer) - getTime(currentTimer))
+        timeSpace = getTime(originTimer) - getTime(currentTimer)
         originTimer = currentTimer
-        console.log('timespace, origin, current: ', timeSpace, originTimer, currentTimer)
-        let data = { image: imgURL, round: round, bonusTime: timeSpace }
+        let data = { image: imgURL, round: round, timeSpace: timeSpace }
         const res = await fetch('/getData', {
             method: 'POST',
             headers: {
@@ -264,15 +262,15 @@ async function predictModel() {
         // console.log(imgURL)
         const resResult = await res.json()
         if (resResult.score) {
-            console.log('score???', resResult.score)
-            console.log('score???', score.textContent)
-            // let currentTimer = timer.textContent
 
-            score.textContent = parseInt(score.textContent) + resResult.score
-            console.log(score.textContent)
+            // let currentTimer = timer.textContent
+            let accScore = parseInt(score.textContent)
+            if (isNaN(accScore)) {
+                accScore = 0
+            }
+            score.innerHTML = +accScore + +resResult.score
             let seconds = currentTimer.substring(0, 2)
             let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-            console.log(seconds, milliseconds)
             clearInterval(startTimer)
             round++
             setTimeout(() => {
