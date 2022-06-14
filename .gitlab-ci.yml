@@ -58,6 +58,7 @@ deploy:
     - echo "commit_hash = $CI_COMMIT_SHA"
     - rsync -SavLP dist "badproject:~/emoji-mama/"
     - cat ~/.ssh/config
+    - npm --version
     - ssh badproject "
         cd ~/emoji-mama &&
         git fetch &&
