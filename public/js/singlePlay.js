@@ -198,11 +198,15 @@ async function loadModel() {
 }
 
 
+function getTime(time) {
+    let s = time.substring(0, 2)
+    let ms = time.substring(time.length - 2, time.length)
+    return +s + (+ms / 100)
+}
 
-
-
-
-
+let timeSpace = 0
+let originTimer = '59:99'
+const score = document.querySelector('#score div')
 
 async function predictModel() {
     // stats.begin();
@@ -237,14 +241,20 @@ async function predictModel() {
         console.log('success!')
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
-        addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
+        // addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
         let dlLink = document.createElement('a');
         dlLink.download = "fileName";
         dlLink.href = imgURL;
         dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
         document.body.appendChild(dlLink);
-        let data = { image: imgURL, round: round }
-        const res = await fetch('/sendImage', {
+
+        let currentTimer = timer.textContent
+        console.log('currentTime: ', currentTimer)
+        timeSpace = getTime(originTimer) - getTime(currentTimer)
+        originTimer = currentTimer
+        console.log('timespace, origin, current: ', timeSpace, originTimer, currentTimer)
+        let data = { image: imgURL, round: round, bonusTime: timeSpace }
+        const res = await fetch('/getData', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -253,8 +263,10 @@ async function predictModel() {
         })
         console.log(imgURL)
         const resResult = await res.json()
-        if (resResult.success) {
-            let currentTimer = timer.textContent
+        if (resResult.score) {
+            // let currentTimer = timer.textContent
+            parseInt(score.textContent) += resResult.score
+            console.log(score.textContent)
             let seconds = currentTimer.substring(0, 2)
             let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
             console.log(seconds, milliseconds)
