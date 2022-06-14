@@ -56,11 +56,10 @@ deploy:
     
   script:
     - echo "commit_hash = $CI_COMMIT_SHA"
-    - rsync -SavLP dist "badproject:~/emoji-mama/"
-    - cat ~/.ssh/config
-    - npm --version
+    - rsync -SavLP dist "badproject:~/emoji-mama/"    
     - ssh badproject "
         cd ~/emoji-mama &&
+        npm --version &&
         git fetch &&
         git checkout $CI_COMMIT_SHA &&
         npm install --prod &&
