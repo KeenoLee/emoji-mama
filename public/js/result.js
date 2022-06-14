@@ -1,20 +1,18 @@
 let postTemplate = document.querySelector(".gallery-container");
 postTemplate.remove();
 
-// fetch("/result")
-//     .then((res) => res.json())
-//     .catch((error) => ({
-//         error: String(error),
-//     }))
-//     .then((json) => {
-//         if (json.error) {
-//             console.log(json.error);
-//         }
-//         let posts = json.result;
-//         let blockList = json.blockList;
-//         console.log(blockList);
-//         posts.forEach((post) => showPost(post, blockList));
-//     });
+fetch("/result")
+    .then((res) => res.json())
+    .catch((error) => ({
+        error: String(error),
+    }))
+    .then((json) => {
+        if (json.error) {
+            console.log(json.error);
+        }
+        let posts = json.result;
+        posts.forEach((post) => showPost(post));
+    });
 
 document.querySelector('.play-again').addEventListener("click", () => {
     //TODO: clear indexedDB
