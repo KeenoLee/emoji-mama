@@ -57,8 +57,9 @@ export class SinglePlayController {
         form.parse(req, async(err, fields, files) => {
         await this.sendImage(fields.image, fields.round, this.getSessionID(req))
         // await this.countScore(fields.bonusTime)
-        console.log(await this.countScore(fields.bonusTime))
+        console.log('FKYOU: ', await this.countScore(fields.bonusTime))
         res.json(await this.countScore(fields.bonusTime))
+        return
     })
     }
     endGame = async (req: Request, res: Response) => {
