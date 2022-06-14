@@ -31,10 +31,10 @@ export class SinglePlayController {
             let ext = parts[0].match(/\/(\w+);/)?.[1];
             if (this.getSessionID) {
                 // let filename = this.getSessionID(req)?.replace(/[^a-zA-Z ]/g, "") + "_" + round.substring(round.length - 2, round.length) + "." + ext;
-                let filename = this.filterSID(this.getSessionID(req)) + "_" + this.formatInt(fields.round) + "." + ext;
+                let filename = this.filterSID(this.getSessionID(req)).substring(0, 3) + "_" + this.formatInt(fields.round) + "." + ext;
                 const filePath = path.join(`./public/uploads`, filename)
                 fs.writeFileSync(filePath, buffer);
-                this.singlePlayService.sendImage
+                this.singlePlayService.sendImage(filename, this.getSessionID(req))
             }
             res.json({success: true})
             return

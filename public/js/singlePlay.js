@@ -237,7 +237,7 @@ async function predictModel() {
         console.log('success!')
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
-        addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
+        // addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
         let dlLink = document.createElement('a');
         dlLink.download = "fileName";
         dlLink.href = imgURL;
@@ -251,7 +251,7 @@ async function predictModel() {
             },
             body: JSON.stringify(data)
         })
-        console.log(imgURL)
+        // console.log(imgURL)
         const resResult = await res.json()
         if (resResult.success) {
             let currentTimer = timer.textContent
