@@ -1,32 +1,3 @@
-// react code version and references by 
-/*
-    Step to run yolov5 model on your website (no server needed)
-    Thanks https://github.com/zldrobit/tfjs-yolov5-example for references
-
-    1. Train your model with yolov5
-
-    2. Save your best.pt weights to your pc
-
-    3. git the yolov5 to your pc if you have not done yet
-    - git clone https://github.com/ultralytics/yolov5
-
-    4. Run below comment in the yolov5 folder to export a tfjs model
-    - python export.py --weights <your weights.pt file> --include tfjs
-    e.g. python export.py --weights best.pt --include tfjs
-
-    5. At that point, you will have a folder holding the model.json and other weights files
-
-    6. Open a repository in github (NOT gitlab, is github), git push your folder to that repository
-
-    7. Your jsdelivr link should be like this
-    -  https://cdn.jsdelivr.net/gh/<your username>/<your respo>/<your model folder>/model.json
-
-    8. Change the modelUrlPath, imgSize, label by your own data
-
-    8. Done
-
-*/
-
 // model variables
 let model;
 
@@ -47,7 +18,7 @@ console.log("Height:", window.innerHeight)
 const stats = new Stats();
 
 const imgSize = 640
-// const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
+const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
 const scoreThras = 0.25 // score lower then that will not display
 
 const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']
@@ -125,11 +96,48 @@ window.onload = async () => {
     getMedia();
 }
 
+// Timer
+const countDown = document.getElementById('timer')
+
+let setTimer = setInterval((timer) => {
+    timer = countDown.innerHTML-- 
+} ,1000)
+
+// Create Key value pair -> label : labelCount, Eg glasses: 0,
+let labelCount = {}
+function checkEmojiDup () {
+    labels.map((label) => {
+        labelCount[label] = 0
+    })
+    return labelCount
+}
+checkEmojiDup()
+console.log(labelCount)
+
+//Sum of labelCount 入邊個數，就知道Label出現左幾多次，即係第幾Round
+//Object.values(比番個Object佢) -> 之後用reduce既方法 sum of (前面＋後面) values
+function checkRound(labelCount) {
+    return Object.values(labelCount).reduce((pre,cur) => pre + cur)
+}
+
+let round = 1
+function findEmoji(round, checkEmojiDup) {
+    let emojiResult = Math.floor(Math.random() * labels.length) // labelsArray[0-19]
+    if (checkEmojiDup[labels[emojiResult]] > 0) {
+        return findEmoji(round, checkEmojiDup)
+    }
+    if (checkRound(labelCount) == (round - 1)) {
+        checkEmojiDup[labels[emojiResult]]++
+        return emojiResult
+    }
+}
+
 // Loop webcam
 var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
+let findEmojiIcon = document.getElementById('find-emoji')
 async function predictModel(){
     
     stats.begin();
@@ -149,10 +157,16 @@ async function predictModel(){
     ctx.font = font;
     ctx.textBaseline = "top";
 
+    if(checkRound(labelCount) == (round - 1)) {
+        let label = findEmoji(round, labelCount)
+        console.log(label)
+        findEmojiIcon.innerHTML = `${emojiLabels[label]}`
+    }
+
     const [boxes, scores, classes, valid_detections] = result;
-    console.log(classes);
+    // console.log(classes);
     const boxes_data = boxes.dataSync();
-    console.log(boxes_data);
+    // console.log(boxes_data);
     const scores_data = scores.dataSync();
     const classes_data = classes.dataSync();
     const valid_detections_data = valid_detections.dataSync()[0];
@@ -216,16 +230,3 @@ const colorArray =
 '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
 '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
 
-// Timer
-const countDown = document.getElementById('timer')
-
-let setTimer = setInterval(() => {
-    +(countDown.innerHTML) -- 
-}, 1000)
-setTimer()
-
-// let s = seconds
-// setInterval(() => {
-//     s = '0' + s
-
-// })
