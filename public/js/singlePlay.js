@@ -88,6 +88,7 @@ console.log("Height:", window.innerHeight)
 
 const imgSize = 224
 const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
+// const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/hunt-model/weights_manifest.json'
 
 const [divNum, subNum] = [1, 0] // [0:255]
 // const [divNum , subNum] = [255,0] // [0:1]
