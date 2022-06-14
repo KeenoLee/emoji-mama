@@ -41,6 +41,7 @@
     "get-file-object-from-local-path": "^1.0.2",
     "jest": "^28.1.0",
     "knex": "^2.1.0",
+    "listening-on": "^2.0.8",
     "node-fetch": "2",
     "nodemon": "^2.0.16",
     "peer": "^0.6.1",
