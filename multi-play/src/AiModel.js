@@ -33,27 +33,25 @@ export function GenEmoji() {
     labels.map((label) => {
         labelCount[label] = 0
     })
-    
+
     const [emojiDup, setEmojiDup] = useState(labelCount)
     const [round, setRound] = useState(0)
     const [emoji, setEmoji] = useState('')
 
 
-
     useEffect(() => {
-        setEmoji((emoji) => {
-            let result = Math.floor(Math.random() * labels.length)
-            if (emojiDup[labels[result]] > 0) {
-                result = Math.floor(Math.random() * labels.length)
-            }
-            setEmojiDup((emojiDup) => {
-                emojiDup[labels[result]]++
-            })
-            emoji = [emojiLabels[result]]
-        })
-        setRound(previousRound => previousRound + 1)
+        setRound
+    })
+
+    useEffect = (() => {
+
+        labelCount[labels[result]]++
     }, [round])
-    
+
+
+
+
+
 
     return <div className='current-emoji'>Round{round}: {emoji}</div>
 }
