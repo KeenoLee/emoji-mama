@@ -1,5 +1,4 @@
 // react code version and references by 
-
 /*
     Step to run yolov5 model on your website (no server needed)
     Thanks https://github.com/zldrobit/tfjs-yolov5-example for references
@@ -48,7 +47,7 @@ console.log("Height:", window.innerHeight)
 const stats = new Stats();
 
 const imgSize = 640
-const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
+// const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
 const scoreThras = 0.25 // score lower then that will not display
 
 const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']
@@ -84,7 +83,6 @@ async function getMedia() {
         console.log(err);
     }
 }
-
 
 // create load model and active cameras
 async function loadModel(){
@@ -122,11 +120,8 @@ video.addEventListener('loadeddata', async () => {
     loadModel();
 });
 
-// 
-window.onload = async () => {
-    stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild( stats.dom );
 
+window.onload = async () => {
     getMedia();
 }
 
@@ -208,6 +203,7 @@ async function predictModel(){
     requestAnimationFrameCross(predictModel);        
 }
 
+// Color Array for the bounding label
 const colorArray = 
 ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
 '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -219,3 +215,17 @@ const colorArray =
 '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
 '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
 '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+
+// Timer
+const countDown = document.getElementById('timer')
+
+let setTimer = setInterval(() => {
+    +(countDown.innerHTML) -- 
+}, 1000)
+setTimer()
+
+// let s = seconds
+// setInterval(() => {
+//     s = '0' + s
+
+// })

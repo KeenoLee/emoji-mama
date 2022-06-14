@@ -1,0 +1,56 @@
+body {
+    display: block;
+    margin: 0;
+    max-height: 100vh;
+    max-width: 100vw;
+    overflow: hidden;
+    background-image: url('../assets/bg.jpeg');
+    background-size:auto;
+}
+
+.top-bar {
+    display: flex;
+    position: absolute;
+    top: 8px;
+    left: 4px;
+    width: 100%;
+}
+
+.top-bar-icon-list{
+    display: flex;
+    background: #fee;
+    width: 2rem;
+    height: 2rem;
+}
+
+.social-media-icon {
+    margin: 0px 5px;
+}
+
+.ranking-icon {
+    margin: 0px 5px;
+    position: fixed;
+    right: 5px;
+    height: 2rem;
+}
+
+.game-mode-list {
+    text-align: center;
+    margin-top: 10rem;
+}
+.btn-game-mode{
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 5rem;
+    border-radius: 10%;
+    margin: 10px 10px 0px 10px;
+}
+
+.lottie-image {
+    position:fixed;
+    width: 400px;
+    height: 300px;
+    bottom:1rem;
+    right: 1rem;
+}

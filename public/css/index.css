@@ -1,77 +1,107 @@
 body {
     background-image: url('../assets/bg.jpeg');
     background-size: cover;
+    font-family: 'Lato', sans-serif;
+    margin: 0;
 }
 @import url(//fonts.googleapis.com/css?family=Lato:300:400);
 
-body {
-    margin: 0;
+/* Page Head */
+.top-bar {
+    display: flex;
+    position: absolute;
+    top: 8px;
+    left: 4px;
+    width: 100%;
 }
 
+.top-bar-icon-list{
+    display: flex;
+    background: #fee;
+    width: 2rem;
+    height: 2rem;
+}
+
+.social-media-icon {
+    margin: 5px 5px;
+    height: 2rem;
+}
+
+
+.ranking-icon {
+    margin: 5px 5px;
+    position: fixed;
+    right: 1rem;
+    height: 2rem;
+}
+
+/* Emoji Icon */
 h1 {
-    font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: 2px;
     font-size: 100px;
-}
-p {
-    font-family: 'Lato', sans-serif;
-    letter-spacing: 1px;
-    font-size: 14px;
-    color: #333333;
 }
 
 .header {
     position: relative;
     text-align: center;
-    color: #ff8037;
 }
 
 .inner-header {
-    height: 65vh;
+    height: 40vh;
     width: 100%;
     margin: 0;
     padding: 0;
 }
 
-.flex {
-    /*Flexbox for containers*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
+p {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.game-intro {
+    line-height: 22px;
+    max-width: 320px;
+    margin:auto;
     text-align: center;
+    width: 100%;
+    font-size: 15px;
+}
+
+/* Play button */
+.btn-play {
+    font-size: 18px;
+    background:#DAA520;
+    margin-top: 3em;
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    letter-spacing: 1px;
+    border-style: ridge;
 }
 
 .waves {
-    position: relative;
+    position: fixed;
     width: 100%;
-    height: 15vh;
     margin-bottom: -7px; /*Fix for safari gap*/
-    min-height: 100px;
-    max-height: 150px;
+    min-height: 70px;
+    max-height: 130px;
+    bottom: 100px;
 }
 
 .content {
-    /* height: 30vh; */
+    height: 100px; 
     position: fixed;
-    height: 24vh;
     bottom: 0;
-    width: 100vw;
-    /* margin-bottom: 0; */
+    width: 100%;
+    margin-bottom: 0;
     text-align: center;
     background-color: white;
 }
-/* .content {
-    position:relative;
-    height: 30vh;
-    height: 20vh;
-    bottom: 0;
-    text-align: center;
-    background-color: white;
-} */
 
 /* Animation */
-
 .parallax > use {
     animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
 }
@@ -102,16 +132,20 @@ p {
 /*Shrinking for mobile*/
 @media (max-width: 768px) {
     .waves {
-        height: 40px;
-        min-height: 40px;
+        height: 200px;
+        min-height: 100px;
     }
     .content {
-        height: 30vh;
+        height: 110px;
     }
     h1 {
         font-size: 24px;
     }
+    p.game-intro {
+        margin-top: 3rem;
+    }
 }
+
 
 
 html,
@@ -120,14 +154,13 @@ body {
 }
 
 .logo {
-    width: 50px;
     fill: white;
-    /* padding-right: 15px; */
+    padding-right: 0px;
     display: inline-block;
     vertical-align: middle;
     text-align: center;
     width: 100%;
-    height: 250px;
+    height: 150px;
     margin: auto;
     position: absolute;
     top: 0;
