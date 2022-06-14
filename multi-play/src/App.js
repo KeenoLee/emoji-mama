@@ -16,17 +16,20 @@ import * as tf from "@tensorflow/tfjs";
 // import TFJS from "tfjs"
 // import { loadModel, predictModel } from "../../demo-playground/tszfung/AiModel"
 import "./App.css"
+import { SetTimer } from "./AiModel"
 
 
 const socket = io.connect('http://localhost:8100')
 // AI Model
 let model;
 let label;
+let startTimer;
 let imgSize = 224;
 const [divNum, subNum] = [1, 0];
 let successRate = 0.1;
 let startedCount = false
 let stopCount = false
+const timer = document.querySelector('.timer')
 const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
 let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
 const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
@@ -50,8 +53,6 @@ function App() {
 
     // Store images from video
     const [imgArray, setImgArray] = useState([])
-    // Show Timer
-    const [time, setTime] = useState('')
 
 
     // Game Logics
@@ -69,17 +70,12 @@ function App() {
         quality: 1.0
     })
 
-
-
     useEffect(() => {
-
         const getUserMedia = async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 setStream(stream)
                 myVideo.current.srcObject = stream;
-                console.log('myVideo: ', myVideo.current)
-                console.log('stream: ', stream)
             } catch (err) {
                 console.log('error: ', err);
             }
@@ -172,29 +168,6 @@ function App() {
         loadModel()
     }, [stream])
     // ********************************************************************************
-    function setTimer() {
-        let setTime;
-        let s = 59
-        let ms = 99
-        startedCount = true
-        return setInterval(() => {
-            if (ms == 0 && s > 0) {
-                ms = 99
-                s -= 1
-            }
-            ms -= 1
-            s = '0' + s
-            ms = '0' + ms
-            if (parseInt(s) <= 0 && parseInt(ms) == 0) {
-                stopCount = true
-                return
-            }
-            time = s.substring(s.length - 2, s.length) + ':' + ms.substring(ms.length - 2, ms.length)
-            // timer.textContent = setTime
-            setTime(time)
-        }, 10);
-    }
-
     async function loadModel() {
         model = await tf.loadGraphModel(modelUrlPath)
         predictModel()
@@ -211,19 +184,25 @@ function App() {
         });
         const result = await model.predict(imgPre).data();
         await tf.dispose(imgPre);
+
         let probs = Math.max(...result)
-        console.log('HIHIHI', imgPre)
-        console.log('pros: ', probs)
+        if (checkRound(checkEmo) == (round - 1)) {
+            label = genEmoji(round, checkEmo)
+            currentEmoji.textContent = `${emojiLabels[label]}`
+            console.log(`Find ${labels[label]}`)
+        }
         if (result[label] > successRate) {
             console.log('success!')
             myVideo.current.pause()
+            let currentTimer = timer.textContent
 
             // useEffect: Should be called if corrected
+        
             await socket.emit('takeScreenShot', {
                 image: image
             })
             await socket.on('takeScreenShotSuccess', (data) => {
-                if (data == 'success') {
+                if (data === 'success') {
                     //     let currentTimer = timer.textContent // TIMER
                     //     let seconds = currentTimer.substring(0, 2)
                     //     let miniSeconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
@@ -260,7 +239,8 @@ function App() {
                     <div className="enemy-score">Enemy Score</div>
                 </div>
                 <div className="current-emoji">MultiPlay</div>
-                <div className="timer">{setTimer()}</div>
+                {/* <div className="timer">{startTimer = setTimer()}</div> */}
+                <SetTimer />
             </div>
             <div className="container">
                 <div className="video-container">
