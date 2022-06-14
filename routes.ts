@@ -7,6 +7,9 @@ import { knex } from './app'
 import { PlayerService } from './playerService';
 import { PlayerController } from './playerController';
 import { SinglePlayController } from './singlePlayController';
+import path from 'path';
+import fs from 'fs';
+
 // Try MultiPlay
 
 
@@ -48,6 +51,16 @@ io.on('connection', (socket) => {
     })
     socket.on('answerCall', (data) => {
         io.to(data.to).emit('callAccepted', data.signal)
+    })
+    socket.on('takeScreenShot', (data) => {
+        console.log('image? ', data)
+        let parts = data.image.split(/,\s*/);
+        const buffer = Buffer.from(parts[1], "base64");
+        let ext = parts[0].match(/\/(\w+);/)?.[1];
+        let filename = 'image' + "." + ext;
+        const filePath = path.join(`./public/uploads`, filename)
+        fs.writeFileSync(filePath, buffer);
+        socket.emit('takeScreenShotSuccess', 'success')
     })
 
 })
