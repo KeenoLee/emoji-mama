@@ -207,7 +207,7 @@ function getTime(time) {
 
 let timeSpace = 0
 let originTimer = '59:99'
-const score = document.querySelector('#score div')
+const score = document.querySelector('#current-score')
 
 async function predictModel() {
     // stats.begin();
@@ -251,7 +251,7 @@ async function predictModel() {
 
         let currentTimer = timer.textContent
         console.log('currentTime: ', currentTimer)
-        timeSpace = getTime(originTimer) - getTime(currentTimer)
+        timeSpace = (bonusTime + 1) - (getTime(originTimer) - getTime(currentTimer))
         originTimer = currentTimer
         console.log('timespace, origin, current: ', timeSpace, originTimer, currentTimer)
         let data = { image: imgURL, round: round, bonusTime: timeSpace }
@@ -265,8 +265,11 @@ async function predictModel() {
         // console.log(imgURL)
         const resResult = await res.json()
         if (resResult.score) {
+            console.log('score???', resResult.score)
+            console.log('score???', score.textContent)
             // let currentTimer = timer.textContent
-            parseInt(score.textContent) += resResult.score
+
+            score.textContent = parseInt(score.textContent) + resResult.score
             console.log(score.textContent)
             let seconds = currentTimer.substring(0, 2)
             let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
