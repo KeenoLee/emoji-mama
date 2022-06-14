@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import formidable from 'formidable'
 import fs from 'fs';
 import path from 'path';
+import { SinglePlayService } from './singlePlayService';
 
 const uploadDir = 'uploads'
 const form = formidable({
@@ -13,7 +14,9 @@ const form = formidable({
   })
 
 export class SinglePlayController {
-    constructor() {
+    private singlePlayService: SinglePlayService;
+    constructor(singlePlayService: SinglePlayService) {
+        this.singlePlayService = singlePlayService
 
     }
 
@@ -31,6 +34,7 @@ export class SinglePlayController {
                 let filename = this.filterSID(this.getSessionID(req)) + "_" + this.formatInt(fields.round) + "." + ext;
                 const filePath = path.join(`./public/uploads`, filename)
                 fs.writeFileSync(filePath, buffer);
+                this.singlePlayService.sendImage
             }
             res.json({success: true})
             return
@@ -47,7 +51,7 @@ export class SinglePlayController {
         res.redirect('/result.html')
         return
     }
-    private getSessionID = (req: Request) => {
+    getSessionID = (req: Request) => {
         let sessionID = req.headers.cookie?.replace('connect.sid=', '')
         return sessionID
     }
