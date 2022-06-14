@@ -8,7 +8,7 @@ import { knex } from './app'
 import { PlayerService } from './playerService';
 import { PlayerController } from './playerController';
 import { SinglePlayController } from './singlePlayController';
-import path from 'path';
+import path, { join, resolve } from 'path';
 import fs from 'fs';
 import { SinglePlayService } from './singlePlayService';
 
@@ -71,7 +71,12 @@ io.on('connection', (socket) => {
 
 
 app.use(sessionMiddleware)
+
+// app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+
 app.post('/lobby', singlePlayController.deleteImage)
+app.get('/result', singlePlayController.getImage)
 app.post('/record', playerController.record)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
@@ -84,6 +89,11 @@ app.get('/endGame', singlePlayController.endGame)
 const port = 8100;
 
 app.use(express.static('public'))
+app.use(express.static("uploads"))
+
+app.use((_, res) => {
+    res.sendFile(resolve(join("public", "404.html")));
+  });
 
 server.listen(port, () => {
     print(port)
