@@ -28,13 +28,13 @@ export function SetTimer() {
 
 export function GenEmoji() {
     let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
-    const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
-    let labelCount = {}
-    labels.map((label) => {
-        labelCount[label] = 0
-    })
-    
-    const [emojiDup, setEmojiDup] = useState(labelCount)
+        const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
+        let labelCount = {}
+        labels.map((label) => {
+            labelCount[label] = 0
+        })
+
+    const [emojiDup, setEmojiDup] = useState({})
     const [round, setRound] = useState(0)
     const [emoji, setEmoji] = useState('')
 
@@ -43,17 +43,17 @@ export function GenEmoji() {
     useEffect(() => {
         setEmoji((emoji) => {
             let result = Math.floor(Math.random() * labels.length)
-            if (emojiDup[labels[result]] > 0) {
+            if (labelCount[labels[result]] > 0) {
                 result = Math.floor(Math.random() * labels.length)
             }
             setEmojiDup((emojiDup) => {
-                emojiDup[labels[result]]++
+                labelCount[labels[result]]++
             })
             emoji = [emojiLabels[result]]
         })
         setRound(previousRound => previousRound + 1)
     }, [round])
-    
+
 
     return <div className='current-emoji'>Round{round}: {emoji}</div>
 }
