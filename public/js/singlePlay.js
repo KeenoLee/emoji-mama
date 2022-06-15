@@ -40,7 +40,7 @@
 //     const db = request.result
 //     const transaction = db.transaction("screenshots")
 //     const objectStore = transaction.objectStore("screenshots")
-    
+
 //     objectStore.openCursor().onsuccess = function(event) {
 //         let cursor = event.target.result
 
@@ -106,7 +106,7 @@ let interval = 1000 / 100
 let bonusTime = 5
 let startTimer
 let timeSpace = 0
-let originTimer = '59:99'
+let originTimer = '19:99'
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -263,8 +263,8 @@ async function predictModel() {
         const res = await fetch('/getData', {
             method: 'POST',
             // headers: {
-                // 'Content-Type': 'application/json'
-                // 'Content-Type': 'multipart/form-data'
+            // 'Content-Type': 'application/json'
+            // 'Content-Type': 'multipart/form-data'
             // },
             body: formData
         })
@@ -314,7 +314,7 @@ async function predictModel() {
 }
 
 
-enterName.addEventListener('submit', async(event) => {
+enterName.addEventListener('submit', async (event) => {
     event.preventDefault()
     let form = event.target
     const formObj = {
