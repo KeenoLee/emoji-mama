@@ -6,6 +6,7 @@
 //     window.msIndexedDB ||
 //     window.shimIndexedDB
 
+
 // if (!indexedDB) {
 //     console.log("IndexedDB could not be found in this browser.");
 // }
@@ -106,7 +107,11 @@ let interval = 1000 / 100
 let bonusTime = 5
 let startTimer
 let timeSpace = 0
-let originTimer = '19:99'
+let originalS = 29
+let originalMS = 99
+let delayPredict = true
+let originTimer = originalS.toString().concat(':', originalMS.toString())
+console.log(originTimer)
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -213,11 +218,11 @@ function getTime(time) {
 }
 
 
-
 async function predictModel() {
-    // stats.begin();
-
     // Prevent memory leaks by using tidy 
+    if (!startedCount && !stopCount) {
+        startTimer = setTimer(originalS, originalMS)
+    }
     let imgPre = await tf.tidy(() => {
         return tf.browser.fromPixels(video)
             .resizeNearestNeighbor([imgSize, imgSize])
@@ -234,11 +239,7 @@ async function predictModel() {
         video.pause()
         enterName.style.display = 'flex'
         unShowForm = true
-        // const res = await fetch(`/endGame`)
-        // console.log('fetched: ', res)
-    }
-    if (!startedCount && !stopCount) {
-        startTimer = setTimer(1, 99)
+
     }
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
@@ -246,15 +247,17 @@ async function predictModel() {
         currentEmoji.textContent = `${emojiLabels[label]}`
         console.log(`Find ${labels[label]}`)
     }
-    if (result[label] > successRate) {
+    if (result[label] > successRate && delayPredict) {
+        delayPredict = false
         console.log('success!')
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
 
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
+        console.log('origin: ', getTime(originTimer))
+        console.log('current: ', getTime(currentTimer))
         originTimer = currentTimer
-        // let data = { image: imgURL, round: round, timeSpace: timeSpace, emoji: emojiLabels[label] }
         let formData = new FormData()
         formData.append('image', imgURL)
         formData.append('round', round)
@@ -262,14 +265,11 @@ async function predictModel() {
         formData.append('emoji', emojiLabels[label])
         const res = await fetch('/getData', {
             method: 'POST',
-            // headers: {
-            // 'Content-Type': 'application/json'
-            // 'Content-Type': 'multipart/form-data'
-            // },
             body: formData
         })
         // console.log(imgURL)
         const resResult = await res.json()
+        console.log('score: ', resResult.score)
         if (resResult.score) {
 
             // let currentTimer = timer.textContent
@@ -283,6 +283,7 @@ async function predictModel() {
             clearInterval(startTimer)
             round++
             setTimeout(() => {
+                delayPredict = true
                 video.play()
                 predictModel()
                 startTimer = setTimer(+seconds + bonusTime, +milliseconds)
