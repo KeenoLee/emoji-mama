@@ -8,9 +8,9 @@ export class PlayerService {
         // this.knex = knex;
     }
 
-    async record(playerName: string, score: number) {
+    async record(playerName: string, playerScore: number) {
         await this.knex
-            .insert({ name: playerName, score: score })
+            .insert({ name: playerName, score: playerScore })
             .into('record');
     }
 
