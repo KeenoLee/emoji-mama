@@ -238,7 +238,7 @@ async function predictModel() {
         // console.log('fetched: ', res)
     }
     if (!startedCount && !stopCount) {
-        startTimer = setTimer(59, 99)
+        startTimer = setTimer(1, 99)
     }
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {

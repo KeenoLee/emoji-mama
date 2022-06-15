@@ -9,7 +9,7 @@ async function scrapingImage(keyword:string) {
         const page = await browser.newPage();
         await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
         // let keyword = "chairs";
-        fs.mkdirSync(`./datasets/${keyword}`, {recursive: true});
+        fs.mkdirSync(`./datasets/newdatasets/${keyword}`, {recursive: true});
         await page.evaluate(
             ({ keyword }) => {
                 // search and click
@@ -99,21 +99,21 @@ async function scrapingImage(keyword:string) {
                 let filename = keyword + "-" + i + "." + ext;
                 // console.log(filename);
                 // let download = path.join(filename,buffer)
-                const filePath = path.join(`./datasets/${keyword}`, filename)
+                const filePath = path.join(`./datasets/newdatasets/${keyword}`, filename)
                 fs.writeFileSync(filePath, buffer);
             }
             i++
         }
-        await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
-        await page.fill('input[name="login"]', 'user')
-        await page.evaluate(
-            ({ keyword }) => {
-                // search and click
-                (document.querySelector('[type="text"]') as HTMLInputElement).value = keyword;
-                (document.querySelector('[type="submit"]') as HTMLInputElement).click();
-            },
-            { keyword }
-        );
+        // await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
+        // await page.fill('input[name="login"]', 'user')
+        // await page.evaluate(
+        //     ({ keyword }) => {
+        //         // search and click
+        //         (document.querySelector('[type="text"]') as HTMLInputElement).value = keyword;
+        //         (document.querySelector('[type="submit"]') as HTMLInputElement).click();
+        //     },
+        //     { keyword }
+        // );
 
 
         await browser.close();
@@ -130,7 +130,11 @@ async function scrapingImage(keyword:string) {
 
 // const searchItems = ['鑰匙', '信用卡', '紙包飲品','雨傘', '水樽', '書本']
 // const searchItems = ['bottle blank','bottle single', 'bottles']
-const searchItems = ['keys']
+
+const searchItems = ['top wear', 'top wear with model', 'pant with model', 'watch with hand',  'pen with hand fit size', 'bottle with hand real', 'shoes single wear']
+// const searchItems = ['phone', 'credit card with hand','credit card close shot', 'glasses close shot', 'umbrella with hand', 'computer mouse close shot']
+const searchItems = ['books close shot', 'books holding','key holding', 'computer chair with background', 'keyboard', 'hand palm real']
+const searchItems = ['facial tissue real', 'tissue box', 'laptops real']
 for (let item of searchItems) {
 scrapingImage(item);
 }
