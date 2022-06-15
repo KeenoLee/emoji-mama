@@ -2,21 +2,15 @@ import { Knex } from 'knex';
 import path from 'path';
 import {unlink} from 'fs';
 
-export class SinglePlayService {
+
+export class SpecialModeService {
     constructor(private knex: Knex) {
         this.knex = knex
     }
-    sendImage = async (image: string, sid: string, emoji: string) => {
+    sendImage = async (image: string, sid: string) => {
         await this.knex
-            .insert({sid: sid, image: image, icon: emoji})
+            .insert({sid: sid, image: image})
             .into('screenshots')
-    }
-    getImageBySID = async (sid: string) => {
-        let image = await this.knex
-        .select("image")
-        .from('screenshots')
-        .where('sid', sid)
-        return image
     }
     deleteImageFromDB = async (sid: string) => {
         let existingImages = await this.knex
@@ -33,10 +27,4 @@ export class SinglePlayService {
             .where('sid', sid)
             .del()
     }
-    enterName = async (name: string, score: string) => {
-        await this.knex
-            .insert({name: name, score: score})
-            .into('record')
-    }
-    
 }

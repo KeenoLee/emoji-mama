@@ -82,6 +82,10 @@ p {
     border-style: ridge;
     position: sticky;
     z-index: 100;
+    border-radius: 30px;
+    border: 1px solid #333;
+    /* text-shadow: 0 1px; */
+    box-shadow: 3px 6px 10px #888888
 }
 
 .waves {

@@ -11,8 +11,8 @@ const ctx = canvas.getContext('2d');
 
 // debugMessage
 const debugMessage = document.getElementById("debugMessage")
-console.log("Width:", window.innerWidth)
-console.log("Height:", window.innerHeight)
+// console.log("Width:", window.innerWidth)
+// console.log("Height:", window.innerHeight)
 
 // stats library
 const stats = new Stats();
@@ -23,6 +23,7 @@ const scoreThras = 0.25 // score lower then that will not display
 
 const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']
 const emojiLabels = ["🌂","🔑 ","🍾","📕","💳","🪑","⌨️","💻","🖊️","📱","👕","👖","👟","👓","⌚","💍","🖱️","🧻","🧃","📺"]
+
 
 
 async function getMedia() {
@@ -45,7 +46,7 @@ async function getMedia() {
     // navigator.mediaDevices.getUserMedia 入邊要有一個Parameters which call constraints 
     // constraints 入邊會有兩樣野audio or video~
       mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log(mediaStream)
+    //   console.log(mediaStream)
 
       window.stream = mediaStream
       video.srcObject = mediaStream
@@ -66,42 +67,38 @@ async function loadModel(){
 
     predictModel();
 
-    const capBtn = document.getElementById("capBtn");
+    // const capBtn = document.querySelector("btn-capture");
 
-    capBtn.addEventListener("click", async () => {
+    // capBtn.addEventListener("click", async () => {
 
-        let imgURL = canvas.toDataURL("image/png");
-
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-
-        document.body.appendChild(dlLink);
-        dlLink.click();
-        document.body.removeChild(dlLink);
         
-    })
+    // })
 
 }
 
 // Webcam load successfully -> action load model
 video.addEventListener('loadeddata', async () => {
-    console.log('Yay!');
+    // console.log('Yay!');
     loadModel();
 });
-
 
 window.onload = async () => {
     getMedia();
 }
 
 // Timer
+let startedCount = false
+let stopCount = false
+
 const countDown = document.getElementById('timer')
 
-let setTimer = setInterval((timer) => {
-    timer = countDown.innerHTML-- 
-} ,1000)
+function setTimer () {
+    return setInterval((timer) => {
+        timer = +(countDown.innerHTML)-- 
+    } ,1000)
+} 
+
+
 
 // Create Key value pair -> label : labelCount, Eg glasses: 0,
 let labelCount = {}
@@ -138,10 +135,16 @@ var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
 let findEmojiIcon = document.getElementById('find-emoji')
+let startTimer = true;
+let stopTimer = false;
+let myTimer;
+let label;
+let successRate = 0.4
+let pausePredict = false
+let score = document.querySelector()
 async function predictModel(){
     
     stats.begin();
-
     // Prevent memory leaks by using tidy 
     let imgPre = await tf.tidy(() => { 
         return tf.browser.fromPixels(video)
@@ -151,16 +154,28 @@ async function predictModel(){
             .expandDims();
     });
     
-    const result = await model.executeAsync(imgPre);
-
+    const result = await model.executeAsync(imgPre)
+    // console.log(result[0]);
     const font = "50px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
 
+    if (startTimer) {
+        myTimer = setTimer()
+        startTimer = false
+    } 
+
+    if (countDown.innerHTML == 0) {
+        clearInterval(myTimer) // Stop the Timer , if not, it'll show NaN after Time Out!
+        countDown.innerHTML = 'Time Out!' // 
+        stopTimer = false 
+    }
+
     if(checkRound(labelCount) == (round - 1)) {
-        let label = findEmoji(round, labelCount)
-        console.log(label)
+        label = findEmoji(round, labelCount)
         findEmojiIcon.innerHTML = `${emojiLabels[label]}`
+        console.log(`Find ${labels[label]}`)
+
     }
 
     const [boxes, scores, classes, valid_detections] = result;
@@ -170,6 +185,9 @@ async function predictModel(){
     const scores_data = scores.dataSync();
     const classes_data = classes.dataSync();
     const valid_detections_data = valid_detections.dataSync()[0];
+    // console.log(scores_data);
+    // console.log(classes_data);
+    // console.log(valid_detections_data);
 
     // Prevent memory leaks also
     await tf.dispose(result);
@@ -178,6 +196,8 @@ async function predictModel(){
 
     ctx.drawImage(video, 0, 0);
 
+    
+    
     for (let i = 0; i < valid_detections_data; ++i) {
 
         if( scores_data[i] <= scoreThras){
@@ -212,7 +232,37 @@ async function predictModel(){
         ctx.fillText(klass + ":" + score, x1, y1);  
 
     }
-
+    // console.log(classes_data)
+    let higherProbClass = classes_data[0]
+    if (labels[label] == labels[higherProbClass] && pausePredict == false) {
+        console.log('correct: ', labels[label])
+        
+        
+        if (scores_data[0] > successRate) {
+            console.log('success!')
+            video.pause()
+            pausePredict = true
+            let imgURL = canvas.toDataURL("image/png");
+            let data = {image: imgURL, round: round, timeSpace: 99 }
+            // let data = {hi: 'hi'}
+            // console.log(data);
+            const res = await fetch('/getSpecialModeData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            let result = await res.json()
+            console.log('fetched: ', result)
+            if (result.score) {
+                video.play()
+                predictModel()
+                round++
+            }
+            
+        }
+    }
     stats.end();
     requestAnimationFrameCross(predictModel);        
 }
