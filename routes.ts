@@ -72,8 +72,8 @@ io.on('connection', (socket) => {
 
 app.use(sessionMiddleware)
 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.post('/lobby', singlePlayController.deleteImage)
 app.get('/result', singlePlayController.getImage)
