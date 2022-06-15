@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 
 async function scrapingImage(keyword:string) {
     try {
-        const browser = await firefox.launch({ headless: false });
+        const browser = await firefox.launch({ headless: true });
         const page = await browser.newPage();
         await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
         // let keyword = "chairs";
@@ -89,7 +89,7 @@ async function scrapingImage(keyword:string) {
                 fetch(imageUrl)
                 let buffer = await res.buffer()
                 let filename = keyword + "-" + i + "." + "jpg";
-                const filePath = path.join(`./datasets/${keyword}`, filename)
+                const filePath = path.join(`./datasets/newdatasets/${keyword}`, filename)
                 fs.writeFileSync(filePath, buffer);
                 // console.log(parts[0])
             } else {
@@ -130,11 +130,12 @@ async function scrapingImage(keyword:string) {
 
 // const searchItems = ['鑰匙', '信用卡', '紙包飲品','雨傘', '水樽', '書本']
 // const searchItems = ['bottle blank','bottle single', 'bottles']
+// const searchItems = [top wear', 'top wear with model', 'pant with model', 'watch with hand']
 
-const searchItems = ['top wear', 'top wear with model', 'pant with model', 'watch with hand',  'pen with hand fit size', 'bottle with hand real', 'shoes single wear']
+// const searchItems = ['bottle with hand real', 'shoes single wear']
 // const searchItems = ['phone', 'credit card with hand','credit card close shot', 'glasses close shot', 'umbrella with hand', 'computer mouse close shot']
-const searchItems = ['books close shot', 'books holding','key holding', 'computer chair with background', 'keyboard', 'hand palm real']
-const searchItems = ['facial tissue real', 'tissue box', 'laptops real']
+// const searchItems = ['books close shot', 'books holding','key holding','computer chair with background', 'keyboard', 'hand palm real']
+const searchItems = ['facial tissue real', 'tissue box', 'laptops real', 'pen with hand fit size']
 for (let item of searchItems) {
 scrapingImage(item);
 }
