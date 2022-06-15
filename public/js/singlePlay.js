@@ -110,6 +110,7 @@ let originTimer = '59:99'
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+let unShowForm = false
 
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
@@ -225,15 +226,17 @@ async function predictModel() {
     });
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
-    if (stopCount) {
+    if (stopCount && !unShowForm) {
         clearInterval(startTimer)
         timer.textContent = 'Time Out!'
+        video.pause()
         enterName.style.display = 'flex'
+        unShowForm = true
         // const res = await fetch(`/endGame`)
         // console.log('fetched: ', res)
     }
     if (!startedCount && !stopCount) {
-        startTimer = setTimer(59, 99)
+        startTimer = setTimer(1, 99)
     }
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
@@ -249,7 +252,7 @@ async function predictModel() {
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
         originTimer = currentTimer
-        let data = { image: imgURL, round: round, timeSpace: timeSpace }
+        let data = { image: imgURL, round: round, timeSpace: timeSpace, emoji: emojiLabels[label] }
         const res = await fetch('/getData', {
             method: 'POST',
             headers: {
@@ -306,15 +309,22 @@ async function predictModel() {
 enterName.addEventListener('submit', async(event) => {
     event.preventDefault()
     let form = event.target
-    const name = form.name.value
+    const formObj = {
+        name: form.name.value,
+        score: score.textContent
+    }
+    console.log('total score: ', formObj.name, score.textContent)
     enterName.style.display = 'none'
     const res = await fetch('/enterName', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(name)
+        body: JSON.stringify(formObj)
     })
     const result = await res.json()
-    console.log('input name: ', result)
+    console.log('input name: ', await result)
+    if (result.success) {
+        window.location('/result.html')
+    }
 })
