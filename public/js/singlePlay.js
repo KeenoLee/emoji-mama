@@ -114,6 +114,7 @@ let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
 const score = document.querySelector('#current-score')
+const enterName = document.querySelector('#enter-name')
 
 
 window.onload = async () => {
@@ -227,8 +228,9 @@ async function predictModel() {
     if (stopCount) {
         clearInterval(startTimer)
         timer.textContent = 'Time Out!'
-        const res = await fetch(`/endGame`)
-        console.log('fetched: ', res)
+        enterName.style.display = 'flex'
+        // const res = await fetch(`/endGame`)
+        // console.log('fetched: ', res)
     }
     if (!startedCount && !stopCount) {
         startTimer = setTimer(59, 99)
@@ -243,9 +245,6 @@ async function predictModel() {
         console.log('success!')
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
-        // addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
-        // let dlLink = document.createElement('a');
-        // dlLink.download = "fileName";
 
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
@@ -302,3 +301,20 @@ async function predictModel() {
     // stats.end();
     requestAnimationFrameCross(predictModel);
 }
+
+
+enterName.addEventListener('submit', async(event) => {
+    event.preventDefault()
+    let form = event.target
+    const name = form.name.value
+    enterName.style.display = 'none'
+    const res = await fetch('/enterName', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(name)
+    })
+    const result = await res.json()
+    console.log('input name: ', result)
+})
