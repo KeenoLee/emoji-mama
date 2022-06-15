@@ -8,7 +8,7 @@ export class SinglePlayService {
     }
     sendImage = async (image: string, sid: string, emoji: string) => {
         await this.knex
-            .insert({sid: sid, image: image, emoji: emoji})
+            .insert({sid: sid, image: image, icon: emoji})
             .into('screenshots')
     }
     getImageBySID = async (sid: string) => {
