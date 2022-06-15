@@ -79,6 +79,7 @@ export class SinglePlayController {
             await this.sendImage(fields.image, fields.round, this.getSessionID(req), fields.emoji)
             // console.log('sent...')
             // await this.countScore(fields.bonusTime)
+            console.log('going to count score...')
             res.json(await this.countScore(fields.timeSpace))
             return
         })
@@ -117,7 +118,11 @@ export class SinglePlayController {
         }
         let {name, score} = req.body
         console.log('bbo', req.body)
-        await this.singlePlayService.enterName(name, score)
+        console.log(this.getSessionID(req))
+        const record: any = (await this.singlePlayService.enterName(name, score))[0]
+        if (score > 0) {
+            await this.singlePlayService.pairWithScreenshots(this.getSessionID(req), record.id)
+        }
         res.json({success: true})
         return
     }

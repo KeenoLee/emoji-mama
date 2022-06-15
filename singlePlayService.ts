@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import path from 'path';
-import {unlink} from 'fs';
+import { unlink } from 'fs';
 
 export class SinglePlayService {
     constructor(private knex: Knex) {
@@ -8,21 +8,29 @@ export class SinglePlayService {
     }
     sendImage = async (image: string, sid: string, emoji: string) => {
         await this.knex
-            .insert({sid: sid, image: image, icon: emoji})
+            .insert({ sid: sid, image: image, icon: emoji })
             .into('screenshots')
     }
     getImageBySID = async (sid: string) => {
-        let image = await this.knex
-        .select("image")
-        .from('screenshots')
-        .where('sid', sid)
-        return image
+        let result = await this.knex
+            .select("image", 'icon', 'record_id')
+            .from('screenshots')
+            .where('sid', sid)
+        let score = (await this.knex
+            .select('score')
+            .from('record')
+            .where('id', result[0].record_id))[0].score
+        console.log(typeof score)
+        return {result, score}
+    }
+    getScoreByRecordId = async () => {
+
     }
     deleteImageFromDB = async (sid: string) => {
         let existingImages = await this.knex
-        .select("image")
-        .from('screenshots')
-        .where('sid', sid)
+            .select("image")
+            .from('screenshots')
+            .where('sid', sid)
         console.log(existingImages)
         for (let i = 0; i < existingImages.length; i++) {
             console.log('deleting file... ', existingImages[i].image)
@@ -34,9 +42,17 @@ export class SinglePlayService {
             .del()
     }
     enterName = async (name: string, score: string) => {
-        await this.knex
-            .insert({name: name, score: score})
+        const recordID = await this.knex
+            .insert({ name: name, score: score })
             .into('record')
+            .returning('id')
+        return recordID
     }
-    
+    pairWithScreenshots = async (sid: string, recordID: number) => {
+        console.log(sid, recordID)
+        await this.knex('screenshots')
+            .where('sid', sid)
+            .update({ record_id: recordID })
+    }
+
 }
