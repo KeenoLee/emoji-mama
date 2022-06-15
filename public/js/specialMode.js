@@ -88,7 +88,7 @@ function setTimer () {
     } ,1000)
 } 
 
-let originTimer = '60'
+let originTimer = '1    '
 
 
 
@@ -126,13 +126,14 @@ var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
 let findEmojiIcon = document.getElementById('find-emoji')
-let pageScore = document.getElementById('current-score')
+const pageScore = document.getElementById('current-score')
 let startTimer = true;
 let stopTimer = false;
 let myTimer;
 let label;
 let successRate = 0.25
 let pausePredict = false
+const enterName = document.querySelector('#opacity-form')
 
 countDown.textContent = originTimer
 async function predictModel(){
@@ -159,8 +160,23 @@ async function predictModel(){
 
     if (countDown.innerHTML == 0) {
         clearInterval(myTimer) // Stop the Timer , if not, it'll show NaN after Time Out!
-        countDown.innerHTML = 'Time Out!' // 
-        stopTimer = false 
+        video.pause()
+        countDown.innerHTML = 'Time Out!'
+        stopTimer = false
+        enterName.style.display = 'flex'
+        // const res = fetch('/enterSpecialModeName', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(formObj)
+        // })
+        // const result = await res.json()
+        // console.log('input name: ', await result)
+        // if (result.success) {
+        //     console.log('success?: ', result)
+        //     window.location.href = './result.html'
+        // }
     }
 
     if(checkRound(labelCount) == (round - 1)) {
@@ -292,4 +308,30 @@ const colorArray =
 '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
 '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
 '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+
+const enterNameForm = document.querySelector('#enter-name')
+enterNameForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    let form = event.target
+    const formObj = {
+        name: form.name.value,
+        score: pageScore.textContent
+    }
+    console.log(formObj)
+    console.log('total score: ', formObj.name, score.textContent)
+    enterName.style.display = 'none'
+    const res = await fetch('/enterSpecialModeName', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formObj)
+    })
+    const result = await res.json()
+    console.log('input name: ', await result)
+    if (result.success) {
+        console.log('success?: ', await result)
+        window.location.href = './result.html'
+    }
+})
 
