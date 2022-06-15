@@ -9,39 +9,48 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/singlePlay.css">
-    <style>
 
-    </style>
 </head>
 
 <body>
-    <div id="header">
-        <div id="score">Score<div id="current-score">0</div></div>
-        <div id="current-emoji">:)</div>
-        <div id="timer">00:00</div>
-    </div>
-    <div id="content">
-
-        <div class="d-flex justify-content-center h-100 w-100">
-            <canvas id="output"></canvas>
+    <div class="loader-wrapper"><span class="loader"><span class="loader-inner"></span></span></div>
+        <div id="header">
+            <div id="score">Score<div id="current-score">0</div>
+            </div>
+            <div id="current-emoji">:)</div>
+            <div id="timer">00:00</div>
         </div>
-        <video id="video" autoplay>
-        </video>
-        <form action="/sendImage" method="POST" style="display: none;" enctype="multipart/form-data"></form>
-    </div>
-    <!-- <div id="footer"></div> -->
+        <div id="content">
+
+            <div class="d-flex justify-content-center h-100 w-100">
+                <canvas id="output"></canvas>
+            </div>
+            <video id="video" autoplay>
+            </video>
+            <form action="/sendImage" method="POST" style="display: none;" enctype="multipart/form-data"></form>
+        </div>
+        <div id="opacity-form" style="display: none">
+
+                <form action="/enterName" method="POST" style="display: flex;" id="enter-name">
+                    <label>Input Your Name to See Your Result!</label>
+                    <input type="text" placeholder="Name" name="name">
+                    <button type="submit">Enter</button>
+                </form>
+        </div>
+        <!-- <div id="footer"></div> -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/stats-js@1.0.1/build/stats.min.js"></script>
+
+    <script src="./js/singlePlay.js"></script>
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/stats-js@1.0.1/build/stats.min.js"></script>
-
-<script src="./js/singlePlay.js"></script>
 
 </html>

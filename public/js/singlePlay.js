@@ -98,7 +98,6 @@ let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'ke
 const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
 let checkEmo = checkEmojiDup();
 let successRate = 0.1;
-// let imgURLArray = [];
 let label;
 let round = 1;
 let startedCount = false
@@ -106,13 +105,18 @@ let stopCount = false
 let interval = 1000 / 100
 let bonusTime = 5
 let startTimer
-
-//choose camera from each device
+let timeSpace = 0
+let originTimer = '59:99'
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+let unShowForm = false
+
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
+const score = document.querySelector('#current-score')
+const enterName = document.querySelector('#opacity-form')
+
 
 window.onload = async () => {
     // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -195,6 +199,7 @@ async function loadModel() {
     // Set up canvas w and h
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    document.querySelector('.loader-wrapper').style.display = 'none';
     predictModel();
 }
 
@@ -205,9 +210,7 @@ function getTime(time) {
     return +s + (+ms / 100)
 }
 
-let timeSpace = 0
-let originTimer = '59:99'
-const score = document.querySelector('#current-score')
+
 
 async function predictModel() {
     // stats.begin();
@@ -223,11 +226,14 @@ async function predictModel() {
     });
     const result = await model.predict(imgPre).data();
     await tf.dispose(imgPre); // clear memory
-    if (stopCount) {
+    if (stopCount && !unShowForm) {
         clearInterval(startTimer)
         timer.textContent = 'Time Out!'
-        const res = await fetch(`/endGame`)
-        console.log('fetched: ', res)
+        video.pause()
+        enterName.style.display = 'flex'
+        unShowForm = true
+        // const res = await fetch(`/endGame`)
+        // console.log('fetched: ', res)
     }
     if (!startedCount && !stopCount) {
         startTimer = setTimer(59, 99)
@@ -242,38 +248,36 @@ async function predictModel() {
         console.log('success!')
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
-        // addImageToIndexedDB(imgURL) //FIXME: add score to Postgresql
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-        document.body.appendChild(dlLink);
 
         let currentTimer = timer.textContent
-        console.log('currentTime: ', currentTimer)
-        timeSpace = (bonusTime + 1) - (getTime(originTimer) - getTime(currentTimer))
+        timeSpace = getTime(originTimer) - getTime(currentTimer)
         originTimer = currentTimer
-        console.log('timespace, origin, current: ', timeSpace, originTimer, currentTimer)
-        let data = { image: imgURL, round: round, bonusTime: timeSpace }
+        // let data = { image: imgURL, round: round, timeSpace: timeSpace, emoji: emojiLabels[label] }
+        let formData = new FormData()
+        formData.append('image', imgURL)
+        formData.append('round', round)
+        formData.append('timeSpace', timeSpace)
+        formData.append('emoji', emojiLabels[label])
         const res = await fetch('/getData', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            // headers: {
+                // 'Content-Type': 'application/json'
+                // 'Content-Type': 'multipart/form-data'
+            // },
+            body: formData
         })
         // console.log(imgURL)
         const resResult = await res.json()
         if (resResult.score) {
-            console.log('score???', resResult.score)
-            console.log('score???', score.textContent)
-            // let currentTimer = timer.textContent
 
-            score.textContent = parseInt(score.textContent) + resResult.score
-            console.log(score.textContent)
+            // let currentTimer = timer.textContent
+            let accScore = parseInt(score.textContent)
+            if (isNaN(accScore)) {
+                accScore = 0
+            }
+            score.innerHTML = +accScore + +resResult.score
             let seconds = currentTimer.substring(0, 2)
             let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-            console.log(seconds, milliseconds)
             clearInterval(startTimer)
             round++
             setTimeout(() => {
@@ -306,3 +310,27 @@ async function predictModel() {
     // stats.end();
     requestAnimationFrameCross(predictModel);
 }
+
+
+enterName.addEventListener('submit', async(event) => {
+    event.preventDefault()
+    let form = event.target
+    const formObj = {
+        name: form.name.value,
+        score: score.textContent
+    }
+    console.log('total score: ', formObj.name, score.textContent)
+    enterName.style.display = 'none'
+    const res = await fetch('/enterName', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formObj)
+    })
+    const result = await res.json()
+    console.log('input name: ', await result)
+    if (result.success) {
+        window.location('./result.html')
+    }
+})
