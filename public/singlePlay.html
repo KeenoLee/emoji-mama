@@ -29,11 +29,14 @@
             </video>
             <form action="/sendImage" method="POST" style="display: none;" enctype="multipart/form-data"></form>
         </div>
-        <form action="/enterName" method="POST" style="display: none;" id="enter-name">
-            <label>Input Your Name to See Your Result!</label>
-            <input type="text" placeholder="Name" name="name">
-            <button type="submit">Enter</button>
-        </form>
+        <div id="opacity-form" style="display: none">
+
+                <form action="/enterName" method="POST" style="display: flex;" id="enter-name">
+                    <label>Input Your Name to See Your Result!</label>
+                    <input type="text" placeholder="Name" name="name">
+                    <button type="submit">Enter</button>
+                </form>
+        </div>
         <!-- <div id="footer"></div> -->
 
 
