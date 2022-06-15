@@ -128,10 +128,11 @@ body {
     /* opacity: 1; */
 }
 #enter-name > input,
-#enter-name > label,
+#enter-name > h1,
 #enter-name > button {
     margin: 2rem;
 }
+
 #opacity-form {
     top: 0;
     bottom: 0;
