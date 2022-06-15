@@ -6,9 +6,9 @@ export class SinglePlayService {
     constructor(private knex: Knex) {
         this.knex = knex
     }
-    sendImage = async (image: string, sid: string) => {
+    sendImage = async (image: string, sid: string, emoji: string) => {
         await this.knex
-            .insert({sid: sid, image: image})
+            .insert({sid: sid, image: image, emoji: emoji})
             .into('screenshots')
     }
     getImageBySID = async (sid: string) => {
@@ -32,6 +32,11 @@ export class SinglePlayService {
         await this.knex('screenshots')
             .where('sid', sid)
             .del()
+    }
+    enterName = async (name: string, score: string) => {
+        await this.knex
+            .insert({name: name, score: score})
+            .into('record')
     }
     
 }
