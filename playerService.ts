@@ -12,16 +12,19 @@ export class PlayerService {
         await this.knex
             .insert({ name: playerName, score: score })
             .into('record');
+    }
+
+    async getTopTenPlayers() {
 
         let topTen = await this.knex
             .select('name', 'score')
             .from('record')
-            .orderBy([ {column: 'score'}, {column: 'created_at', order: 'desc'}])
+            .orderBy([{ column: 'score' }, { column: 'created_at', order: 'desc' }])
             .limit(10);
         return topTen;
     }
+
     hello() {
         console.log('hi')
     }
 }
-
