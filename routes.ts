@@ -14,7 +14,6 @@ import { SinglePlayService } from './singlePlayService';
 
 // Try MultiPlay
 
-
 let app = express();
 app.use(cors())
 const server = new http.Server(app)
@@ -81,6 +80,7 @@ app.post('/record', playerController.record)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
 app.post('/getSpecialModeData', singlePlayController.getData)
+// app.get('/endSpecialModelGame', singlePlayController.endGame)
 app.post('/enterName', singlePlayController.enterName)
 
 
