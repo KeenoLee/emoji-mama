@@ -126,14 +126,15 @@ var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
 let findEmojiIcon = document.getElementById('find-emoji')
-let pageScore = document.getElementById('score')
+let pageScore = document.getElementById('current-score')
 let startTimer = true;
 let stopTimer = false;
 let myTimer;
 let label;
-let successRate = 0.4
+let successRate = 0.25
 let pausePredict = false
 
+countDown.textContent = originTimer
 async function predictModel(){
     
     stats.begin();
@@ -225,14 +226,16 @@ async function predictModel(){
     }
     // console.log(classes_data)
     let higherProbClass = classes_data[0]
-    if (labels[label] == labels[higherProbClass] && pausePredict == false) {
+    console.log()
+    if (labels[label] == labels[higherProbClass]) {
+    // if (labels[label] == labels[higherProbClass] && pausePredict == false) {
         console.log('correct: ', labels[label])
         
         
         if (scores_data[0] > successRate) {
             console.log('success!')
             video.pause()
-            pausePredict = true
+            // pausePredict = true
             let imgURL = canvas.toDataURL("image/png");
             
             let currentTimer = countDown.innerHTML
@@ -255,7 +258,17 @@ async function predictModel(){
             })
             let result = await res.json()
             console.log('fetched: ', result)
+            console.log('type: ', typeof +pageScore.textContent)
+            console.log('content: ', pageScore.textContent)
             if (result.score) {
+                // if (isNaN(pageScore.textContent)) {
+                //     pageScore.textContent = 0
+                // }
+                let num = +pageScore.textContent
+                num += parseInt(result.score)
+
+                // parseInt(pageScore.innerHTML) += parseInt(result.score)
+                pageScore.textContent = num
                 video.play()
                 predictModel()
                 round++
