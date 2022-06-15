@@ -1,6 +1,6 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import expressSession from 'express-session'
-import {Server as SocketIO} from 'socket.io'
+import { Server as SocketIO } from 'socket.io'
 import cors from 'cors'
 import http from 'http'
 import { knex } from './app'
@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('callEnded')
     })
     socket.on("callUser", (data) => {
-        io.to(data.userToCall).emit('callUser', {signal: data.signalData, from: data.from, name: data.name})
+        io.to(data.userToCall).emit('callUser', { signal: data.signalData, from: data.from, name: data.name })
     })
     socket.on('answerCall', (data) => {
         io.to(data.to).emit('callAccepted', data.signal)
@@ -74,6 +74,8 @@ app.post('/lobby', singlePlayController.deleteImage)
 app.post('/record', playerController.record)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
+app.get('/rank', playerController.getTopTenPlayers)
+
 // app.get('/', (req, res) => {
 //     console.log('Server is connected');
 //     res.end('Hello from express');
