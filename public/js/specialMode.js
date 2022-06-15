@@ -88,6 +88,9 @@ function setTimer () {
     } ,1000)
 } 
 
+let originTimer = '60'
+
+
 
 // Create Key value pair -> label : labelCount, Eg glasses: 0,
 let labelCount = {}
@@ -231,13 +234,24 @@ async function predictModel(){
             video.pause()
             pausePredict = true
             let imgURL = canvas.toDataURL("image/png");
-            let data = {image: imgURL, round: round, timeSpace: 99 }
+            
+            let currentTimer = countDown.innerHTML
+            timeSpace = (+originTimer) - (+currentTimer) 
+            originTimer = currentTimer
+
+            let formData = new FormData
+            formData.append('image', imgURL)
+            formData.append('round', round)
+            formData.append('timeSpace', timeSpace)
+            formData.append('emoji', emojiLabels[label])
+
+            // let data = {image: imgURL, round: round, timeSpace: timeSpace }
             const res = await fetch('/getSpecialModeData', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                body: formData
             })
             let result = await res.json()
             console.log('fetched: ', result)
