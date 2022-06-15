@@ -73,11 +73,11 @@ export class SinglePlayController {
     }
     getData = async (req: Request, res: Response) => {
         form.parse(req, async (err, fields, files) => {
-            console.log('going to send image...')
+            // console.log('going to send image...')
             // console.log('files: ', files)
-            console.log(fields.image, fields.emoji)
+            // console.log(fields.image, fields.emoji)
             await this.sendImage(fields.image, fields.round, this.getSessionID(req), fields.emoji)
-            console.log('sent...')
+            // console.log('sent...')
             // await this.countScore(fields.bonusTime)
             res.json(await this.countScore(fields.timeSpace))
             return
