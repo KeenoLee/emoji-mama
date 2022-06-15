@@ -10,9 +10,13 @@ body {
 }
 
 #score,
-#find-emoji,
 #timer {
     padding:2rem;
+}
+
+#find-emoji {
+    font-size: 1.5rem;
+    padding: 1.5rem;
 }
 
 #camera {
