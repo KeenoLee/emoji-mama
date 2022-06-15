@@ -81,7 +81,7 @@ app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
 // app.get('/rank', playerController.getTopTenPlayers)
 app.post('/getSpecialModeData', singlePlayController.getData)
-// app.get('/endSpecialModelGame', singlePlayController.endGame)
+app.post('/enterSpecialModeName', singlePlayController.enterName)
 app.post('/enterName', singlePlayController.enterName)
 
 

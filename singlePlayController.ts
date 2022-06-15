@@ -116,6 +116,7 @@ export class SinglePlayController {
             return
         }
         let {name, score} = req.body
+        console.log('bbo', req.body)
         await this.singlePlayService.enterName(name, score)
         res.json({success: true})
         return
