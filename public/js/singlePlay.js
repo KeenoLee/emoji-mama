@@ -115,7 +115,7 @@ let unShowForm = false
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
 const score = document.querySelector('#current-score')
-const enterName = document.querySelector('#enter-name')
+const enterName = document.querySelector('#opacity-form')
 
 
 window.onload = async () => {
@@ -236,7 +236,7 @@ async function predictModel() {
         // console.log('fetched: ', res)
     }
     if (!startedCount && !stopCount) {
-        startTimer = setTimer(1, 99)
+        startTimer = setTimer(59, 99)
     }
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
@@ -252,13 +252,19 @@ async function predictModel() {
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
         originTimer = currentTimer
-        let data = { image: imgURL, round: round, timeSpace: timeSpace, emoji: emojiLabels[label] }
+        // let data = { image: imgURL, round: round, timeSpace: timeSpace, emoji: emojiLabels[label] }
+        let formData = new FormData()
+        formData.append('image', imgURL)
+        formData.append('round', round)
+        formData.append('timeSpace', timeSpace)
+        formData.append('emoji', emojiLabels[label])
         const res = await fetch('/getData', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            // headers: {
+                // 'Content-Type': 'application/json'
+                // 'Content-Type': 'multipart/form-data'
+            // },
+            body: formData
         })
         // console.log(imgURL)
         const resResult = await res.json()
@@ -325,6 +331,6 @@ enterName.addEventListener('submit', async(event) => {
     const result = await res.json()
     console.log('input name: ', await result)
     if (result.success) {
-        window.location('/result.html')
+        window.location('./result.html')
     }
 })
