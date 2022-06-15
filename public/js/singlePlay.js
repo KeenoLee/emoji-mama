@@ -333,6 +333,7 @@ enterName.addEventListener('submit', async(event) => {
     const result = await res.json()
     console.log('input name: ', await result)
     if (result.success) {
-        window.location('./result.html')
+        console.log('success?: ', result)
+        window.location.href = './result.html'
     }
 })
