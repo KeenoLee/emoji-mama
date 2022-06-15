@@ -198,6 +198,7 @@ async function loadModel() {
     // Set up canvas w and h
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    document.querySelector('.loader-wrapper').style.display = 'none';
     predictModel();
 }
 
