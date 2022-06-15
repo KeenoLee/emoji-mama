@@ -25,7 +25,6 @@ const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards
 const emojiLabels = ["🌂","🔑 ","🍾","📕","💳","🪑","⌨️","💻","🖊️","📱","👕","👖","👟","👓","⌚","💍","🖱️","🧻","🧃","📺"]
 
 
-
 async function getMedia() {
     let mediaStream = null;
 
@@ -64,21 +63,12 @@ async function loadModel(){
     // Set up canvas w and h
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
+    document.querySelector('.loader-wrapper').style.display = 'none';
     predictModel();
-
-    // const capBtn = document.querySelector("btn-capture");
-
-    // capBtn.addEventListener("click", async () => {
-
-        
-    // })
-
 }
 
 // Webcam load successfully -> action load model
 video.addEventListener('loadeddata', async () => {
-    // console.log('Yay!');
     loadModel();
 });
 
@@ -99,7 +89,6 @@ function setTimer () {
 } 
 
 
-
 // Create Key value pair -> label : labelCount, Eg glasses: 0,
 let labelCount = {}
 function checkEmojiDup () {
@@ -109,7 +98,6 @@ function checkEmojiDup () {
     return labelCount
 }
 checkEmojiDup()
-console.log(labelCount)
 
 //Sum of labelCount 入邊個數，就知道Label出現左幾多次，即係第幾Round
 //Object.values(比番個Object佢) -> 之後用reduce既方法 sum of (前面＋後面) values
@@ -135,13 +123,14 @@ var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
 let findEmojiIcon = document.getElementById('find-emoji')
+let pageScore = document.getElementById('score')
 let startTimer = true;
 let stopTimer = false;
 let myTimer;
 let label;
 let successRate = 0.4
 let pausePredict = false
-let score = document.querySelector()
+
 async function predictModel(){
     
     stats.begin();
@@ -155,7 +144,6 @@ async function predictModel(){
     });
     
     const result = await model.executeAsync(imgPre)
-    // console.log(result[0]);
     const font = "50px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
@@ -244,8 +232,6 @@ async function predictModel(){
             pausePredict = true
             let imgURL = canvas.toDataURL("image/png");
             let data = {image: imgURL, round: round, timeSpace: 99 }
-            // let data = {hi: 'hi'}
-            // console.log(data);
             const res = await fetch('/getSpecialModeData', {
                 method: 'POST',
                 headers: {
