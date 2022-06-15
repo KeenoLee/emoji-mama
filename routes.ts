@@ -76,6 +76,7 @@ app.post('/record', playerController.record)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
 app.post('/getSpecialModeData', singlePlayController.getData)
+app.post('/enterName', singlePlayController.enterName)
 
 
 // app.get('/', (req, res) => {

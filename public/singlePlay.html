@@ -29,7 +29,11 @@
         </video>
         <form action="/sendImage" method="POST" style="display: none;" enctype="multipart/form-data"></form>
     </div>
-    <!-- <div id="footer"></div> -->
+    <form action="/enterName" method="POST" style="display: none;" id="enter-name">
+        <label>Input Your Name to See Your Result!</label>
+        <input type="text" placeholder="Name" name="name">
+        <button type="submit">Enter</button>
+    </form>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
