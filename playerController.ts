@@ -8,14 +8,14 @@ export class PlayerController {
     }
 
     record = async (req: Request, res: Response) => {
-        let { playerName, score } = req.body;
+        let { playerName, playerScore } = req.body;
         if (!playerName) {
             res.status(400).json({ error: 'missing player name' });
             return;
         }
         // any limitation imposed on the player name??????????
 
-        this.playerService.record(playerName, score);
+        this.playerService.record(playerName, playerScore);
     }
 
     getTopTenPlayers = async (req: Request, res: Response) => {
