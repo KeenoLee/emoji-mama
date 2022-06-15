@@ -1,8 +1,6 @@
 import { Knex } from 'knex';
 import path from 'path';
 import {unlink} from 'fs';
-import { WhereToVote } from '@material-ui/icons';
-
 
 export class SinglePlayService {
     constructor(private knex: Knex) {
@@ -18,7 +16,7 @@ export class SinglePlayService {
         .select("image")
         .from('screenshots')
         .where('sid', sid)
-        
+        return image
     }
     deleteImageFromDB = async (sid: string) => {
         let existingImages = await this.knex

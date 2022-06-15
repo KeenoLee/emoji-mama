@@ -140,7 +140,8 @@ let stopTimer = false;
 let myTimer;
 let label;
 let successRate = 0.4
-
+let pausePredict = false
+let score = document.querySelector()
 async function predictModel(){
     
     stats.begin();
@@ -173,6 +174,8 @@ async function predictModel(){
     if(checkRound(labelCount) == (round - 1)) {
         label = findEmoji(round, labelCount)
         findEmojiIcon.innerHTML = `${emojiLabels[label]}`
+        console.log(`Find ${labels[label]}`)
+
     }
 
     const [boxes, scores, classes, valid_detections] = result;
@@ -194,21 +197,7 @@ async function predictModel(){
     ctx.drawImage(video, 0, 0);
 
     
-    if (classes_data[0] > successRate) {
-        video.pause()
-        let imgURL = canvas.toDataURL("image/png");
-        let data = {image: imgURL, round: round, timeSpace: 99 }
-        // let data = {hi: 'hi'}
-        // console.log(data);
-        const res = await fetch('/getSpecialModeData', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-
-    }
+    
     for (let i = 0; i < valid_detections_data; ++i) {
 
         if( scores_data[i] <= scoreThras){
@@ -243,7 +232,37 @@ async function predictModel(){
         ctx.fillText(klass + ":" + score, x1, y1);  
 
     }
-
+    // console.log(classes_data)
+    let higherProbClass = classes_data[0]
+    if (labels[label] == labels[higherProbClass] && pausePredict == false) {
+        console.log('correct: ', labels[label])
+        
+        
+        if (scores_data[0] > successRate) {
+            console.log('success!')
+            video.pause()
+            pausePredict = true
+            let imgURL = canvas.toDataURL("image/png");
+            let data = {image: imgURL, round: round, timeSpace: 99 }
+            // let data = {hi: 'hi'}
+            // console.log(data);
+            const res = await fetch('/getSpecialModeData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            let result = await res.json()
+            console.log('fetched: ', result)
+            if (result.score) {
+                video.play()
+                predictModel()
+                round++
+            }
+            
+        }
+    }
     stats.end();
     requestAnimationFrameCross(predictModel);        
 }
