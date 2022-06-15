@@ -28,11 +28,11 @@ export function SetTimer() {
 
 export function GenEmoji() {
     let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
-        const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
-        let labelCount = {}
-        labels.map((label) => {
-            labelCount[label] = 0
-        })
+    const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
+    let labelCount = {}
+    labels.map((label) => {
+        labelCount[label] = 0
+    })
 
     const [emojiDup, setEmojiDup] = useState({})
     const [round, setRound] = useState(0)
@@ -50,8 +50,21 @@ export function GenEmoji() {
 
 
 
-    
+
 
 
     return <div className='current-emoji'>Round{round}: {emoji}</div>
+}
+
+
+function abc() {
+    const [timer, setTimer] = useState()
+
+    return (
+        <div style='display.....'>
+            <Ad />
+            <Search />
+            <Nav />
+        </div>
+    )
 }

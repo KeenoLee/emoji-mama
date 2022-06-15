@@ -99,6 +99,10 @@ export class SinglePlayController {
         }
         this.singlePlayService.deleteImageFromDB(this.getSessionID(req))
     }
+    enterName = (req: Request, res: Response) => {
+        let name = req.body.name
+        console.log('name? ', req.body)
+    }
     
 }
 

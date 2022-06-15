@@ -53,7 +53,7 @@ canvas {
     height: auto;
 }
 
-.controls {
+/* .controls {
     position: absolute;
     right: 20px;
     top: 20px;
@@ -126,4 +126,25 @@ canvas {
 
 .controls > button:hover svg {
     color: white;
+} */
+
+#enter-name {
+    flex-direction: column;
+    position: fixed;
+    /* width: fit-content; */
+    /* height: fit-content; */
+    padding: 2rem;
+    background-color: blue;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: 20rem;
+    justify-content: center;
+    align-items: center;
+}
+#enter-name > input,
+#enter-name > label,
+#enter-name > button {
+    margin: 2rem;
 }
