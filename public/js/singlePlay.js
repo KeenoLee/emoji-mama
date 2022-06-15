@@ -115,7 +115,7 @@ let unShowForm = false
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
 const score = document.querySelector('#current-score')
-const enterName = document.querySelector('#enter-name')
+const enterName = document.querySelector('#opacity-form')
 
 
 window.onload = async () => {
@@ -181,7 +181,9 @@ async function getMedia() {
     let constraints = window.constraints = {
         audio: false,
         video: {
-            facingMode: "environment"
+            facingMode: "environment",
+            width: { min: 1024, ideal: 1280, max: 1920 },
+            height: { min: 576, ideal: 720, max: 1080 }
         }
     };
     try {
@@ -236,7 +238,7 @@ async function predictModel() {
         // console.log('fetched: ', res)
     }
     if (!startedCount && !stopCount) {
-        startTimer = setTimer(1, 99)
+        startTimer = setTimer(59, 99)
     }
     let probs = Math.max(...result)
     if (checkRound(checkEmo) == (round - 1)) {
@@ -252,13 +254,19 @@ async function predictModel() {
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
         originTimer = currentTimer
-        let data = { image: imgURL, round: round, timeSpace: timeSpace, emoji: emojiLabels[label] }
+        // let data = { image: imgURL, round: round, timeSpace: timeSpace, emoji: emojiLabels[label] }
+        let formData = new FormData()
+        formData.append('image', imgURL)
+        formData.append('round', round)
+        formData.append('timeSpace', timeSpace)
+        formData.append('emoji', emojiLabels[label])
         const res = await fetch('/getData', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            // headers: {
+                // 'Content-Type': 'application/json'
+                // 'Content-Type': 'multipart/form-data'
+            // },
+            body: formData
         })
         // console.log(imgURL)
         const resResult = await res.json()
@@ -289,16 +297,16 @@ async function predictModel() {
     ctx.drawImage(video, 0, 0);
 
     // Draw the top color box
-    ctx.fillStyle = "#00FFFF";
-    ctx.fillRect(0, 0, 1000, 30);
+    // ctx.fillStyle = "#00FFFF";
+    // ctx.fillRect(0, 0, 1000, 30);
 
     // Draw the text last to ensure it's on top. (draw label)
     let ind = result.indexOf(probs);
-    const font = "22px sans-serif";
-    ctx.font = font;
-    ctx.textBaseline = "top";
-    ctx.fillStyle = "#000000";
-    ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
+    // const font = "22px sans-serif";
+    // ctx.font = font;
+    // ctx.textBaseline = "top";
+    // ctx.fillStyle = "#000000";
+    // ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
 
     // console.log('ctx: ', ctx)
     // stats.end();
@@ -325,6 +333,6 @@ enterName.addEventListener('submit', async(event) => {
     const result = await res.json()
     console.log('input name: ', await result)
     if (result.success) {
-        window.location('/result.html')
+        window.location('./result.html')
     }
 })

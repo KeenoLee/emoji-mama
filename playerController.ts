@@ -15,8 +15,12 @@ export class PlayerController {
         }
         // any limitation imposed on the player name??????????
 
-        let record = this.playerService.record(playerName, score);
-        // showing top 10 players
-        res.json({ 'record': record });
+        this.playerService.record(playerName, score);
+    }
+
+    getTopTenPlayers = async (req: Request, res: Response) => {
+        let topTen = await this.playerService.getTopTenPlayers();
+        // console.log(topTen);
+        res.json({ "topTen": topTen });
     }
 }
