@@ -142,9 +142,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: grey;
-    opacity: 0.7;
-}
+    background-color: rgba(84,84,84,0.7);}
 
 /* loader */
 
@@ -226,7 +224,7 @@ body {
 
 
 body fieldset {
-    box-shadow: 0 8px 10px #29a329;
+    box-shadow: 0 4px 5px #f5bd03;
 }
 
 body.error {
@@ -405,7 +403,7 @@ body.error fieldset {
     width: 6px;
     height: 6px;
     bottom: -1px;
-    left: -3px;
+    left: -2px;
     border-color: #333333;
     border-right: 2px solid;
     border-bottom: 2px solid;
@@ -500,6 +498,11 @@ body.error fieldset {
 }
 .icon .heart::after {
     top: -6px;
+}
+
+.username > button {
+    background: transparent;
+    border:transparent;
 }
 
 /* name animation end*/
