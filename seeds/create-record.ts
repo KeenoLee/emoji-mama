@@ -1,4 +1,6 @@
 import { Knex as KnexType } from "knex";
+import { readdir, unlink } from 'fs';
+import path from 'path';
 
 export async function seed(knex: KnexType): Promise<void> {
     // Deletes ALL existing entries
@@ -19,4 +21,14 @@ export async function seed(knex: KnexType): Promise<void> {
         { id: 11, name: "neo", score: 0 },
         { id: 12, name: "zero", score: 0 },
     ]);
+
+    // const directory = path.join(__dirname, '../uploads')
+    // readdir(directory, (err, files) => {
+    //     if (err) throw err;
+    //     for (const file of files) {
+    //         unlink(path.join(directory, file), err => {
+    //             if (err) throw err;
+    //         })
+    //     }
+    // })
 };
