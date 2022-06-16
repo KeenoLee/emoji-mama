@@ -122,7 +122,7 @@ const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
 const score = document.querySelector('#current-score')
 const enterName = document.querySelector('#opacity-form')
-const endGame = document.querySelector('#end div');
+const endGame = document.querySelector('#end');
 const skip = document.querySelector('#skip')
 
 
@@ -220,7 +220,7 @@ function genEmoji(round, checkEmojiDup) {
         checkEmojiDup[labels[result]]++
         return result
     }
-    return 
+    return
 }
 function checkRound(object) {
     return Object.values(object).reduce((pre, cur) => pre + cur)

@@ -11,6 +11,7 @@ body {
 }
 
 #header {
+    position: relative;
     width: 100vw;
     height: 10vh;
     display: flex;
@@ -23,26 +24,47 @@ body {
     font-size: 3rem;
 }
 
-#score,
-#timer {
+
+#score {
     padding: 2rem;
     width: 10rem;
     text-align: center;
 }
 
+
 #button-and-timer {
+    padding: 0.5rem;
+    text-align: center;
     width: 10rem;
 }
 
 #button-container {
+    height: 3rem;
+    width: 40rem;
+    position: absolute;
+    top: 10rem;
+    left: 60rem;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 1.5rem;
 }
 
 #skip {
-    width: auto;
+    color: rgb(255, 58, 58);
+    font-size: 2rem;
+    cursor: pointer;
 }
+
+#end {
+    color: rgb(255, 58, 58);
+    font-size: 2rem;
+    cursor: pointer;
+}
+#end {
+    width: 5rem;
+} */
 
 #video {
     -webkit-transform: scaleX(-1);
@@ -556,17 +578,3 @@ body.error fieldset {
 }
 
 /* name animation end*/
-
-#end {
-    display: flex;
-    justify-content: center;
-    transform: translateY(-650px);
-}
-
-#end div {
-    font-size: 40px;
-    background-color: rgba(127, 197, 255);
-    padding: 20px;
-    border-radius: 10px;
-    cursor: pointer;
-}
