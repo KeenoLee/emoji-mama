@@ -135,7 +135,11 @@ async function scrapingImage(keyword:string) {
 // const searchItems = ['bottle with hand real', 'shoes single wear']
 // const searchItems = ['phone', 'credit card with hand','credit card close shot', 'glasses close shot', 'umbrella with hand', 'computer mouse close shot']
 // const searchItems = ['books close shot', 'books holding','key holding','computer chair with background', 'keyboard', 'hand palm real']
-const searchItems = ['facial tissue real', 'tissue box', 'laptops real', 'pen with hand fit size']
+// const searchItems = ['facial tissue real', 'tissue box', 'laptops real', 'pen with hand fit size']
+// const searchItems = ['book real single']
+const searchItems = ['mouse close up real']
+// const searchItems = ['']
+// const searchItems = ['']
 for (let item of searchItems) {
 scrapingImage(item);
 }

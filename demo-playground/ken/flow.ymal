@@ -6,3 +6,4 @@ test:  # (optional)
 ## Classes  
 nc: 20  # number of classes  
 names: ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']  # class names  
+

@@ -1,5 +1,5 @@
 import { Knex as KnexType } from "knex";
-import { readdir, readdirSync, unlink } from 'fs';
+import { mkdirSync, readdir, readdirSync, unlink } from 'fs';
 import path from 'path';
 
 export async function seed(knex: KnexType): Promise<void> {
@@ -23,6 +23,7 @@ export async function seed(knex: KnexType): Promise<void> {
     ]);
 
     const directory = path.join(__dirname, '../uploads')
+    mkdirSync('uploads', { recursive: true })
     readdirSync(directory).forEach(file => {
         let filepath = directory + '/' + file
         unlink(path.resolve(filepath), err => {
