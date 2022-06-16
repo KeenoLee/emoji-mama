@@ -37,7 +37,7 @@ function createPost(gallery) {
     let galleryContainer = galleryTemplate.cloneNode(true);
     console.log(gallery.image)
     galleryContainer.querySelector(".upload").src = gallery.image
-    galleryContainer.querySelector('.icon').textContent = gallery.icon
+    galleryContainer.querySelector('.icon-emoji').textContent = gallery.icon
     // galleryContainer.querySelector(".icon").src = gallery.image
     return galleryContainer;
 }
