@@ -5,11 +5,11 @@ import fetch from "node-fetch";
 
 async function scrapingImage(keyword:string) {
     try {
-        const browser = await firefox.launch({ headless: false });
+        const browser = await firefox.launch({ headless: true });
         const page = await browser.newPage();
         await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
         // let keyword = "chairs";
-        fs.mkdirSync(`./datasets/${keyword}`, {recursive: true});
+        fs.mkdirSync(`./datasets/newdatasets/${keyword}`, {recursive: true});
         await page.evaluate(
             ({ keyword }) => {
                 // search and click
@@ -89,7 +89,7 @@ async function scrapingImage(keyword:string) {
                 fetch(imageUrl)
                 let buffer = await res.buffer()
                 let filename = keyword + "-" + i + "." + "jpg";
-                const filePath = path.join(`./datasets/${keyword}`, filename)
+                const filePath = path.join(`./datasets/newdatasets/${keyword}`, filename)
                 fs.writeFileSync(filePath, buffer);
                 // console.log(parts[0])
             } else {
@@ -99,21 +99,47 @@ async function scrapingImage(keyword:string) {
                 let filename = keyword + "-" + i + "." + ext;
                 // console.log(filename);
                 // let download = path.join(filename,buffer)
-                const filePath = path.join(`./datasets/${keyword}`, filename)
+                const filePath = path.join(`./datasets/newdatasets/${keyword}`, filename)
                 fs.writeFileSync(filePath, buffer);
             }
             i++
         }
+        // await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
+        // await page.fill('input[name="login"]', 'user')
+        // await page.evaluate(
+        //     ({ keyword }) => {
+        //         // search and click
+        //         (document.querySelector('[type="text"]') as HTMLInputElement).value = keyword;
+        //         (document.querySelector('[type="submit"]') as HTMLInputElement).click();
+        //     },
+        //     { keyword }
+        // );
+
+
         await browser.close();
 
     } catch (err) {
         console.log("No Error Please", err);
     }
 }
+// 🖊️ 🪑 💻 ⌨️🖱️ 📺 🧻 🧃
+// Pens Chairs Notebooks Keyboards Mouses Televisions Tissues Beverages
+
+// 📱 👕 👖 👟 👓 ⌚ 💳 🍾 📕 🔑 🌂
+// Phones Topwears Pants Shoes Glasses Watches Cards Bottles Books Keys Umbrellas
 
 // const searchItems = ['鑰匙', '信用卡', '紙包飲品','雨傘', '水樽', '書本']
 // const searchItems = ['bottle blank','bottle single', 'bottles']
-const searchItems = ['keys']
+// const searchItems = [top wear', 'top wear with model', 'pant with model', 'watch with hand']
+
+// const searchItems = ['bottle with hand real', 'shoes single wear']
+// const searchItems = ['phone', 'credit card with hand','credit card close shot', 'glasses close shot', 'umbrella with hand', 'computer mouse close shot']
+// const searchItems = ['books close shot', 'books holding','key holding','computer chair with background', 'keyboard', 'hand palm real']
+// const searchItems = ['facial tissue real', 'tissue box', 'laptops real', 'pen with hand fit size']
+// const searchItems = ['book real single']
+const searchItems = ['mouse close up real']
+// const searchItems = ['']
+// const searchItems = ['']
 for (let item of searchItems) {
 scrapingImage(item);
 }
