@@ -76,10 +76,9 @@ app.use(express.json());
 
 app.post('/lobby', singlePlayController.deleteImage)
 app.get('/result', singlePlayController.getImage)
-app.post('/record', playerController.record)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
-app.get('/rank', playerController.getTopTenPlayers)
+app.get('/rank', singlePlayController.getTopTenPlayers)
 app.post('/getSpecialModeData', singlePlayController.getData)
 app.post('/enterSpecialModeName', singlePlayController.enterName)
 app.post('/enterName', singlePlayController.enterName)
