@@ -12,3 +12,4 @@ uploads/*
 public/uploads/*
 yarn-error.*
 package-lock.json
+yarn.lockyarn-error.log
