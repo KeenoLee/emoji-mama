@@ -98,14 +98,23 @@ function setTimer() {
     }, 1000)
 }
 
-let originTimer = '1'
+let originTimer = '30'
 
+const correctLabels = ['cards', 'chairs', 'glasses', 'keyboards', 'pants', 'phones', 'rings', 'topwears', 'watches', 'laptop', 'mouses', 'beverages']
 
+// function filterLabels(label) {    
+//     correctLabels.forEach(label => );
+// }
 
 // Create Key value pair -> label : labelCount, Eg glasses: 0,
 let labelCount = {}
 function checkEmojiDup() {
     labels.map((label) => {
+        // correctLabels.forEach((correctLabel) => {
+        //     if (label === correctLabel) {
+        //         labelCount[label] = 0
+        //     } else
+        // })
         // if (label == 'cards' ||
         //     label == 'chairs' ||
         //     label == 'glasses' ||
@@ -118,17 +127,23 @@ function checkEmojiDup() {
         //     label =='laptop' ||
         //     label =='mouses' ||
         //     label =='beverage') {
-            labelCount[label] = 0
-        // }
+
+        labelCount[label] = 1
     })
+    correctLabels.map((label) => {
+        labelCount[label] = 0
+    })
+    // }
+
     return labelCount
 }
 checkEmojiDup()
+console.log(labelCount)
 
 //Sum of labelCount 入邊個數，就知道Label出現左幾多次，即係第幾Round
 //Object.values(比番個Object佢) -> 之後用reduce既方法 sum of (前面＋後面) values
 function checkRound(labelCount) {
-    return Object.values(labelCount).reduce((pre, cur) => pre + cur)
+    return Object.values(labelCount).reduce((pre, cur) => pre + cur) - (labels.length - correctLabels.length)
 }
 
 let round = 1
@@ -205,9 +220,11 @@ async function predictModel() {
         //     window.location.href = './result.html'
         // }
     }
-
+    console.log('checkRound', checkRound(labelCount))
     if (checkRound(labelCount) == (round - 1)) {
         label = findEmoji(round, labelCount)
+        console.log('label: ', label)
+        console.log('emoji: ', labels[label])
         findEmojiIcon.innerHTML = `${emojiLabels[label]}`
         console.log(`Find ${labels[label]}`)
 
@@ -321,9 +338,9 @@ async function predictModel() {
         }
     }
     stats.end();
-if (requestAnimation){
-    requestAnimationFrameCross(predictModel);
-}
+    if (requestAnimation) {
+        requestAnimationFrameCross(predictModel);
+    }
 }
 
 // Color Array for the bounding label
