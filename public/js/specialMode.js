@@ -18,7 +18,12 @@ const debugMessage = document.getElementById("debugMessage")
 const stats = new Stats();
 
 const imgSize = 640
-const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
+// base model
+// const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
+
+// v5m model
+const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/v5m/model.json'
+
 const scoreThras = 0.25 // score lower then that will not display
 
 const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']
@@ -88,7 +93,7 @@ function setTimer () {
     } ,1000)
 } 
 
-let originTimer = '1    '
+let originTimer = '60'
 
 
 
@@ -309,7 +314,7 @@ const colorArray =
 '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
 '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
 
-const enterNameForm = document.querySelector('#enter-name')
+const Form = document.querySelector('#enter-name')
 enterNameForm.addEventListener('submit', async (event) => {
     event.preventDefault()
     let form = event.target

@@ -30,6 +30,20 @@ body {
     text-align: center;
 }
 
+#button-and-timer {
+    width: 10rem;
+}
+
+#button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#skip {
+    width: auto;
+}
+
 #video {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
