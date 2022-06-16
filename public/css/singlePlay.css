@@ -9,6 +9,7 @@ body {
     user-select: none;
     text-align: center;
 }
+
 #header {
     width: 100vw;
     height: 10vh;
@@ -17,10 +18,13 @@ body {
     align-items: center;
     /* background-color: #ffee00; */
 }
+
 #current-emoji {
     font-size: 3rem;
 }
-#score {
+
+#score,
+#timer {
     padding: 2rem;
     width: 10rem;
     text-align: center;
@@ -29,11 +33,13 @@ body {
 #button-and-timer {
     width: 10rem;
 }
+
 #button-container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 #skip {
     width: auto;
 }
@@ -138,9 +144,10 @@ body {
     align-items: center;
     /* opacity: 1; */
 }
-#enter-name > input,
-#enter-name > h1,
-#enter-name > button {
+
+#enter-name>input,
+#enter-name>h1,
+#enter-name>button {
     margin: 2rem;
 }
 
@@ -153,7 +160,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(84,84,84,0.7);}
+    background-color: rgba(84, 84, 84, 0.7);
+}
 
 /* loader */
 
@@ -169,6 +177,7 @@ body {
     align-items: center;
     z-index: 100;
 }
+
 .loader {
     display: inline-block;
     width: 30px;
@@ -241,6 +250,7 @@ body fieldset {
 body.error {
     background: #f04000;
 }
+
 body.error fieldset {
     box-shadow: 0 8px 10px #bd3200;
 }
@@ -276,6 +286,7 @@ ul.items {
     left: -60px;
     transform: translateY(-50%);
 }
+
 ul.items li {
     width: 8px;
     height: 8px;
@@ -285,6 +296,7 @@ ul.items li {
     opacity: 0.4;
     cursor: pointer;
 }
+
 ul.items li.active {
     opacity: 1;
 }
@@ -297,6 +309,7 @@ form {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 form fieldset {
     position: absolute;
     width: 300px;
@@ -307,6 +320,7 @@ form fieldset {
     transform: scale(0.2);
     transition: all 0.4s ease-in-out;
 }
+
 form fieldset input,
 form fieldset p {
     display: inline-block;
@@ -316,16 +330,19 @@ form fieldset p {
     font-size: 16px;
     letter-spacing: 1px;
 }
+
 form fieldset p {
     margin-top: 22px;
     text-align: center;
 }
+
 form fieldset input {
     height: 40px;
     margin-top: 8px;
     border: none;
     outline: none;
 }
+
 form fieldset .icon {
     position: absolute;
     width: 30px;
@@ -333,27 +350,33 @@ form fieldset .icon {
     top: 15px;
     transition: all 0.4s ease;
 }
+
 form fieldset .icon i {
     position: absolute;
     display: block;
 }
+
 form fieldset .icon i::before,
 form fieldset .icon i::after {
     position: absolute;
     content: '';
 }
+
 form fieldset .icon.left {
     left: 10px;
 }
+
 form fieldset .icon.right {
     right: 10px;
     cursor: pointer;
 }
+
 form fieldset .icon.button:hover {
     background: #f2f2f2;
     border-radius: 3px;
     transition: all 0.4s ease;
 }
+
 form fieldset.enable {
     z-index: 1;
     opacity: 1;
@@ -361,6 +384,7 @@ form fieldset.enable {
     transform: scale(1);
     animation: enable 0.5s ease-out 0.2s;
 }
+
 form fieldset.disable {
     opacity: 0;
     transition: all 0.3s ease-in;
@@ -377,9 +401,11 @@ body.error fieldset {
         opacity: 0;
         transform: scale(0.2);
     }
+
     60% {
         transform: scale(1.1);
     }
+
     100% {
         opacity: 1;
         transform: scale(1);
@@ -387,14 +413,17 @@ body.error fieldset {
 }
 
 @keyframes error {
+
     0%,
     50%,
     100% {
         transform: rotate(0deg);
     }
+
     25% {
         transform: rotate(-3deg);
     }
+
     75% {
         transform: rotate(3deg);
     }
@@ -410,6 +439,7 @@ body.error fieldset {
     left: 14px;
     background: #333333;
 }
+
 .icon .arrow::before {
     width: 6px;
     height: 6px;
@@ -429,6 +459,7 @@ body.error fieldset {
     box-shadow: 0 0 0 2px #333333 inset;
     border-radius: 6px 6px 3px 3px;
 }
+
 .icon .user::before {
     width: 10px;
     height: 10px;
@@ -446,6 +477,7 @@ body.error fieldset {
     box-shadow: 0 0 0 2px #333333 inset;
     border-radius: 3px;
 }
+
 .icon .letter::before,
 .icon .letter::after {
     width: 11px;
@@ -453,10 +485,12 @@ body.error fieldset {
     top: 4px;
     background: #333333;
 }
+
 .icon .letter::before {
     left: 0;
     transform: rotate(30deg);
 }
+
 .icon .letter::after {
     right: 0;
     transform: rotate(-30deg);
@@ -470,6 +504,7 @@ body.error fieldset {
     box-shadow: 0 0 0 2px #333333 inset;
     border-radius: 3px;
 }
+
 .icon .lock::before {
     width: 8px;
     height: 8px;
@@ -481,6 +516,7 @@ body.error fieldset {
     border-radius: 50%;
     transform: rotate(-45deg);
 }
+
 .icon .lock::after {
     width: 6px;
     height: 7px;
@@ -497,6 +533,7 @@ body.error fieldset {
     background: #ff5233;
     transform: rotate(45deg);
 }
+
 .icon .heart::before,
 .icon .heart::after {
     width: 10px;
@@ -504,16 +541,32 @@ body.error fieldset {
     border-radius: 50%;
     background: #ff5233;
 }
+
 .icon .heart::before {
     left: -6px;
 }
+
 .icon .heart::after {
     top: -6px;
 }
 
-.username > button {
+.username>button {
     background: transparent;
-    border:transparent;
+    border: transparent;
 }
 
 /* name animation end*/
+
+#end {
+    display: flex;
+    justify-content: center;
+    transform: translateY(-650px);
+}
+
+#end div {
+    font-size: 40px;
+    background-color: rgba(127, 197, 255);
+    padding: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}

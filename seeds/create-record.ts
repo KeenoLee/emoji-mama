@@ -23,8 +23,8 @@ export async function seed(knex: KnexType): Promise<void> {
     ]);
 
     const directory = path.join(__dirname, '../uploads')
-    mkdirSync('uploads', {recursive: true})
-    readdirSync(directory).forEach( file => {
+    mkdirSync('uploads', { recursive: true })
+    readdirSync(directory).forEach(file => {
         let filepath = directory + '/' + file
         unlink(path.resolve(filepath), err => {
             if (err) throw err;
