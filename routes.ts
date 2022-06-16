@@ -5,8 +5,6 @@ import { Server as SocketIO } from 'socket.io'
 import cors from 'cors'
 import http from 'http'
 import { knex } from './app'
-import { PlayerService } from './playerService';
-import { PlayerController } from './playerController';
 import { SinglePlayController } from './singlePlayController';
 import path, { join, resolve } from 'path';
 import fs from 'fs';
@@ -25,8 +23,6 @@ const io = new SocketIO(server, {
     }
 })
 
-let playerService = new PlayerService(knex);
-let playerController = new PlayerController(playerService);
 let singlePlayService = new SinglePlayService(knex)
 let singlePlayController = new SinglePlayController(singlePlayService);
 declare module 'express-session' {
@@ -76,10 +72,13 @@ app.use(express.json());
 
 app.post('/lobby', singlePlayController.deleteImage)
 app.get('/result', singlePlayController.getImage)
-app.post('/record', playerController.record)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
+<<<<<<< HEAD
 app.get('/rank', playerController.getTopTenPlayers)
+=======
+app.get('/rank', singlePlayController.getTopTenPlayers)
+>>>>>>> b8c2f880b63ae08a520bfbb3d3700e869c1ce44d
 app.post('/getSpecialModeData', singlePlayController.getData)
 app.post('/enterSpecialModeName', singlePlayController.enterName)
 app.post('/enterName', singlePlayController.enterName)
