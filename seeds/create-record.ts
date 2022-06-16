@@ -4,8 +4,8 @@ import path from 'path';
 
 export async function seed(knex: KnexType): Promise<void> {
     // Deletes ALL existing entries
-    await knex("record").del();
     await knex("screenshots").del();
+    await knex("record").del();
     // Inserts seed entries
     await knex("record").insert([
         { name: "alex", score: 0 },
