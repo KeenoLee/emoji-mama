@@ -271,6 +271,7 @@ async function predictModel() {
         return
     }
 
+    // Draw frames from video to canvas
     ctx.drawImage(video, 0, 0);
 
     // Pause prediction when paused

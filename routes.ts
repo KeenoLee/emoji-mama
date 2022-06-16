@@ -14,14 +14,14 @@ import { SinglePlayService } from './singlePlayService';
 
 let app = express();
 app.use(cors())
-const server = new http.Server(app)
+// const server = new http.Server(app)
 // const io = new SocketIO(server)
-const io = new SocketIO(server, {
-    cors: {
-        origin: 'http://localhost:8101',
-        methods: ['GET', 'POST']
-    }
-})
+// const io = new SocketIO(server, {
+//     cors: {
+//         origin: 'http://localhost:8101',
+//         methods: ['GET', 'POST']
+//     }
+// })
 
 let singlePlayService = new SinglePlayService(knex)
 let singlePlayController = new SinglePlayController(singlePlayService);
@@ -39,30 +39,29 @@ export let sessionMiddleware = expressSession({
 })
 
 // let routes = express.Router();
-io.on('connection', (socket) => {
-    socket.emit('me', socket.id)
-    console.log('id: ', socket.id)
-    socket.on('disconnect', () => {
-        socket.broadcast.emit('callEnded')
-    })
-    socket.on("callUser", (data) => {
-        io.to(data.userToCall).emit('callUser', { signal: data.signalData, from: data.from, name: data.name })
-    })
-    socket.on('answerCall', (data) => {
-        io.to(data.to).emit('callAccepted', data.signal)
-    })
-    socket.on('takeScreenShot', (data) => {
-        console.log('image? ', data)
-        let parts = data.image.split(/,\s*/);
-        const buffer = Buffer.from(parts[1], "base64");
-        let ext = parts[0].match(/\/(\w+);/)?.[1];
-        let filename = 'image' + "." + ext;
-        const filePath = path.join(`./public/uploads`, filename)
-        fs.writeFileSync(filePath, buffer);
-        socket.emit('takeScreenShotSuccess', 'success')
-    })
-
-})
+// io.on('connection', (socket) => {
+//     socket.emit('me', socket.id)
+//     console.log('id: ', socket.id)
+//     socket.on('disconnect', () => {
+//         socket.broadcast.emit('callEnded')
+//     })
+//     socket.on("callUser", (data) => {
+//         io.to(data.userToCall).emit('callUser', { signal: data.signalData, from: data.from, name: data.name })
+//     })
+//     socket.on('answerCall', (data) => {
+//         io.to(data.to).emit('callAccepted', data.signal)
+//     })
+//     socket.on('takeScreenShot', (data) => {
+//         console.log('image? ', data)
+//         let parts = data.image.split(/,\s*/);
+//         const buffer = Buffer.from(parts[1], "base64");
+//         let ext = parts[0].match(/\/(\w+);/)?.[1];
+//         let filename = 'image' + "." + ext;
+//         const filePath = path.join(`./public/uploads`, filename)
+//         fs.writeFileSync(filePath, buffer);
+//         socket.emit('takeScreenShotSuccess', 'success')
+//     })
+// })
 
 
 app.use(sessionMiddleware)
@@ -95,6 +94,6 @@ app.use((_, res) => {
     res.sendFile(resolve(join("public", "404.html")));
 });
 
-server.listen(port, () => {
+app.listen(port, () => {
     print(port)
 })
