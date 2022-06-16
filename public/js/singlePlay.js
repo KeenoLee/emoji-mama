@@ -94,6 +94,9 @@ const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/t
 const [divNum, subNum] = [1, 0] // [0:255]
 // const [divNum , subNum] = [255,0] // [0:1]
 // const [divNum , subNum] = [127.5,1] // [0:1]
+let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
+    window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
 let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
 const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
@@ -101,26 +104,24 @@ let checkEmo = checkEmojiDup();
 let successRate = 0.1;
 let label;
 let round = 1;
-let startedCount = false
-let stopCount = false
 let interval = 1000 / 100
 let bonusTime = 5
 let startTimer
 let timeSpace = 0
 let originalS = 29
 let originalMS = 99
-let delayPredict = true
 let originTimer = originalS.toString().concat(':', originalMS.toString())
-console.log(originTimer)
-let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
-    window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-    window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+let delayPredict = true
+let startedCount = false
 let unShowForm = false
+let stopCount = false
+let ableToSkip = true
 
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
 const score = document.querySelector('#current-score')
 const enterName = document.querySelector('#opacity-form')
+const skip = document.querySelector('#skip')
 
 
 window.onload = async () => {
@@ -128,12 +129,39 @@ window.onload = async () => {
     // document.body.appendChild(stats.dom);
     getMedia();
 }
+async function getMedia() {
+    let stream = null;
+    let constraints = window.constraints = {
+        audio: false,
+        video: {
+            facingMode: "environment",
+            width: { min: 1024, ideal: 1280, max: 1920 },
+            height: { min: 576, ideal: 720, max: 1080 }
+        }
+    };
+    try {
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        window.stream = stream
+        video.srcObject = stream
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 video.addEventListener('loadeddata', async () => {
     console.log('Yay!');
     loadModel();
 });
 
+// create load model and active cameras
+async function loadModel() {
+    model = await tf.loadGraphModel(modelUrlPath);
+    // Set up canvas w and h
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    document.querySelector('.loader-wrapper').style.display = 'none';
+    predictModel();
+}
 
 // Timer
 function setTimer(seconds, milliseconds) {
@@ -158,6 +186,14 @@ function setTimer(seconds, milliseconds) {
     }, interval);
 }
 
+// Format Time to float
+function getTime(time) {
+    let s = time.substring(0, 2)
+    let ms = time.substring(time.length - 2, time.length)
+    return +s + (+ms / 100)
+}
+
+// Emoji
 function checkEmojiDup() {
     let labelCount = {}
     labels.map((label) => {
@@ -165,7 +201,6 @@ function checkEmojiDup() {
     })
     return labelCount
 }
-
 function genEmoji(round, checkEmojiDup) {
     let result = Math.floor(Math.random() * labels.length)
     if (checkEmojiDup[labels[result]] > 0) {
@@ -176,48 +211,23 @@ function genEmoji(round, checkEmojiDup) {
         return result
     }
 }
-
 function checkRound(object) {
     return Object.values(object).reduce((pre, cur) => pre + cur)
 }
 
-async function getMedia() {
-    let stream = null;
-    let constraints = window.constraints = {
-        audio: false,
-        video: {
-            facingMode: "environment",
-            width: { min: 1024, ideal: 1280, max: 1920 },
-            height: { min: 576, ideal: 720, max: 1080 }
-        }
-    };
-    try {
-        stream = await navigator.mediaDevices.getUserMedia(constraints);
-        window.stream = stream
-        video.srcObject = stream
-    } catch (err) {
-        console.log(err);
+// Skip Emoji
+function skipEmoji() {
+    round++
+    label = genEmoji(round, checkEmo)
+    currentEmoji.textContent = `${emojiLabels[label]}`
+}
+skip.addEventListener('click', () => {
+    if (ableToSkip) {
+        skipEmoji()
     }
-}
+})
 
-// create load model and active cameras
-async function loadModel() {
-    model = await tf.loadGraphModel(modelUrlPath);
-    // Set up canvas w and h
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    document.querySelector('.loader-wrapper').style.display = 'none';
-    predictModel();
-}
-
-
-function getTime(time) {
-    let s = time.substring(0, 2)
-    let ms = time.substring(time.length - 2, time.length)
-    return +s + (+ms / 100)
-}
-
-
+// Main Function
 async function predictModel() {
     // Prevent memory leaks by using tidy 
     if (!startedCount && !stopCount) {
@@ -242,6 +252,7 @@ async function predictModel() {
 
     }
     let probs = Math.max(...result)
+
     if (checkRound(checkEmo) == (round - 1)) {
         label = genEmoji(round, checkEmo)
         currentEmoji.textContent = `${emojiLabels[label]}`
@@ -249,6 +260,7 @@ async function predictModel() {
     }
     if (result[label] > successRate && delayPredict) {
         delayPredict = false
+        ableToSkip = false
         console.log('success!')
         video.pause()
         let imgURL = canvas.toDataURL("image/png");
@@ -269,7 +281,6 @@ async function predictModel() {
         })
         // console.log(imgURL)
         const resResult = await res.json()
-        console.log('score: ', resResult.score)
         if (resResult.score) {
 
             // let currentTimer = timer.textContent
@@ -284,10 +295,10 @@ async function predictModel() {
             round++
             setTimeout(() => {
                 delayPredict = true
+                ableToSkip = true
                 video.play()
                 predictModel()
                 startTimer = setTimer(+seconds + bonusTime, +milliseconds)
-                // startTimer()
             }, 1000)
         }
         return
@@ -314,7 +325,7 @@ async function predictModel() {
     requestAnimationFrameCross(predictModel);
 }
 
-
+// Submit Name
 enterName.addEventListener('submit', async (event) => {
     event.preventDefault()
     let form = event.target
@@ -322,7 +333,6 @@ enterName.addEventListener('submit', async (event) => {
         name: form.name.value,
         score: score.textContent
     }
-    console.log('total score: ', formObj.name, score.textContent)
     enterName.style.display = 'none'
     const res = await fetch('/enterName', {
         method: 'POST',
@@ -332,9 +342,9 @@ enterName.addEventListener('submit', async (event) => {
         body: JSON.stringify(formObj)
     })
     const result = await res.json()
-    console.log('input name: ', await result)
     if (result.success) {
-        console.log('success?: ', result)
         window.location.href = './result.html'
     }
 })
+
+

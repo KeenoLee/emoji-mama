@@ -39,6 +39,7 @@ export class SinglePlayController {
             fs.writeFileSync(filePath, buffer);
             this.singlePlayService.sendImage(filename, sid, emoji)
         }
+        console.log('sid: ', sid)
         // res.json({ success: true })
         return
     }
@@ -116,15 +117,21 @@ export class SinglePlayController {
             res.status(400).json({ error: 'cannot find name or score' })
             return
         }
-        let {name, score} = req.body
+        let { name, score } = req.body
         console.log('bbo', req.body)
         console.log(this.getSessionID(req))
         const record: any = (await this.singlePlayService.enterName(name, score))[0]
         if (score > 0) {
             await this.singlePlayService.pairWithScreenshots(this.getSessionID(req), record.id)
         }
-        res.json({success: true})
+        res.json({ success: true })
         return
+    }
+
+    getTopTenPlayers = async (req: Request, res: Response) => {
+        let topTen = await this.singlePlayService.getTopTenPlayers();
+        // console.log(topTen);
+        res.json({ "topTen": topTen });
     }
 
 }
