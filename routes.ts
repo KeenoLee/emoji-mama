@@ -74,11 +74,7 @@ app.post('/lobby', singlePlayController.deleteImage)
 app.get('/result', singlePlayController.getImage)
 app.post('/getData', singlePlayController.getData)
 app.get('/endGame', singlePlayController.endGame)
-<<<<<<< HEAD
-app.get('/rank', playerController.getTopTenPlayers)
-=======
 app.get('/rank', singlePlayController.getTopTenPlayers)
->>>>>>> b8c2f880b63ae08a520bfbb3d3700e869c1ce44d
 app.post('/getSpecialModeData', singlePlayController.getData)
 app.post('/enterSpecialModeName', singlePlayController.enterName)
 app.post('/enterName', singlePlayController.enterName)
