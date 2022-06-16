@@ -75,7 +75,6 @@ async function getMedia() {
 }
 
 video.addEventListener('loadeddata', async () => {
-    console.log('Yay!');
     loadModel();
 });
 
@@ -93,8 +92,10 @@ async function loadModel() {
     // Set up canvas w and h
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    setTimeout(() => {
     document.querySelector('.loader-wrapper').style.display = 'none';
-    predictModel();
+        predictModel();
+    }, 500)
 }
 
 // Timer
@@ -177,7 +178,6 @@ async function predictModel() {
     if (!startedCount && !stopCount) {
         startTimer = setTimer(originalS, originalMS)
     }
-    console.log('round: ', round, labels.length)
     if (round >= labels.length) {
         clearInterval(startTimer)
         timer.textContent = 'No More Emoji'

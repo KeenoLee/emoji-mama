@@ -93,3 +93,13 @@ table td {
         transform: translate3d(85px, 0, 0);
     }
 }
+
+
+@media screen and (max-width:700px) {
+    /* .names {
+        display: none;
+    } */
+    #rank, .ranks {
+        display: none;
+    }
+}
