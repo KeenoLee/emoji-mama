@@ -23,7 +23,7 @@ export async function seed(knex: KnexType): Promise<void> {
     ]);
 
     const directory = path.join(__dirname, '../uploads')
-    readdirSync(directory).forEach( file => {
+    readdirSync(directory).forEach(file => {
         let filepath = directory + '/' + file
         unlink(path.resolve(filepath), err => {
             if (err) throw err;
