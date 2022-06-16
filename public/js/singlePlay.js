@@ -1,91 +1,17 @@
-//indexedDB setup
-// const indexedDB =
-//     window.indexedDB ||
-//     window.mozIndexedDB ||
-//     window.webkitIndexedDB ||
-//     window.msIndexedDB ||
-//     window.shimIndexedDB
-
-
-// if (!indexedDB) {
-//     console.log("IndexedDB could not be found in this browser.");
-// }
-
-// const request = indexedDB.open('imagesIDB', 1)
-
-// request.onerror = function (event) {
-//     console.error("An error from IndexedDB");
-//     console.error(event.target.error);
-// }
-
-// request.onupgradeneeded = function () {
-//     const db = request.result
-//     if (!db.objectStoreNames.contains('screenshots')) {
-//         const store = db.createObjectStore("screenshots", { keyPath: "id" });
-//         store.createIndex("userID", 'image', { unique: false })
-//     }
-// }
-
-// let DBid = 1
-// function addImageToIndexedDB(image) {
-
-//     let images = { id: DBid, screenshots: image }
-//     transaction = request.result.transaction(["screenshots"], "readwrite")
-//         .objectStore('screenshots')
-//         .add(images)
-
-//     DBid++
-// }
-
-//  function getImageFromIndexedDB() {
-//     const db = request.result
-//     const transaction = db.transaction("screenshots")
-//     const objectStore = transaction.objectStore("screenshots")
-
-//     objectStore.openCursor().onsuccess = function(event) {
-//         let cursor = event.target.result
-
-//         if(cursor) {
-//             console.log(cursor.key)
-//             console.log(cursor.value.screenshots)
-//             cursor.continue()
-//         }else {
-//             console.log('Entries all displayed.');
-//           }
-//     }
-// }
-
-// request.onsuccess = function () {
-//     const db = request.result
-//     const transaction = db.transaction("screenshots", "readwrite")
-//     const store = transaction.objectStore("screenshots")
-//     const userIndex = store.index("userID")
-
-//     store.put({ id: 1, screenshots: '123' })
-
-//     const idQuery = store.get(1)
-
-//     idQuery.onsuccess = function () {
-//         console.log('idQuery', store.get(1).result)
-//     }
-// }
-// }
-
 let model;
-// webCam
+
+// WebCam
 const video = document.querySelector('video');
 
-// webCam display
+// WebCam display
 const canvas = document.getElementById('output');
 const ctx = canvas.getContext('2d');
 
-// debugMessage
+// Debug Message
 const debugMessage = document.getElementById("debugMessage")
 console.log("Width:", window.innerWidth)
 console.log("Height:", window.innerHeight)
 
-// stats library
-// const stats = new Stats();
 
 const imgSize = 224
 const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/tfModels/model.json'
@@ -127,8 +53,6 @@ const skip = document.querySelector('#skip')
 
 
 window.onload = async () => {
-    // stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    // document.body.appendChild(stats.dom);
     getMedia();
 }
 async function getMedia() {
@@ -163,7 +87,7 @@ endGame.addEventListener('click', () => {
     unShowForm = true
 })
 
-// create load model and active cameras
+// Create load model and active cameras
 async function loadModel() {
     model = await tf.loadGraphModel(modelUrlPath);
     // Set up canvas w and h
@@ -249,7 +173,6 @@ skip.addEventListener('click', () => {
 
 // Main Function
 async function predictModel() {
-
     // Prevent memory leaks by using tidy 
     if (!startedCount && !stopCount) {
         startTimer = setTimer(originalS, originalMS)
@@ -272,37 +195,40 @@ async function predictModel() {
             .expandDims();
     });
     const result = await model.predict(imgPre).data();
-    await tf.dispose(imgPre); // clear memory
+    // Clear memory
+    await tf.dispose(imgPre);
+
+    // Show name form when time out
     if (stopCount && !unShowForm) {
         clearInterval(startTimer)
         timer.textContent = 'Time Out!'
         video.pause()
         enterName.style.display = 'flex'
         unShowForm = true
-
     }
-    let probs = Math.max(...result)
 
+    // Show emoji
     if (checkRound(checkEmo) == (round - 1)) {
         label = genEmoji(round, checkEmo)
         currentEmoji.textContent = `${emojiLabels[label]}`
         console.log(`Find ${labels[label]}`)
     }
+
+    // Successfully matched the emoji
     if (result[label] > successRate && delayPredict) {
         delayPredict = false
         pauseRequestFrameCross = true
         ableToSkip = false
-        console.log('success!')
         video.pause()
+
+        // Download image
         let imgURL = canvas.toDataURL("image/png");
 
+        // Manipulate time for score counting
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
-        console.log('timespace: ', timeSpace)
-        console.log('origin: ', getTime(originTimer))
-        console.log('current: ', getTime(currentTimer))
-        // currentTimer = (parseInt(currentTimer.substring(0, 2)) + bonusTime) + ':' + currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-        // console.log('format current time: ', currentTimer)
+
+        // Formidable
         let formData = new FormData()
         formData.append('image', imgURL)
         formData.append('round', round)
@@ -312,24 +238,26 @@ async function predictModel() {
             method: 'POST',
             body: formData
         })
-        // console.log(imgURL)
         const resResult = await res.json()
-        if (resResult.score) {
 
-            // let currentTimer = timer.textContent
+        // Update score
+        if (resResult.score) {
             let accScore = parseInt(score.textContent)
             if (isNaN(accScore)) {
                 accScore = 0
             }
             score.innerHTML = +accScore + +resResult.score
         }
-        let seconds = currentTimer.substring(0, 2)
-        let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
         clearInterval(startTimer)
         round++
-
+        
+        // 1s Pause if corrected
         setTimeout(() => {
+            let seconds = currentTimer.substring(0, 2)
+            let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
             startTimer = setTimer(+seconds + bonusTime, +milliseconds)
+
+            // Set delay to prevent from overlapping prediction
             setTimeout(() => {
                 ableToSkip = true
                 delayPredict = true
@@ -342,25 +270,10 @@ async function predictModel() {
 
         return
     }
-    //console.log("MyModel predicted:", labels[ind]); // top labels
-    //console.log("Possibility:", result[ind] * 100); // top labels possible
 
     ctx.drawImage(video, 0, 0);
 
-    // Draw the top color box
-    // ctx.fillStyle = "#00FFFF";
-    // ctx.fillRect(0, 0, 1000, 30);
-
-    // Draw the text last to ensure it's on top. (draw label)
-    let ind = result.indexOf(probs);
-    // const font = "22px sans-serif";
-    // ctx.font = font;
-    // ctx.textBaseline = "top";
-    // ctx.fillStyle = "#000000";
-    // ctx.fillText(`${emojiLabels[ind]} : ${result[ind] * 100}%`, 20, 8);
-
-    // console.log('ctx: ', ctx)
-    // stats.end();
+    // Pause prediction when paused
     if (!pauseRequestFrameCross) {
         requestAnimationFrameCross(predictModel);
     }
@@ -383,6 +296,7 @@ enterName.addEventListener('submit', async (event) => {
         body: JSON.stringify(formObj)
     })
     const result = await res.json()
+    // Redirect to result page
     if (result.success) {
         window.location.href = './result.html'
     }
