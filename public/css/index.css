@@ -17,13 +17,13 @@ body {
 
 .top-bar-icon-list{
     display: flex;
-    background: #fee;
     width: 2rem;
     height: 2rem;
 }
 
 .social-media-icon {
-    margin: 5px 5px;
+    background-color: #fee;
+    margin: 0 5px;
     height: 2rem;
 }
 

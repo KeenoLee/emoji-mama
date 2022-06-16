@@ -6,11 +6,13 @@ export class SinglePlayService {
     constructor(private knex: Knex) {
         this.knex = knex
     }
+    
     sendImage = async (image: string, sid: string, emoji: string) => {
         await this.knex
             .insert({ sid: sid, image: image, icon: emoji })
             .into('screenshots')
     }
+
     getImageBySID = async (sid: string) => {
         let result = await this.knex
             .select("image", 'icon', 'record_id')
@@ -24,9 +26,7 @@ export class SinglePlayService {
         console.log(typeof score)
         return { result, score }
     }
-    getScoreByRecordId = async () => {
 
-    }
     deleteImageFromDB = async (sid: string) => {
         let existingImages = await this.knex
             .select("image")

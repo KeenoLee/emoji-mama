@@ -43,7 +43,7 @@ export class SinglePlayController {
         // res.json({ success: true })
         return
     }
-    getImage = async (req, res) => {
+    getImage = async (req: Request, res: Response) => {
         try {
             this.singlePlayService.getImageBySID(this.getSessionID(req))
                 .then((result) => {
@@ -56,15 +56,12 @@ export class SinglePlayController {
     }
 
     private countScore = async (timeSpace: any) => {
-        // console.log('inside countScore///')
-        // console.log(req)
         console.log('timeSpace: ', timeSpace)
         if (!timeSpace) {
             return { error: 'timespace not found' }
         } else {
-            // timeSpace = +timeSpace
             let bonusTime: number;
-            if (timeSpace > 5) {
+            if (timeSpace > 5 || timeSpace <= 0) {
                 bonusTime = 1
             } else {
                 bonusTime = 5 - timeSpace + 1
@@ -76,13 +73,7 @@ export class SinglePlayController {
     }
     getData = async (req: Request, res: Response) => {
         form.parse(req, async (err, fields, files) => {
-            console.log('going to send image...')
-            console.log('fields: ', fields)
-            // console.log('files: ', files)
-            // console.log(fields.image, fields.emoji)
             await this.sendImage(fields.image, fields.round, this.getSessionID(req), fields.emoji)
-            // console.log('sent...')
-            // await this.countScore(fields.bonusTime)
             console.log('going to count score...')
             res.json(await this.countScore(fields.timeSpace))
             return
@@ -116,7 +107,7 @@ export class SinglePlayController {
         this.singlePlayService.deleteImageFromDB(this.getSessionID(req))
     }
     enterName = async (req: Request, res: Response) => {
-        if (!req.body.name) {
+        if (!req.body.name || !req.body.score) {
             res.status(400).json({ error: 'cannot find name or score' })
             return
         }
