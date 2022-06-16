@@ -16,7 +16,7 @@ import * as tf from "@tensorflow/tfjs";
 // import TFJS from "tfjs"
 // import { loadModel, predictModel } from "../../demo-playground/tszfung/AiModel"
 import "./App.css"
-import { SetTimer } from "./AiModel"
+// import { GenEmoji, SetTimer } from "./AiModel"
 
 
 const socket = io.connect('http://localhost:8100')
@@ -25,6 +25,7 @@ let model;
 let label;
 let startTimer;
 let imgSize = 224;
+let round = 1
 const [divNum, subNum] = [1, 0];
 let successRate = 0.1;
 let startedCount = false
@@ -36,9 +37,11 @@ const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "
 let requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
     window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame || window.msRequestAnimationFrame;
+const currentEmoji = document.querySelector('#current-emoji')
 
 function App() {
     // My ID
+    let checkEmo = checkEmojiDup()
     const [me, setMe] = useState("")
     const [stream, setStream] = useState(null)
     const [receivingCall, setReceivingCall] = useState(false)
@@ -153,12 +156,7 @@ function App() {
         const str = JSON.stringify([...imgArray, image])
         localStorage.setItem('imagesArrayLocalStore', str);
         setImgArray([...imgArray, image])
-        // socket.emit('takeScreenShot', {
-        //     image: image
-        // })
-        // socket.on('takeScreenShotSuccess', (data) => {
-        //     console.log('REPLY ME: ', data)
-        // })
+
     }, [image])
 
     useEffect(() => {
@@ -171,6 +169,28 @@ function App() {
     async function loadModel() {
         model = await tf.loadGraphModel(modelUrlPath)
         predictModel()
+    }
+    function checkEmojiDup() {
+        let labelCount = {}
+        labels.map((label) => {
+            labelCount[label] = 0
+        })
+        return labelCount
+    }
+
+    function genEmoji(round, checkEmojiDup) {
+        let result = Math.floor(Math.random() * labels.length)
+        if (checkEmojiDup[labels[result]] > 0) {
+            return genEmoji(round, checkEmojiDup)
+        }
+        if (checkRound(checkEmojiDup) == (round - 1)) {
+            checkEmojiDup[labels[result]]++
+            return result
+        }
+    }
+
+    function checkRound(object) {
+        return Object.values(object).reduce((pre, cur) => pre + cur)
     }
 
     async function predictModel() {
@@ -186,6 +206,7 @@ function App() {
         await tf.dispose(imgPre);
 
         let probs = Math.max(...result)
+        console.log('probs: ', probs)
         if (checkRound(checkEmo) == (round - 1)) {
             label = genEmoji(round, checkEmo)
             currentEmoji.textContent = `${emojiLabels[label]}`
@@ -194,27 +215,27 @@ function App() {
         if (result[label] > successRate) {
             console.log('success!')
             myVideo.current.pause()
-            let currentTimer = timer.textContent
+            // let currentTimer = timer.textContent
 
             // useEffect: Should be called if corrected
-        
+
             await socket.emit('takeScreenShot', {
                 image: image
             })
             await socket.on('takeScreenShotSuccess', (data) => {
                 if (data === 'success') {
-                    //     let currentTimer = timer.textContent // TIMER
-                    //     let seconds = currentTimer.substring(0, 2)
-                    //     let miniSeconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-                    //     console.log(seconds, miniSeconds)
-                    //     clearInterval(startTimer)
-                    //     round++
-                    //     setTimeout(() => {
-                    //         videoRef.current.play()
-                    //         predictModel()
-                    //         startTimer = setTimer(+seconds + bonusScore, +miniSeconds)
-                    //         // startTimer()
-                    //     }, 1000)
+                    //             //     let currentTimer = timer.textContent // TIMER
+                    //             //     let seconds = currentTimer.substring(0, 2)
+                    //             //     let miniSeconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
+                    //             //     console.log(seconds, miniSeconds)
+                    //             //     clearInterval(startTimer)
+                    //             //     round++
+                    //             //     setTimeout(() => {
+                    //             //         videoRef.current.play()
+                    //             //         predictModel()
+                    //             //         startTimer = setTimer(+seconds + bonusScore, +miniSeconds)
+                    //             //         // startTimer()
+                    //             //     }, 1000)
                 }
             })
         }
@@ -234,13 +255,14 @@ function App() {
                     <img width={100} src={v} alt={'Screenshot'} />
                 ))}
 
-                <div className="score">
+                {/* <div className="score">
                     <div className="my-score">Your Score</div>
                     <div className="enemy-score">Enemy Score</div>
-                </div>
+                </div> */}
                 <div className="current-emoji">MultiPlay</div>
+                {/* <GenEmoji /> */}
                 {/* <div className="timer">{startTimer = setTimer()}</div> */}
-                <SetTimer />
+                {/* <SetTimer /> */}
             </div>
             <div className="container">
                 <div className="video-container">

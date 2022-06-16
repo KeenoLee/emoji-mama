@@ -11,14 +11,19 @@ const ctx = canvas.getContext('2d');
 
 // debugMessage
 const debugMessage = document.getElementById("debugMessage")
-console.log("Width:", window.innerWidth)
-console.log("Height:", window.innerHeight)
+// console.log("Width:", window.innerWidth)
+// console.log("Height:", window.innerHeight)
 
 // stats library
 const stats = new Stats();
 
 const imgSize = 640
-const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
+// base model
+// const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/best_web_model/model.json'
+
+// v5m model
+const modelUrlPath = 'https://cdn.jsdelivr.net/gh/tszfungkoktf/emojimama-model/v5m/model.json'
+
 const scoreThras = 0.25 // score lower then that will not display
 
 const labels = ['umbrellas','keys','bottles','books','cards','chairs','keyboards','laptop','pens','phones','topwears','pants','shoes','glasses','watches','rings','mouses','tissues','beverages','televisions']
@@ -45,7 +50,7 @@ async function getMedia() {
     // navigator.mediaDevices.getUserMedia 入邊要有一個Parameters which call constraints 
     // constraints 入邊會有兩樣野audio or video~
       mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log(mediaStream)
+    //   console.log(mediaStream)
 
       window.stream = mediaStream
       video.srcObject = mediaStream
@@ -63,45 +68,34 @@ async function loadModel(){
     // Set up canvas w and h
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
+    document.querySelector('.loader-wrapper').style.display = 'none';
     predictModel();
-
-    const capBtn = document.getElementById("capBtn");
-
-    capBtn.addEventListener("click", async () => {
-
-        let imgURL = canvas.toDataURL("image/png");
-
-        let dlLink = document.createElement('a');
-        dlLink.download = "fileName";
-        dlLink.href = imgURL;
-        dlLink.dataset.downloadurl = ["image/png", dlLink.download, dlLink.href].join(':');
-
-        document.body.appendChild(dlLink);
-        dlLink.click();
-        document.body.removeChild(dlLink);
-        
-    })
-
 }
 
 // Webcam load successfully -> action load model
 video.addEventListener('loadeddata', async () => {
-    console.log('Yay!');
     loadModel();
 });
-
 
 window.onload = async () => {
     getMedia();
 }
 
 // Timer
+let startedCount = false
+let stopCount = false
+
 const countDown = document.getElementById('timer')
 
-let setTimer = setInterval((timer) => {
-    timer = countDown.innerHTML-- 
-} ,1000)
+function setTimer () {
+    return setInterval((timer) => {
+        timer = +(countDown.innerHTML)-- 
+    } ,1000)
+} 
+
+let originTimer = '60'
+
+
 
 // Create Key value pair -> label : labelCount, Eg glasses: 0,
 let labelCount = {}
@@ -112,7 +106,6 @@ function checkEmojiDup () {
     return labelCount
 }
 checkEmojiDup()
-console.log(labelCount)
 
 //Sum of labelCount 入邊個數，就知道Label出現左幾多次，即係第幾Round
 //Object.values(比番個Object佢) -> 之後用reduce既方法 sum of (前面＋後面) values
@@ -138,10 +131,19 @@ var requestAnimationFrameCross = window.webkitRequestAnimationFrame ||
         window.oRequestAnimationFrame || window.msRequestAnimationFrame;
 
 let findEmojiIcon = document.getElementById('find-emoji')
+const pageScore = document.getElementById('current-score')
+let startTimer = true;
+let stopTimer = false;
+let myTimer;
+let label;
+let successRate = 0.25
+let pausePredict = false
+const enterName = document.querySelector('#opacity-form')
+
+countDown.textContent = originTimer
 async function predictModel(){
     
     stats.begin();
-
     // Prevent memory leaks by using tidy 
     let imgPre = await tf.tidy(() => { 
         return tf.browser.fromPixels(video)
@@ -151,16 +153,42 @@ async function predictModel(){
             .expandDims();
     });
     
-    const result = await model.executeAsync(imgPre);
-
+    const result = await model.executeAsync(imgPre)
     const font = "50px sans-serif";
     ctx.font = font;
     ctx.textBaseline = "top";
 
+    if (startTimer) {
+        myTimer = setTimer()
+        startTimer = false
+    } 
+
+    if (countDown.innerHTML == 0) {
+        clearInterval(myTimer) // Stop the Timer , if not, it'll show NaN after Time Out!
+        video.pause()
+        countDown.innerHTML = 'Time Out!'
+        stopTimer = false
+        enterName.style.display = 'flex'
+        // const res = fetch('/enterSpecialModeName', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(formObj)
+        // })
+        // const result = await res.json()
+        // console.log('input name: ', await result)
+        // if (result.success) {
+        //     console.log('success?: ', result)
+        //     window.location.href = './result.html'
+        // }
+    }
+
     if(checkRound(labelCount) == (round - 1)) {
-        let label = findEmoji(round, labelCount)
-        console.log(label)
+        label = findEmoji(round, labelCount)
         findEmojiIcon.innerHTML = `${emojiLabels[label]}`
+        console.log(`Find ${labels[label]}`)
+
     }
 
     const [boxes, scores, classes, valid_detections] = result;
@@ -170,6 +198,9 @@ async function predictModel(){
     const scores_data = scores.dataSync();
     const classes_data = classes.dataSync();
     const valid_detections_data = valid_detections.dataSync()[0];
+    // console.log(scores_data);
+    // console.log(classes_data);
+    // console.log(valid_detections_data);
 
     // Prevent memory leaks also
     await tf.dispose(result);
@@ -178,6 +209,8 @@ async function predictModel(){
 
     ctx.drawImage(video, 0, 0);
 
+    
+    
     for (let i = 0; i < valid_detections_data; ++i) {
 
         if( scores_data[i] <= scoreThras){
@@ -212,7 +245,58 @@ async function predictModel(){
         ctx.fillText(klass + ":" + score, x1, y1);  
 
     }
+    // console.log(classes_data)
+    let higherProbClass = classes_data[0]
+    console.log()
+    if (labels[label] == labels[higherProbClass]) {
+    // if (labels[label] == labels[higherProbClass] && pausePredict == false) {
+        console.log('correct: ', labels[label])
+        
+        
+        if (scores_data[0] > successRate) {
+            console.log('success!')
+            video.pause()
+            // pausePredict = true
+            let imgURL = canvas.toDataURL("image/png");
+            
+            let currentTimer = countDown.innerHTML
+            timeSpace = (+originTimer) - (+currentTimer) 
+            originTimer = currentTimer
 
+            let formData = new FormData
+            formData.append('image', imgURL)
+            formData.append('round', round)
+            formData.append('timeSpace', timeSpace)
+            formData.append('emoji', emojiLabels[label])
+
+            // let data = {image: imgURL, round: round, timeSpace: timeSpace }
+            const res = await fetch('/getSpecialModeData', {
+                method: 'POST',
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // },
+                body: formData
+            })
+            let result = await res.json()
+            console.log('fetched: ', result)
+            console.log('type: ', typeof +pageScore.textContent)
+            console.log('content: ', pageScore.textContent)
+            if (result.score) {
+                // if (isNaN(pageScore.textContent)) {
+                //     pageScore.textContent = 0
+                // }
+                let num = +pageScore.textContent
+                num += parseInt(result.score)
+
+                // parseInt(pageScore.innerHTML) += parseInt(result.score)
+                pageScore.textContent = num
+                video.play()
+                predictModel()
+                round++
+            }
+            
+        }
+    }
     stats.end();
     requestAnimationFrameCross(predictModel);        
 }
@@ -229,4 +313,30 @@ const colorArray =
 '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
 '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
 '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+
+const Form = document.querySelector('#enter-name')
+enterNameForm.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    let form = event.target
+    const formObj = {
+        name: form.name.value,
+        score: pageScore.textContent
+    }
+    console.log(formObj)
+    console.log('total score: ', formObj.name, score.textContent)
+    enterName.style.display = 'none'
+    const res = await fetch('/enterSpecialModeName', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formObj)
+    })
+    const result = await res.json()
+    console.log('input name: ', await result)
+    if (result.success) {
+        console.log('success?: ', await result)
+        window.location.href = './result.html'
+    }
+})
 
