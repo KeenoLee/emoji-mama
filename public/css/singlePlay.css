@@ -38,20 +38,29 @@ body {
     width: 10rem;
 }
 
-#output {
+#canvas-container {
     position: relative;
 }
 
-#button-container {
-    height: 3rem;
-    width: 40rem;
+#button-container-abs {
+    /* display: flex;
+    justify-content: center; */
     position: absolute;
-    z-index: 9999;
-    top: 0;
-    left: 0;
+    z-index: 99;
+    width: 100%;
+}
+
+#button-container-abs>div {
+    display: flex;
+    justify-content: center;
+}
+
+#button-container {
+    width: 20%;
+    left: 40%;
+    right: 40%;
     display: flex;
     justify-content: space-around;
-    align-items: center;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 1.5rem;
 }
@@ -66,10 +75,7 @@ body {
     color: rgb(255, 58, 58);
     font-size: 2rem;
     cursor: pointer;
-}
-
-#end {
-    width: 5rem;
+    /* width: fit-content; */
 }
 
 /* #video {
