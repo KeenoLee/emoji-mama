@@ -21,7 +21,7 @@ export class SinglePlayService {
             .from('record')
             .where('id', result[0].record_id))[0].score
         console.log(typeof score)
-        return {result, score}
+        return { result, score }
     }
     getScoreByRecordId = async () => {
 
@@ -53,6 +53,15 @@ export class SinglePlayService {
         await this.knex('screenshots')
             .where('sid', sid)
             .update({ record_id: recordID })
+    }
+
+    async getTopTenPlayers() {
+        let topTen = await this.knex
+            .select('name', 'score')
+            .from('record')
+            .orderBy([{ column: 'score' }, { column: 'created_at', order: 'desc' }])
+            .limit(10);
+        return topTen;
     }
 
 }
