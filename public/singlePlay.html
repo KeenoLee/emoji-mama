@@ -20,22 +20,35 @@
         <div id="current-emoji">:)</div>
         <div id="button-and-timer">
             <div id="timer">00:00</div>
-            <div id="button-container">
+            <!-- <div id="button-container">
                 <div id="skip"><i class="bi bi-skip-forward-circle"></i></div>
                 <div id="end"><i class="bi bi-stop-circle"></i></div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div id="content">
         <div class="d-flex justify-content-center h-100 w-100">
-            <canvas id="output"></canvas>
+            <div id="canvas-container">
+                <div id="button-container-abs">
+                    <div>
+                        <div id="button-container">
+                            <div id="skip"><i class="bi bi-skip-forward-circle"></i></div>
+                            <div id="end"><i class="bi bi-stop-circle"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="output">
+                </canvas>
+
+            </div>
+
         </div>
-        <video id="video" autoplay>
+        <video id="video" autoplay style="
+        -webkit-transform: scaleX(-1); transform: scaleX(-1);
+        visibility: hidden; width:auto; height:auto;">>
         </video>
         <form action="/sendImage" method="POST" style="display: none;" enctype="multipart/form-data"></form>
-        <!-- <div id="end">
-            <div>END GAME</div>
-        </div> -->
+
     </div>
 
     <div id="opacity-form" style="display: none">
