@@ -66,13 +66,13 @@ body {
     width: 5rem;
 } */
 
-#video {
+/* #video {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
     visibility: hidden;
     width: auto;
     height: auto;
-}
+} */
 
 /* .controls {
     position: absolute;
