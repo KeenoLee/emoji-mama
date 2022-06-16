@@ -11,7 +11,7 @@ body {
 }
 
 #header {
-    position: relative;
+
     width: 100vw;
     height: 10vh;
     display: flex;
@@ -38,12 +38,17 @@ body {
     width: 10rem;
 }
 
+#output {
+    position: relative;
+}
+
 #button-container {
     height: 3rem;
     width: 40rem;
     position: absolute;
-    top: 10rem;
-    left: 60rem;
+    z-index: 9999;
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -62,11 +67,12 @@ body {
     font-size: 2rem;
     cursor: pointer;
 }
+
 #end {
     width: 5rem;
-} */
+}
 
-#video {
+*/ #video {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
     visibility: hidden;
