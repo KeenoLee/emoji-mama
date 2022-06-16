@@ -189,7 +189,7 @@ function App() {
         if (result[label] > successRate) {
             console.log('success!')
             myVideo.current.pause()
-            let currentTimer = timer.textContent
+            // let currentTimer = timer.textContent
 
             // useEffect: Should be called if corrected
         
@@ -229,14 +229,14 @@ function App() {
                     <img width={100} src={v} alt={'Screenshot'} />
                 ))}
 
-                <div className="score">
+                {/* <div className="score">
                     <div className="my-score">Your Score</div>
                     <div className="enemy-score">Enemy Score</div>
-                </div>
+                </div> */}
                 {/* <div className="current-emoji">MultiPlay</div> */}
                 <GenEmoji />
                 {/* <div className="timer">{startTimer = setTimer()}</div> */}
-                <SetTimer />
+                {/* <SetTimer /> */}
             </div>
             <div className="container">
                 <div className="video-container">
