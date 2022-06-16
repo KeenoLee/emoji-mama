@@ -11,7 +11,9 @@ fetch("/result")
     .then((json) => {
         console.log('DATAS:', json)
         if (json.error) {
+            score.textContent = 0
             console.log(json.error);
+            return
         }
         let galleries = json.result;
         console.log(galleries);
