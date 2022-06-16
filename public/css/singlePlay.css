@@ -20,11 +20,22 @@ body {
 #current-emoji {
     font-size: 3rem;
 }
-#score,
-#timer {
+#score {
     padding: 2rem;
     width: 10rem;
     text-align: center;
+}
+
+#button-and-timer {
+    width: 10rem;
+}
+#button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#skip {
+    width: auto;
 }
 
 #video {
