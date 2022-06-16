@@ -102,32 +102,11 @@ let originTimer = '30'
 
 const correctLabels = ['cards', 'chairs', 'glasses', 'keyboards', 'pants', 'phones', 'rings', 'topwears', 'watches', 'laptop', 'mouses', 'beverages']
 
-// function filterLabels(label) {    
-//     correctLabels.forEach(label => );
-// }
 
 // Create Key value pair -> label : labelCount, Eg glasses: 0,
 let labelCount = {}
 function checkEmojiDup() {
     labels.map((label) => {
-        // correctLabels.forEach((correctLabel) => {
-        //     if (label === correctLabel) {
-        //         labelCount[label] = 0
-        //     } else
-        // })
-        // if (label == 'cards' ||
-        //     label == 'chairs' ||
-        //     label == 'glasses' ||
-        //     label =='keyboards' ||
-        //     label =='pants' ||
-        //     label =='phones' ||
-        //     label =='rings' ||
-        //     label =='topwears' ||
-        //     label =='watches' ||
-        //     label =='laptop' ||
-        //     label =='mouses' ||
-        //     label =='beverage') {
-
         labelCount[label] = 1
     })
     correctLabels.map((label) => {
@@ -227,7 +206,6 @@ async function predictModel() {
         console.log('emoji: ', labels[label])
         findEmojiIcon.innerHTML = `${emojiLabels[label]}`
         console.log(`Find ${labels[label]}`)
-
     }
 
     const [boxes, scores, classes, valid_detections] = result;
@@ -266,7 +244,7 @@ async function predictModel() {
         const width = x2 - x1;
         const height = y2 - y1;
         const klass = emojiLabels[classes_data[i]];
-        const score = (scores_data[i].toFixed(2)) * 100 + "%";
+        const score = (scores_data[i] * 100).toFixed(0) + "%";
 
         // Draw the bounding box. (draw box)
         ctx.strokeStyle = colorArray[classes_data[i]];
@@ -286,6 +264,9 @@ async function predictModel() {
     }
     // console.log(classes_data)
     let higherProbClass = classes_data[0]
+    // console.log('higherProbClass: ', higherProbClass)
+    // console.log('labels[label]: ', labels[label])
+    // console.log('[labels[higherProbClass]: ', labels[higherProbClass])
     if (labels[label] == labels[higherProbClass]) {
         // if (labels[label] == labels[higherProbClass] && pausePredict == false) {
         console.log('correct: ', labels[label])
@@ -300,6 +281,9 @@ async function predictModel() {
 
             let currentTimer = countDown.innerHTML
             timeSpace = (+originTimer) - (+currentTimer)
+            console.log(originTimer)
+            console.log(currentTimer)
+            console.log('space', timeSpace)
             originTimer = currentTimer
 
             let formData = new FormData
