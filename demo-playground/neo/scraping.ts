@@ -5,21 +5,29 @@ import fetch from "node-fetch";
 
 async function scrapingImage(keyword:string) {
     try {
-        const browser = await firefox.launch({ headless: true });
+        const browser = await firefox.launch({ headless: false });
         const page = await browser.newPage();
-        await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
+        // await page.goto("https://www.google.com.hk/imghp?hl=zh-TW&authuser=0&ogbl");
+        await page.goto(`https://unsplash.com/s/photos/${keyword}`);
         // let keyword = "chairs";
         fs.mkdirSync(`./datasets/newdatasets/${keyword}`, {recursive: true});
-        await page.evaluate(
-            ({ keyword }) => {
+        // await page.evaluate(
+            // ({ keyword }) => {
                 // search and click
-                (document.querySelector('[type="text"]') as HTMLInputElement).value = keyword;
-                (document.querySelector('[type="submit"]') as HTMLInputElement).click();
-            },
-            { keyword }
-        );
+                
+                // for google image
+                // (document.querySelector('[type="text"]') as HTMLInputElement).value = keyword;
+                // (document.querySelector('[type="submit"]') as HTMLInputElement).click();
+
+                // for upsplash
+                // (document.querySelector('[type="search"]') as HTMLInputElement).value = keyword;
+                // (document.querySelector('[type="submit"]') as HTMLButtonElement).click();
+                // (document.querySelector('.r7Rbd.jpBZ0') as HTMLButtonElement).click();
+            // },
+            // { keyword }
+        // );
         // waiting for the next page to finish
-        await page.waitForNavigation();
+        // await page.waitForNavigation();
         let imageUrls = await page.evaluate(() => {
             // Create a empty array for storing all the images URLs
             return new Promise<string[]>((resolve, reject) => {
@@ -30,8 +38,14 @@ async function scrapingImage(keyword:string) {
                             div.remove()
                         }
                     })
-                    let images = document.querySelectorAll<HTMLImageElement>("div.bRMDJf img")
-                    let input = document.querySelector<HTMLInputElement>('input[value="顯示更多結果"]')
+                    //for google
+                    // let images = document.querySelectorAll<HTMLImageElement>("div.bRMDJf img")
+                    // let input = document.querySelector<HTMLInputElement>('input[value="顯示更多結果"]')
+                    //for upsplash
+                    document.querySelector('.lR_dv.kG7WW').remove()
+                    let images = document.querySelectorAll<HTMLImageElement>("div.VQW0y.Jl9NH img")
+                    let input = document.querySelector<HTMLButtonElement>('.CwMIr.DQBsa.p1cWU.jpBZ0.AYOsT.Olora.I0aPD.dEcXu')
+                    
                     let display = input?.parentElement?.style.display
                     if (input && display !== 'none') {
                         input.click()
@@ -137,7 +151,7 @@ async function scrapingImage(keyword:string) {
 // const searchItems = ['books close shot', 'books holding','key holding','computer chair with background', 'keyboard', 'hand palm real']
 // const searchItems = ['facial tissue real', 'tissue box', 'laptops real', 'pen with hand fit size']
 // const searchItems = ['book real single']
-const searchItems = ['mouse close up real']
+const searchItems = ['books single']
 // const searchItems = ['']
 // const searchItems = ['']
 for (let item of searchItems) {
