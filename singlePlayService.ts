@@ -64,4 +64,8 @@ export class SinglePlayService {
         return topTen;
     }
 
+    hello() {
+        console.log('hello from singlePlayService')
+    }
+
 }
