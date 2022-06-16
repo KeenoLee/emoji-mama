@@ -116,6 +116,7 @@ let startedCount = false
 let unShowForm = false
 let stopCount = false
 let ableToSkip = true
+let pauseRequestFrameCross = false
 
 const currentEmoji = document.querySelector('#current-emoji')
 const timer = document.querySelector('#timer')
@@ -210,6 +211,7 @@ function genEmoji(round, checkEmojiDup) {
         checkEmojiDup[labels[result]]++
         return result
     }
+    return 
 }
 function checkRound(object) {
     return Object.values(object).reduce((pre, cur) => pre + cur)
@@ -217,6 +219,15 @@ function checkRound(object) {
 
 // Skip Emoji
 function skipEmoji() {
+    if (round >= labels.length) {
+        clearInterval(startTimer)
+
+        timer.textContent = 'No More Emoji'
+        video.pause()
+        enterName.style.display = 'flex'
+        unShowForm = true
+        return
+    }
     round++
     label = genEmoji(round, checkEmo)
     currentEmoji.textContent = `${emojiLabels[label]}`
@@ -229,9 +240,19 @@ skip.addEventListener('click', () => {
 
 // Main Function
 async function predictModel() {
+
     // Prevent memory leaks by using tidy 
     if (!startedCount && !stopCount) {
         startTimer = setTimer(originalS, originalMS)
+    }
+    console.log('round: ', round, labels.length)
+    if (round >= labels.length) {
+        clearInterval(startTimer)
+        timer.textContent = 'No More Emoji'
+        video.pause()
+        enterName.style.display = 'flex'
+        unShowForm = true
+        return
     }
     let imgPre = await tf.tidy(() => {
         return tf.browser.fromPixels(video)
@@ -260,6 +281,7 @@ async function predictModel() {
     }
     if (result[label] > successRate && delayPredict) {
         delayPredict = false
+        pauseRequestFrameCross = true
         ableToSkip = false
         console.log('success!')
         video.pause()
@@ -267,9 +289,11 @@ async function predictModel() {
 
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
+        console.log('timespace: ', timeSpace)
         console.log('origin: ', getTime(originTimer))
         console.log('current: ', getTime(currentTimer))
-        originTimer = currentTimer
+        // currentTimer = (parseInt(currentTimer.substring(0, 2)) + bonusTime) + ':' + currentTimer.substring(currentTimer.length - 2, currentTimer.length)
+        // console.log('format current time: ', currentTimer)
         let formData = new FormData()
         formData.append('image', imgURL)
         formData.append('round', round)
@@ -289,18 +313,24 @@ async function predictModel() {
                 accScore = 0
             }
             score.innerHTML = +accScore + +resResult.score
-            let seconds = currentTimer.substring(0, 2)
-            let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-            clearInterval(startTimer)
-            round++
-            setTimeout(() => {
-                delayPredict = true
-                ableToSkip = true
-                video.play()
-                predictModel()
-                startTimer = setTimer(+seconds + bonusTime, +milliseconds)
-            }, 1000)
         }
+        let seconds = currentTimer.substring(0, 2)
+        let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
+        clearInterval(startTimer)
+        round++
+
+        setTimeout(() => {
+            startTimer = setTimer(+seconds + bonusTime, +milliseconds)
+            setTimeout(() => {
+                ableToSkip = true
+                delayPredict = true
+                predictModel()
+                video.play()
+                pauseRequestFrameCross = false
+                originTimer = timer.textContent
+            }, 50)
+        }, 1000)
+
         return
     }
     //console.log("MyModel predicted:", labels[ind]); // top labels
@@ -322,7 +352,9 @@ async function predictModel() {
 
     // console.log('ctx: ', ctx)
     // stats.end();
-    requestAnimationFrameCross(predictModel);
+    if (!pauseRequestFrameCross) {
+        requestAnimationFrameCross(predictModel);
+    }
 }
 
 // Submit Name
