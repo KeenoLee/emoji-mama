@@ -73,7 +73,7 @@ p {
 /* Play button */
 .btn-play {
     font-size: 18px;
-    background:#DAA520;
+    background:#daa520;
     margin-top: 3em;
     cursor: pointer;
     text-transform: uppercase;
@@ -86,6 +86,14 @@ p {
     border: 1px solid #333;
     /* text-shadow: 0 1px; */
     box-shadow: 3px 6px 10px #888888
+}
+
+.btn-play:hover {
+    background-color: #f7c547;
+    box-shadow: 0 0 5px#ffd25f,
+    0 0 20px #ffd25f,
+    0 0 60px #ffd25f,
+    0 0 150px #ffd25f;
 }
 
 .waves {
