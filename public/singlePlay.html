@@ -33,15 +33,19 @@
         <video id="video" autoplay>
         </video>
         <form action="/sendImage" method="POST" style="display: none;" enctype="multipart/form-data"></form>
+        <div id="end">
+            <div>END GAME</div>
+        </div>
     </div>
+
     <div id="opacity-form" style="display: none">
-            <!-- <form action="/enterName" method="POST" id="enter-name">
+        <!-- <form action="/enterName" method="POST" id="enter-name">
                 <h1>Enter Your Name</h1>
                 <input type="text" placeholder="Name" name="name">
                 <button type="submit">Enter</button>
             </form> -->
 
-        <form action="/enterName" method="POST" >
+        <form action="/enterName" method="POST">
             <ul class="items"></ul>
             <fieldset class="username enable">
                 <div class="icon left"><i class="user"></i></div><input type="text" name="name"
