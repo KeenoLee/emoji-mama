@@ -64,5 +64,6 @@
 #         npm install --omit=dev &&
 #         cd dist &&
 #         npx knex migrate:latest &&
+#         npx knex seed:run &&
 #         pm2 reload ~/emoji-mama/dist/routes.js
 #         "
