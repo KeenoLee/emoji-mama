@@ -30,7 +30,9 @@
         <div class="d-flex justify-content-center h-100 w-100">
             <canvas id="output"></canvas>
         </div>
-        <video id="video" autoplay>
+        <video id="video" autoplay style="
+        -webkit-transform: scaleX(-1); transform: scaleX(-1);
+        visibility: hidden; width:auto; height:auto;">>
         </video>
         <form action="/sendImage" method="POST" style="display: none;" enctype="multipart/form-data"></form>
         <!-- <div id="end">
