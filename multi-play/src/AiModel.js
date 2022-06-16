@@ -26,33 +26,33 @@ import { useEffect, useState } from 'react';
 //     return <div className="timer">{timer}</div>
 // }
 
-export function GenEmoji() {
-    let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
-    const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
-    let labelCount = {}
-    labels.map((label) => {
-        labelCount[label] = 0
-    })
+// export function GenEmoji() {
+//     let labels = ['beverages', 'books', 'bottles', 'cards', 'chairs', 'glasses', 'keyboards', 'keys', 'mouses', 'notebooks', 'pants', 'pens', 'phones', 'rings', 'shoes', 'televisions', 'tissues', 'topwears', 'umbrellas', 'watches']
+//     const emojiLabels = ["🧃", "📕", "🍾", "💳", "🪑", "👓", "⌨️", "🔑 ", "🖱️", "💻", "👖", "🖊️", "📱", "💍", "👟", "📺", "🧻", "👕", "🌂", "⌚"]
+//     let labelCount = {}
+//     labels.map((label) => {
+//         labelCount[label] = 0
+//     })
 
-    const [emojiDup, setEmojiDup] = useState({})
-    const [round, setRound] = useState(0)
-    const [emoji, setEmoji] = useState('')
-
-
-    useEffect(() => {
-        setRound
-    })
-
-    useEffect = (() => {
-
-        labelCount[labels[result]]++
-    }, [round])
+//     const [emojiDup, setEmojiDup] = useState({})
+//     const [round, setRound] = useState(0)
+//     const [emoji, setEmoji] = useState('')
 
 
+//     useEffect(() => {
+//         setRound
+//     })
+
+//     useEffect = (() => {
+
+//         labelCount[labels[result]]++
+//     }, [round])
 
 
 
 
-    return <div className='current-emoji'>Round{round}: {emoji}</div>
-}
+
+
+//     return <div className='current-emoji'>Round{round}: {emoji}</div>
+// }
 

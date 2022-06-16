@@ -39,6 +39,7 @@ export class SinglePlayController {
             fs.writeFileSync(filePath, buffer);
             this.singlePlayService.sendImage(filename, sid, emoji)
         }
+        console.log('sid: ', sid)
         // res.json({ success: true })
         return
     }
