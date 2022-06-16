@@ -16,6 +16,7 @@ export class SinglePlayService {
             .select("image", 'icon', 'record_id')
             .from('screenshots')
             .where('sid', sid)
+        if (result.length == 0) return;
         let score = (await this.knex
             .select('score')
             .from('record')
@@ -59,7 +60,7 @@ export class SinglePlayService {
         let topTen = await this.knex
             .select('name', 'score')
             .from('record')
-            .orderBy([{ column: 'score' }, { column: 'created_at', order: 'desc' }])
+            .orderBy([{ column: 'score', order: 'desc' }, { column: 'created_at', order: 'desc' }])
             .limit(10);
         return topTen;
     }

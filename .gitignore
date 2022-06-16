@@ -11,3 +11,4 @@ gen-db-pw.js
 uploads/*
 public/uploads/*
 yarn-error.*
+package-lock.json
