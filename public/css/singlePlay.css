@@ -24,14 +24,17 @@ body {
     font-size: 3rem;
 }
 
-#score,
-#timer {
+
+#score {
     padding: 2rem;
     width: 10rem;
     text-align: center;
 }
 
+
 #button-and-timer {
+    padding: 0.5rem;
+    text-align: center;
     width: 10rem;
 }
 
@@ -59,6 +62,9 @@ body {
     font-size: 2rem;
     cursor: pointer;
 }
+#end {
+    width: 5rem;
+} */
 
 #video {
     -webkit-transform: scaleX(-1);
