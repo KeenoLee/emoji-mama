@@ -58,8 +58,9 @@ export class SinglePlayController {
     private countScore = async (timeSpace: any) => {
         // console.log('inside countScore///')
         // console.log(req)
+        console.log('timeSpace: ', timeSpace)
         if (!timeSpace) {
-            return
+            return { error: 'timespace not found' }
         } else {
             // timeSpace = +timeSpace
             let bonusTime: number;
@@ -69,12 +70,14 @@ export class SinglePlayController {
                 bonusTime = 5 - timeSpace + 1
             }
             // res.json({score: (1000 * bonusTime).toFixed(0)})
+            console.log('score: ', (1000 * bonusTime).toFixed(0))
             return { score: (1000 * bonusTime).toFixed(0) }
         }
     }
     getData = async (req: Request, res: Response) => {
         form.parse(req, async (err, fields, files) => {
-            // console.log('going to send image...')
+            console.log('going to send image...')
+            console.log('fields: ', fields)
             // console.log('files: ', files)
             // console.log(fields.image, fields.emoji)
             await this.sendImage(fields.image, fields.round, this.getSessionID(req), fields.emoji)
