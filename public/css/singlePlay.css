@@ -23,26 +23,32 @@ body {
     font-size: 3rem;
 }
 
-#score,
-#timer {
+
+#score {
     padding: 2rem;
     width: 10rem;
     text-align: center;
 }
 
+
 #button-and-timer {
+    padding: 0.5rem;
+    text-align: center;
     width: 10rem;
 }
 
 #button-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
-#skip {
-    width: auto;
+/* #skip {
+    width: 5rem;
 }
+#end {
+    width: 5rem;
+} */
 
 #video {
     -webkit-transform: scaleX(-1);

@@ -93,7 +93,7 @@ function setTimer () {
     } ,1000)
 } 
 
-let originTimer = '60'
+let originTimer = '1'
 
 
 
@@ -315,7 +315,7 @@ const colorArray =
 '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
 
 const Form = document.querySelector('#enter-name')
-enterNameForm.addEventListener('submit', async (event) => {
+document.querySelector('#enter-name').addEventListener('submit', async (event) => {
     event.preventDefault()
     let form = event.target
     const formObj = {
@@ -333,9 +333,9 @@ enterNameForm.addEventListener('submit', async (event) => {
         body: JSON.stringify(formObj)
     })
     const result = await res.json()
-    console.log('input name: ', await result)
+    console.log('input name: ', result)
     if (result.success) {
-        console.log('success?: ', await result)
+        console.log('success?: ')
         window.location.href = './result.html'
     }
 })
