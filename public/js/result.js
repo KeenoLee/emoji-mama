@@ -4,7 +4,7 @@ const score = document.querySelector('.score')
 galleryTemplate.remove();
 
 fetch("/result")
-    .then(async(res) => {
+    .then(async (res) => {
         let result = await res.json()
         return result
     })
