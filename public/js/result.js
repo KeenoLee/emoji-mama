@@ -5,12 +5,13 @@ galleryTemplate.remove();
 
 fetch("/result")
     .then((res) => {
+        console.log('res?: ', res.json())
         res.json()
-        console.log('res?: ', res)
+        console.log(typeof res);
     })
-    .catch((error) => ({
-        error: String(error)
-    }))
+    // .catch((error) => ({
+    //     error: String(error)
+    // }))
     .then((json) => {
         console.log('DATAS:', json)
         if (json.error) {
