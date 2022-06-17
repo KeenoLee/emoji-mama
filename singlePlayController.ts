@@ -26,6 +26,7 @@ export class SinglePlayController {
             // res.status(400).json({error: 'failed to capture image'})
             return
         }
+        console.log('hv info?: ', round, sid, emoji)
         let imageUrl: any = image
         let parts = imageUrl.split(/,\s*/);
         const buffer = Buffer.from(parts[1], "base64");
@@ -73,6 +74,7 @@ export class SinglePlayController {
     }
     getData = async (req: Request, res: Response) => {
         form.parse(req, async (err, fields, files) => {
+            console.log('hv fields? ', fields)
             await this.sendImage(fields.image, fields.round, this.getSessionID(req), fields.emoji)
             console.log('going to count score...')
             res.json(await this.countScore(fields.timeSpace))
