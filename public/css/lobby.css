@@ -18,13 +18,14 @@ body {
 
 .top-bar-icon-list {
     display: flex;
-    background: #fee;
     width: 2rem;
     height: 2rem;
 }
 
 .social-media-icon {
+    background-color: #fee;
     margin: 0px 5px;
+    height: 2rem;
 }
 
 .ranking-icon {

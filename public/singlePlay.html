@@ -62,7 +62,7 @@
             <ul class="items"></ul>
             <fieldset class="username enable">
                 <div class="icon left"><i class="user"></i></div><input type="text" name="name"
-                    placeholder="Player Name" />
+                    placeholder="Player Name" maxlength="20" onkeyup="this.value = this.value.replace(/[^a-zA-Z0-9@ ]/, '')" required/>
                 <!-- <div class="icon right button"><i class="arrow"></i></div> -->
                 <button class="icon right button" type="submit"><i class="arrow"></i></button>
             </fieldset>
