@@ -8,9 +8,9 @@ fetch("/result")
         let result = await res.json()
         return result
     })
-    .catch((error) => ({
-        error: String(error)
-    }))
+    // .catch((error) => ({
+    //     error: String(error)
+    // }))
     .then((json) => {
         console.log('DATAS:', json)
         if (json.error || !json) {
