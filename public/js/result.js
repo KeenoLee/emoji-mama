@@ -4,16 +4,9 @@ const score = document.querySelector('.score')
 galleryTemplate.remove();
 
 fetch("/result")
-<<<<<<< HEAD
-    .then((res) => {
-        console.log('res?: ', res.json())
-        res.json()
-        console.log(typeof res);
-=======
-    .then(async(res) => {
+    .then(async (res) => {
         let result = await res.json()
         return result
->>>>>>> c477569b13c1fdbd9129cd8952137e4676f2f5d7
     })
     // .catch((error) => ({
     //     error: String(error)
