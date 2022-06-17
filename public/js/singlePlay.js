@@ -1,7 +1,7 @@
 let model;
 
 // WebCam
-const video = document.querySelector('video');
+const video = document.querySelector('#video');
 
 // WebCam display
 const canvas = document.getElementById('output');
@@ -69,16 +69,17 @@ async function getMedia() {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         window.stream = stream
         video.srcObject = stream
+        video.onloadedmetadata = () => {
+            video.play()
+        }
     } catch (err) {
         console.log(err);
     }
 }
 
 video.addEventListener('loadedmetadata', async () => {
-    setTimeout(() => {
         // loadModel();
         initModel()
-    }, 10000)
     function draw() {
         ctx.drawImage(video, 0, 0);
         requestAnimationFrame(draw);
@@ -280,7 +281,7 @@ async function loopModel() {
 function checkGameOver() {
     if (round >= labels.length) {
         clearInterval(startTimer)
-        timer.textContent = 'No More Emoji'
+        timer.textContent = 'No More Emoji' 
         video.pause()
         enterName.style.display = 'flex'
         unShowForm = true
