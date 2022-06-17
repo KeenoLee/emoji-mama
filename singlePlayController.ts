@@ -88,9 +88,14 @@ export class SinglePlayController {
         return
     }
     getSessionID = (req: Request) => {
-        let sessionID = req.headers.cookie?.replace('connect.sid=', '')
+        let sessionID = req.session.id.replace('connect.sid=', '')
+        // console.log('sID', sessionID)
         return sessionID
     }
+    // getSessionID = (req: Request) => {
+    //     let sessionID = req.headers.cookie?.replace('connect.sid=', '')
+    //     return sessionID
+    // }
     private filterSID = (sessionID: string) => {
         return sessionID.replace(/[^a-zA-Z ]/g, "")
     }
