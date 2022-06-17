@@ -74,8 +74,11 @@ async function getMedia() {
     }
 }
 
-video.addEventListener('loadeddata', async () => {
-    loadModel();
+video.addEventListener('loadedmetadata', async () => {
+    setTimeout(()=>{
+        loadModel();
+    },10000)
+    
 });
 
 endGame.addEventListener('click', () => {
@@ -174,6 +177,7 @@ skip.addEventListener('click', () => {
 
 // Main Function
 async function predictModel() {
+    debugger
     // Prevent memory leaks by using tidy 
     if (!startedCount && !stopCount) {
         startTimer = setTimer(originalS, originalMS)
@@ -266,7 +270,7 @@ async function predictModel() {
             setTimeout(() => {
                 ableToSkip = true
                 delayPredict = true
-                predictModel()
+                // predictModel()
                 video.play()
                 pauseRequestFrameCross = false
                 originTimer = timer.textContent
