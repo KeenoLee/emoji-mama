@@ -4,13 +4,16 @@ const score = document.querySelector('.score')
 galleryTemplate.remove();
 
 fetch("/result")
-    .then((res) => res.json())
-    .catch((error) => ({
-        error: String(error),
-    }))
+    .then(async(res) => {
+        let result = await res.json()
+        return result
+    })
+    // .catch((error) => ({
+    //     error: String(error)
+    // }))
     .then((json) => {
         console.log('DATAS:', json)
-        if (json.error) {
+        if (json.error || !json) {
             score.textContent = 0
             console.log(json.error);
             return
@@ -22,6 +25,8 @@ fetch("/result")
         });
         showScore(json)
     })
+
+
 
 document.querySelector('.play-again').addEventListener("click", () => {
     location.href = './index.html'
@@ -43,5 +48,10 @@ function createPost(gallery) {
 }
 
 function showScore(result) {
+    if (result.score == 0) {
+        score.textContent = 0
+        return
+    }
     score.textContent = result.score
+    return
 }
