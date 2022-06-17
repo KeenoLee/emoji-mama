@@ -93,7 +93,7 @@ async function loadModel() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     setTimeout(() => {
-    document.querySelector('.loader-wrapper').style.display = 'none';
+        document.querySelector('.loader-wrapper').style.display = 'none';
         predictModel();
     }, 500)
 }
@@ -222,23 +222,28 @@ async function predictModel() {
         video.pause()
 
         // Download image
-        let imgURL = canvas.toDataURL("image/png");
+        let imgURL = canvas.toDataURL('image/jpeg', 0.5);
+        console.log('getting image... ', typeof imgURL)
 
         // Manipulate time for score counting
         let currentTimer = timer.textContent
         timeSpace = getTime(originTimer) - getTime(currentTimer)
-
+        // console.log('qqq', timeSpace)
+        // console.log('tttt', originTimer, currentTimer)
         // Formidable
         let formData = new FormData()
         formData.append('image', imgURL)
         formData.append('round', round)
         formData.append('timeSpace', timeSpace)
         formData.append('emoji', emojiLabels[label])
+        // console.log('gdfgdf', timeSpace)
+        // console.log('fgsadfg 2', emojiLabels[label])
         const res = await fetch('/getData', {
             method: 'POST',
             body: formData
         })
         const resResult = await res.json()
+        console.log('sdgsdgh', resResult)
 
         // Update score
         if (resResult.score) {
@@ -250,7 +255,7 @@ async function predictModel() {
         }
         clearInterval(startTimer)
         round++
-        
+
         // 1s Pause if corrected
         setTimeout(() => {
             let seconds = currentTimer.substring(0, 2)
@@ -268,7 +273,7 @@ async function predictModel() {
             }, 50)
         }, 1000)
 
-        return
+        // return
     }
 
     // Draw frames from video to canvas
