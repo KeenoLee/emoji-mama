@@ -1,19 +1,15 @@
 import express, { Request, Response } from 'express';
 import { print } from "listening-on";
 import expressSession from 'express-session'
-import { Server as SocketIO } from 'socket.io'
-import cors from 'cors'
-import http from 'http'
 import { knex } from './app'
 import { SinglePlayController } from './singlePlayController';
 import path, { join, resolve } from 'path';
-import fs from 'fs';
 import { SinglePlayService } from './singlePlayService';
 
 // Try MultiPlay
 
 let app = express();
-app.use(cors())
+// app.use(cors())
 // const server = new http.Server(app)
 // const io = new SocketIO(server)
 // const io = new SocketIO(server, {

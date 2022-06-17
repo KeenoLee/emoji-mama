@@ -48,6 +48,7 @@ export class SinglePlayController {
         try {
             this.singlePlayService.getImageBySID(this.getSessionID(req))
                 .then((result) => {
+                    console.log('result from controller: ', result)
                     res.json(result)
                     return
                 })
