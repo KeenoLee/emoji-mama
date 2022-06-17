@@ -24,7 +24,8 @@ export class SinglePlayService {
             .from('record')
             .where('id', result[0].record_id))[0].score
         console.log(typeof score)
-        return { result, score, sid }
+        console.log('hv result? score? ', score, result)
+        return { result, score }
     }
 
     deleteImageFromDB = async (sid: string) => {
