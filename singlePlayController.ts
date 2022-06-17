@@ -49,10 +49,12 @@ export class SinglePlayController {
             this.singlePlayService.getImageBySID(this.getSessionID(req))
                 .then((result) => {
                     res.json(result)
+                    return
                 })
         }
         catch (error) {
             res.status(500).json({ error: String(error) });
+            return
         }
     }
 
