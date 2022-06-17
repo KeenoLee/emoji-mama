@@ -77,7 +77,11 @@ export class SinglePlayController {
     }
     getData = async (req: Request, res: Response) => {
         form.parse(req, async (err, fields, files) => {
-            console.log('hv fields? ', fields)
+            if(err){
+                console.log(err);
+                
+            }
+            console.log('hv fields? ', fields.round, fields.timeSpace)
             await this.sendImage(fields.image, fields.round, this.getSessionID(req), fields.emoji)
             console.log('going to count score...')
             res.json(await this.countScore(fields.timeSpace))
@@ -122,7 +126,7 @@ export class SinglePlayController {
             return
         }
         let { name, score } = req.body
-        console.log('bbo', req.body)
+        // console.log('bbo', req.body)
         console.log(this.getSessionID(req))
         const record: any = (await this.singlePlayService.enterName(name, score))[0]
         if (score > 0) {

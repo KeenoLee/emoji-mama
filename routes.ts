@@ -7,6 +7,9 @@ import path, { join, resolve } from 'path';
 import { SinglePlayService } from './singlePlayService';
 
 // Try MultiPlay
+require('events').EventEmitter.defaultMaxListeners = 0
+
+// or 0 to turn off the limit
 
 let app = express();
 // app.use(cors())
