@@ -63,7 +63,6 @@ deploy:
         git checkout $CI_COMMIT_SHA &&
         npm install --omit=dev &&
         cd dist &&
-        npx knex migrate:latest &&
-        npx knex seed:run &&
+        npx knex migrate:latest &&        
         pm2 reload ~/emoji-mama/dist/routes.js
         "
