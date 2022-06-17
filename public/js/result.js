@@ -4,9 +4,12 @@ const score = document.querySelector('.score')
 galleryTemplate.remove();
 
 fetch("/result")
-    .then((res) => res.json())
+    .then((res) => {
+        res.json()
+        console.log('res?: ', res)
+    })
     .catch((error) => ({
-        error: String(error),
+        error: String(error)
     }))
     .then((json) => {
         console.log('DATAS:', json)
@@ -43,5 +46,10 @@ function createPost(gallery) {
 }
 
 function showScore(result) {
+    if (result.score == 0) {
+        score.textContent = 0
+        return
+    }
     score.textContent = result.score
+    return
 }
