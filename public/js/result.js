@@ -4,16 +4,23 @@ const score = document.querySelector('.score')
 galleryTemplate.remove();
 
 fetch("/result")
+<<<<<<< HEAD
     .then((res) => {
+        console.log('res?: ', res.json())
         res.json()
-        console.log('res?: ', res)
+        console.log(typeof res);
+=======
+    .then(async(res) => {
+        let result = await res.json()
+        return result
+>>>>>>> c477569b13c1fdbd9129cd8952137e4676f2f5d7
     })
-    .catch((error) => ({
-        error: String(error)
-    }))
+    // .catch((error) => ({
+    //     error: String(error)
+    // }))
     .then((json) => {
         console.log('DATAS:', json)
-        if (json.error) {
+        if (json.error || !json) {
             score.textContent = 0
             console.log(json.error);
             return
@@ -25,6 +32,8 @@ fetch("/result")
         });
         showScore(json)
     })
+
+
 
 document.querySelector('.play-again').addEventListener("click", () => {
     location.href = './index.html'
