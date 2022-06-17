@@ -277,7 +277,7 @@ async function predictModel() {
             video.pause()
             requestAnimation = false
             // pausePredict = true
-            let imgURL = canvas.toDataURL("image/png");
+            let imgURL = canvas.toDataURL('image/jpeg', 0.5);
 
             let currentTimer = countDown.innerHTML
             timeSpace = (+originTimer) - (+currentTimer)
