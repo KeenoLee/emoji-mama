@@ -86,11 +86,11 @@ app.post('/enterName', singlePlayController.enterName)
 
 const port = 8100;
 
-app.use(express.static('public'))
-app.use(express.static("uploads"))
+app.use(express.static('public')) //
+app.use(express.static("uploads")) //
 
 app.use((_, res) => {
-    res.sendFile(resolve(join("public", "404.html")));
+    res.sendFile(resolve(join("public", "404.html"))); //
 });
 
 app.listen(port, () => {

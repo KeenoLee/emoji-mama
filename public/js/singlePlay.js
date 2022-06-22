@@ -1,7 +1,7 @@
 let model;
 
 // WebCam
-const video = document.querySelector('video');
+const video = document.querySelector('#video');
 
 // WebCam display
 const canvas = document.getElementById('output');
@@ -69,13 +69,22 @@ async function getMedia() {
         stream = await navigator.mediaDevices.getUserMedia(constraints);
         window.stream = stream
         video.srcObject = stream
+        video.onloadedmetadata = () => {
+            video.play()
+        }
     } catch (err) {
         console.log(err);
     }
 }
 
-video.addEventListener('loadeddata', async () => {
-    loadModel();
+video.addEventListener('loadedmetadata', async () => {
+        // loadModel();
+        initModel()
+    function draw() {
+        ctx.drawImage(video, 0, 0);
+        requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
 });
 
 endGame.addEventListener('click', () => {
@@ -88,14 +97,7 @@ endGame.addEventListener('click', () => {
 
 // Create load model and active cameras
 async function loadModel() {
-    model = await tf.loadGraphModel(modelUrlPath);
-    // Set up canvas w and h
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    setTimeout(() => {
-        document.querySelector('.loader-wrapper').style.display = 'none';
-        predictModel();
-    }, 500)
+
 }
 
 // Timer
@@ -104,7 +106,10 @@ function setTimer(seconds, milliseconds) {
     let s = seconds
     let ms = milliseconds
     startedCount = true
-    return setInterval(() => {
+    if (startTimer) {
+        clearInterval(startTimer)
+    }
+    startTimer = setInterval(() => {
         if (ms == 0 && s > 0) {
             ms = 99
             s -= 1
@@ -114,6 +119,7 @@ function setTimer(seconds, milliseconds) {
         ms = '0' + ms
         if (parseInt(s) <= 0 && parseInt(ms) == 0) {
             stopCount = true
+            checkTimeout();
             return
         }
         setTime = s.substring(s.length - 2, s.length) + ':' + ms.substring(ms.length - 2, ms.length)
@@ -172,20 +178,22 @@ skip.addEventListener('click', () => {
     }
 })
 
+async function initModel() {
+    setTimer(originalS, originalMS)
+    model = await tf.loadGraphModel(modelUrlPath);
+    // Set up canvas w and h
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    setTimeout(() => {
+        document.querySelector('.loader-wrapper').style.display = 'none';
+    }, 500)
+    checkNextEmoji()
+    loopModel()
+}
 // Main Function
-async function predictModel() {
+async function loopModel() {
+    // requestAnimationFrame(loopModel)
     // Prevent memory leaks by using tidy 
-    if (!startedCount && !stopCount) {
-        startTimer = setTimer(originalS, originalMS)
-    }
-    if (round >= labels.length) {
-        clearInterval(startTimer)
-        timer.textContent = 'No More Emoji'
-        video.pause()
-        enterName.style.display = 'flex'
-        unShowForm = true
-        return
-    }
     let imgPre = await tf.tidy(() => {
         return tf.browser.fromPixels(video)
             .resizeNearestNeighbor([imgSize, imgSize])
@@ -197,22 +205,6 @@ async function predictModel() {
     const result = await model.predict(imgPre).data();
     // Clear memory
     await tf.dispose(imgPre);
-
-    // Show name form when time out
-    if (stopCount && !unShowForm) {
-        clearInterval(startTimer)
-        timer.textContent = 'Time Out!'
-        video.pause()
-        enterName.style.display = 'flex'
-        unShowForm = true
-    }
-
-    // Show emoji
-    if (checkRound(checkEmo) == (round - 1)) {
-        label = genEmoji(round, checkEmo)
-        currentEmoji.textContent = `${emojiLabels[label]}`
-        console.log(`Find ${labels[label]}`)
-    }
 
     // Successfully matched the emoji
     if (result[label] > successRate && delayPredict) {
@@ -255,18 +247,22 @@ async function predictModel() {
         }
         clearInterval(startTimer)
         round++
+        if (checkGameOver()) {
+            return
+        }
+        checkNextEmoji()
 
         // 1s Pause if corrected
         setTimeout(() => {
             let seconds = currentTimer.substring(0, 2)
             let milliseconds = currentTimer.substring(currentTimer.length - 2, currentTimer.length)
-            startTimer = setTimer(+seconds + bonusTime, +milliseconds)
+            setTimer(+seconds + bonusTime, +milliseconds)
 
             // Set delay to prevent from overlapping prediction
             setTimeout(() => {
                 ableToSkip = true
                 delayPredict = true
-                predictModel()
+                // predictModel()
                 video.play()
                 pauseRequestFrameCross = false
                 originTimer = timer.textContent
@@ -275,15 +271,45 @@ async function predictModel() {
 
         // return
     }
-
-    // Draw frames from video to canvas
-    ctx.drawImage(video, 0, 0);
-
+    
     // Pause prediction when paused
     if (!pauseRequestFrameCross) {
-        requestAnimationFrameCross(predictModel);
+        requestAnimationFrameCross(loopModel);
     }
 }
+
+function checkGameOver() {
+    if (round >= labels.length) {
+        clearInterval(startTimer)
+        timer.textContent = 'No More Emoji' 
+        video.pause()
+        enterName.style.display = 'flex'
+        unShowForm = true
+        return true
+    }
+}
+
+function checkTimeout() {
+    // Show name form when time out
+    if (stopCount && !unShowForm) {
+        clearInterval(startTimer)
+        timer.textContent = 'Time Out!'
+        video.pause()
+        enterName.style.display = 'flex'
+        unShowForm = true
+    }
+}
+
+function checkNextEmoji() {
+    // Show emoji
+    if (checkRound(checkEmo) == (round - 1)) {
+        label = genEmoji(round, checkEmo)
+        currentEmoji.textContent = `${emojiLabels[label]}`
+        console.log(`Find ${labels[label]}`)
+    }
+}
+
+
 
 // Submit Name
 enterName.addEventListener('submit', async (event) => {
