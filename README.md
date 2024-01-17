@@ -35,3 +35,15 @@ A special thanks to Google for inspiring this project. Check out the original Em
 
 ## Overview
 
+![PPT Side 1](public/assets/presentation/overview-p.1.jpg)
+![PPT Side 2](public/assets/presentation/overview-p.2.jpg)
+![PPT Side 3](public/assets/presentation/overview-p.3.jpg)
+![PPT Side 4](public/assets/presentation/overview-p.4.jpg)
+![PPT Side 5](public/assets/presentation/overview-p.5.jpg)
+![PPT Side 6](public/assets/presentation/overview-p.6.jpg)
+![PPT Side 7](public/assets/presentation/overview-p.7.jpg)
+![PPT Side 8](public/assets/presentation/overview-p.8.jpg)
+![PPT Side 9](public/assets/presentation/overview-p.9.jpg)
+![PPT Side 10](public/assets/presentation/overview-p.10.jpg)
+![PPT Side 11](public/assets/presentation/overview-p.11.jpg)
+
