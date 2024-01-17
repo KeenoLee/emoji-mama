@@ -27,4 +27,11 @@ To get started with Emoji Mama:
 A special thanks to Google for inspiring this project. Check out the original Emoji Scavenger Hunt by Google [here](https://emojiscavengerhunt.withgoogle.com/).
 
 ## Screenshots
-Here's a look at Emoji Mama in action!
+![Emoji Mama Game Interface](public/assets/presentation/interface.png)
+
+## Demo Video
+
+[![Watch the demo video](https://img.youtube.com/vi/GzbTozS31tc/0.jpg)](https://www.youtube.com/watch?v=GzbTozS31tc)
+
+## Overview
+
